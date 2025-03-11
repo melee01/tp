@@ -43,7 +43,7 @@ public class Parser {
         } catch (NumberFormatException e) {
             System.out.println("Uh oh! Invalid number format. Please enter a valid integer.");
         } catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("Uh oh! Missing arguments for command. Please review the user guide for formatting specifics.");
+            System.out.println("Uh oh! Missing arguments for command. Please review the user guide.");
         }
 
     }

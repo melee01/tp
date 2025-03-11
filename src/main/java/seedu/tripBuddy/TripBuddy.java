@@ -1,18 +1,14 @@
 package seedu.tripBuddy;
 
-import java.text.ParseException;
-
 public class TripBuddy {
     private int budget;
     private Ui ui;
     private Parser parser;
-//    private ExpenseList expenses;
 
     public TripBuddy() {
         this.budget = 0;
         this.ui = new Ui();
         this.parser = new Parser(ui, this);
-//        expenses = new ExpenseList();
     }
 
     /**
@@ -41,7 +37,7 @@ public class TripBuddy {
                         "1. set-budget AMOUNT - Set your total trip budget.\n" +
                         "2. add-expense EXPENSE_NAME AMOUNT [CATEGORY] - Add a new expense.\n" +
                         "3. delete-expense EXPENSE_NAME - Remove an expense by name.\n" +
-                        "4. create-category CATEGORY - Create a new expense category such as accomodation, food, etc.\n" +
+                        "4. create-category CATEGORY - Create a new expense category.\n" +
                         "5. set-category EXPENSE_NAME CATEGORY - Assign an expense to a category.\n" +
                         "6. view-budget - Check your remaining budget.\n" +
                         "7. list-expense [CATEGORY] - Calculate sum of recorded expenses.\n" +

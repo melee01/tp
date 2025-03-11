@@ -7,8 +7,8 @@ import java.util.Scanner;
  * This class manages all input/output operations for the program.
  */
 public class Ui {
+    private static final String LINE = "____________________________________________________________";
     private final Scanner scanner;
-    static final String LINE = "____________________________________________________________";
 
     public Ui() {
         scanner = new Scanner(System.in);
