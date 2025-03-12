@@ -29,7 +29,7 @@ test {
 }
 
 application {
-    mainClass.set("seedu.tripBuddy.TripBuddy")
+    mainClass.set("seedu.trip_buddy.TripBuddy")
 }
 
 shadowJar {

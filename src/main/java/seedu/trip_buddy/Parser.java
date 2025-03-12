@@ -1,4 +1,4 @@
-package seedu.tripBuddy;
+package seedu.trip_buddy;
 
 /**
  * Handles parsing of user commands and delegates the execution of tasks.

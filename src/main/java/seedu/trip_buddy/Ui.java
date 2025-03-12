@@ -1,4 +1,4 @@
-package seedu.tripBuddy;
+package seedu.trip_buddy;
 
 import java.util.Scanner;
 
@@ -37,13 +37,6 @@ public class Ui {
      */
     public String getUserInput() {
         return scanner.nextLine();
-    }
-
-    /**
-     * Displays an error message.
-     */
-    public void showError() {
-        System.out.println("Something went wrong. Please review the user guide for formatting specifics.");
     }
 
     /**

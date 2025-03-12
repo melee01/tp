@@ -1,4 +1,4 @@
-package seedu.tripBuddy;
+package seedu.trip_buddy;
 
 public class TripBuddy {
     private int budget;
