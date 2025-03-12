@@ -1,12 +1,13 @@
-package seedu.duke;
+package seedu.trip_buddy;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-class DukeTest {
+class TripBuddyTest {
     @Test
-    public void sampleTest() {
+    public void testTripBuddy() {
+        new TripBuddy();
         assertTrue(true);
     }
 }
