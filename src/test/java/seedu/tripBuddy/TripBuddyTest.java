@@ -6,7 +6,8 @@ import org.junit.jupiter.api.Test;
 
 class TripBuddyTest {
     @Test
-    public void sampleTest() {
+    public void testTripBuddy() {
+        new TripBuddy();
         assertTrue(true);
     }
 }

@@ -9,9 +9,14 @@ public class Parser {
     private TripBuddy tripBuddy;
     private Ui ui;
 
+    public Parser() {
+        this.tripBuddy = new TripBuddy();
+        this.ui = new Ui();
+    }
+
     public Parser(Ui ui, TripBuddy tripBuddy) {
-        this.ui = ui;
         this.tripBuddy = tripBuddy;
+        this.ui = ui;
     }
 
     /**
