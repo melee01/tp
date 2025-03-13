@@ -2,6 +2,7 @@ package seedu.trip_buddy.framework;
 
 import org.junit.jupiter.api.Test;
 import seedu.trip_buddy.dataclass.Expense;
+import seedu.trip_buddy.exception.InvalidArgumentException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -16,6 +17,29 @@ class ExpenseManagerTest {
         assertEquals(2333, manager.getBudget(), "1");
         manager.setBudget(233);
         assertEquals(233, manager.getBudget(), "2");
+    }
+
+    @Test
+    void addDeleteExpenseTest_add3Delete1() throws InvalidArgumentException {
+        ExpenseManager manager = new ExpenseManager(2333);
+        manager.addExpense("a", 1);
+        manager.addExpense("b", 2);
+        manager.deleteExpense(1);
+        manager.addExpense("c", 3);
+
+        List<Expense> expenses = manager.getExpenses();
+        for (Expense expense : expenses) {
+            System.err.println(expense);
+        }
+        assertEquals(2, expenses.size());
+    }
+
+    @Test
+    void addDeleteTest_invalidDeleteID_expectInvalidArgumentException() {
+        ExpenseManager manager = new ExpenseManager(2333);
+        manager.addExpense("a", 1);
+        manager.addExpense("b", 2);
+        assertThrows(InvalidArgumentException.class, () -> manager.deleteExpense(3));
     }
 
     @Test

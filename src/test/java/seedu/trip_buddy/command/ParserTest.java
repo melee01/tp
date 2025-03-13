@@ -1,12 +1,10 @@
 package seedu.trip_buddy.command;
 
 import org.junit.jupiter.api.Test;
-import seedu.trip_buddy.command.Parser;
 import seedu.trip_buddy.framework.Ui;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-
 
 public class ParserTest {
     @Test

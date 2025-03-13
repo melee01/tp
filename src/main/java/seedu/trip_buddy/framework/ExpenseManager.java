@@ -1,11 +1,14 @@
 package seedu.trip_buddy.framework;
 
 import seedu.trip_buddy.dataclass.Expense;
+import seedu.trip_buddy.exception.InvalidArgumentException;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 /**
- * Stores all user data.
+ * Has CRUD access to all user data.
  * */
 public class ExpenseManager {
 
@@ -56,5 +59,33 @@ public class ExpenseManager {
         createCategory(categoryName);
         Expense expense = new Expense(name, amount);
         expenses.add(expense);
+    }
+
+    public Expense getExpense(int id) throws InvalidArgumentException {
+        if (id < 0 || id >= expenses.size()) {
+            throw new InvalidArgumentException(Integer.toString(id));
+        }
+        return expenses.get(id);
+    }
+
+    public void deleteExpense(int id) throws InvalidArgumentException {
+        if (id < 0 || id >= expenses.size()) {
+            throw new InvalidArgumentException(Integer.toString(id));
+        }
+        expenses.remove(id);
+    }
+
+    public List<Expense> getExpensesByCategory(String category) throws InvalidArgumentException {
+        if (!categories.contains(category)) {
+            throw new InvalidArgumentException(category);
+        }
+
+        ArrayList<Expense> ret = new ArrayList<>();
+        for (Expense expense : expenses) {
+            if (category.equals(expense.getCategory())) {
+                ret.add(expense);
+            }
+        }
+        return ret;
     }
 }
