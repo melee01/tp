@@ -34,6 +34,8 @@ public class Parser {
             case "tutorial" -> cmdRunner.handleTutorial();
             case "set-budget" -> cmdRunner.handleSetBudget(Integer.parseInt(tokens[1]));
             case "view-budget" -> cmdRunner.handleViewBudget();
+            case "set-category" -> cmdRunner.handleSetCategory(tokens[1], tokens[2]);
+            case "delete-expense" -> cmdRunner.handleDeleteExpense(tokens[1]);
             default -> throw new InvalidKeywordException(keyword);
             };
             ui.printMessage(message);
