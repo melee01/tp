@@ -98,7 +98,7 @@ public class ExpenseManager {
                 return;
             }
         }
-        throw new InvalidArgumentException(category);
+        throw new InvalidArgumentException(expenseName);
     }
 
     public void deleteExpense(String expenseName) throws InvalidArgumentException {
