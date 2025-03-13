@@ -1,5 +1,8 @@
 package seedu.tripbuddy.framework;
 
+import seedu.tripbuddy.exception.InvalidArgumentException;
+
+
 /**
  * Handles commands and return message strings.
  * */
@@ -40,5 +43,15 @@ public class CommandHandler {
     public String handleSetBudget(int budget) {
         expenseManager.setBudget(budget);
         return "Your budget has been set to $" + budget + ".";
+    }
+
+    public String handleSetCategory(String expenseName, String category) throws InvalidArgumentException {
+        expenseManager.setExpenseCategory(expenseName, category);
+        return "Category set successfully for " + expenseName + ".";
+    }
+
+    public String handleDeleteExpense(String expenseName) throws InvalidArgumentException {
+        expenseManager.deleteExpense(expenseName);
+        return "Expense " + expenseName + "deleted successfully.";
     }
 }

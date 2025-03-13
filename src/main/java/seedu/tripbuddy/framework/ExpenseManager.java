@@ -90,4 +90,24 @@ public class ExpenseManager {
         }
         return ret;
     }
+
+    public void setExpenseCategory(String expenseName, String category) throws InvalidArgumentException {
+        for (Expense expense : expenses) {
+            if (expense.getName().equalsIgnoreCase(expenseName)) {
+                expense.setCategory(category);
+                return;
+            }
+        }
+        throw new InvalidArgumentException(category);
+    }
+
+    public void deleteExpense(String expenseName) throws InvalidArgumentException {
+        for (Expense expense : expenses) {
+            if (expense.getName().equalsIgnoreCase(expenseName)) {
+                expenses.remove(expense);
+                return;
+            }
+        }
+        throw new InvalidArgumentException(expenseName);
+    }
 }
