@@ -45,21 +45,13 @@ public class CommandHandler {
         return "Your budget has been set to $" + budget + ".";
     }
 
-    public String handleSetCategory(String expenseName, String category) {
-        try {
-            expenseManager.setExpenseCategory(expenseName, category);
-            return "Category set successfully for " + expenseName + ".";
-        } catch (InvalidArgumentException e) {
-            return "Error: " + e.getMessage();
-        }
+    public String handleSetCategory(String expenseName, String category) throws InvalidArgumentException {
+        expenseManager.setExpenseCategory(expenseName, category);
+        return "Category set successfully for " + expenseName + ".";
     }
 
-    public String handleDeleteExpense(String expenseName) {
-        try {
-            expenseManager.deleteExpense(expenseName);
-            return "Expense \"" + expenseName + "\" deleted successfully.";
-        } catch (InvalidArgumentException e) {
-            return "Error: " + e.getMessage();
-        }
+    public String handleDeleteExpense(String expenseName) throws InvalidArgumentException {
+        expenseManager.deleteExpense(expenseName);
+        return "Expense " + expenseName + "deleted successfully.";
     }
 }

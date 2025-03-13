@@ -1,6 +1,7 @@
 package seedu.tripbuddy.command;
 
 import seedu.tripbuddy.exception.ExceptionHandler;
+import seedu.tripbuddy.exception.InvalidArgumentException;
 import seedu.tripbuddy.exception.InvalidKeywordException;
 import seedu.tripbuddy.framework.CommandHandler;
 import seedu.tripbuddy.framework.Ui;
@@ -39,11 +40,12 @@ public class Parser {
             default -> throw new InvalidKeywordException(keyword);
             };
             ui.printMessage(message);
-        } catch(InvalidKeywordException e) {
+        } catch (InvalidKeywordException e) {
             exceptionHandler.handleInvalidKeywordException(e);
         } catch (NumberFormatException e) {
             exceptionHandler.handleNumberFormatException(e);
+        } catch (InvalidArgumentException e) {
+            exceptionHandler.handleInvalidArgumentException(e);
         }
-
     }
 }
