@@ -1,6 +1,8 @@
 package seedu.trip_buddy;
 
 import org.junit.jupiter.api.Test;
+import seedu.trip_buddy.command.Parser;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 

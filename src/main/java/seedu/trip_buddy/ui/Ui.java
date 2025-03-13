@@ -1,4 +1,4 @@
-package seedu.trip_buddy;
+package seedu.trip_buddy.ui;
 
 import java.util.Scanner;
 

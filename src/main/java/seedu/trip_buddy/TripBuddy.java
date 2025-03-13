@@ -1,5 +1,8 @@
 package seedu.trip_buddy;
 
+import seedu.trip_buddy.command.Parser;
+import seedu.trip_buddy.ui.Ui;
+
 public class TripBuddy {
     private int budget;
     private Ui ui;

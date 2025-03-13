@@ -1,4 +1,7 @@
-package seedu.trip_buddy;
+package seedu.trip_buddy.command;
+
+import seedu.trip_buddy.TripBuddy;
+import seedu.trip_buddy.ui.Ui;
 
 /**
  * Handles parsing of user commands and delegates the execution of tasks.
