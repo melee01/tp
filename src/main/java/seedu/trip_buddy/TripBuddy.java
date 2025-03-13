@@ -1,7 +1,7 @@
 package seedu.trip_buddy;
 
 import seedu.trip_buddy.command.Parser;
-import seedu.trip_buddy.ui.Ui;
+import seedu.trip_buddy.framework.Ui;
 
 public class TripBuddy {
     private int budget;
