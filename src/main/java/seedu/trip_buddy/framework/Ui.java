@@ -7,7 +7,11 @@ import java.util.Scanner;
  * This class manages all input/output operations for the program.
  */
 public class Ui {
+
     private static final String LINE = "____________________________________________________________";
+    public static final String START_MESSAGE = "Welcome to TripBuddy! Type `tutorial` for a list of available commands.";
+    public static final String END_MESSAGE = "Your TripBuddy session has ended. Bye!";
+
     private final Scanner scanner;
 
     public Ui() {
@@ -26,17 +30,17 @@ public class Ui {
      */
     public void printStartMessage() {
         printLineSeparator();
-        System.out.println("Welcome to TripBuddy! Type `tutorial` for a list of available commands.");
+        System.out.println(START_MESSAGE);
         printLineSeparator();
     }
 
     /**
      * Retrieves user input from the console.
      *
-     * @return The command entered by the user.
+     * @return The command entered by the user, whitespace stripped.
      */
     public String getUserInput() {
-        return scanner.nextLine();
+        return scanner.nextLine().strip();
     }
 
     /**
@@ -44,11 +48,13 @@ public class Ui {
      */
     public void printEndMessage() {
         printLineSeparator();
-        System.out.println("Your TripBuddy session has ended. Bye!");
+        System.out.println(END_MESSAGE);
         printLineSeparator();
     }
 
     public void printMessage(String message) {
+        printLineSeparator();
         System.out.println(message);
+        printLineSeparator();
     }
 }

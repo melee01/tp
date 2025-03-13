@@ -1,6 +1,8 @@
 package seedu.trip_buddy.command;
 
-import seedu.trip_buddy.TripBuddy;
+import seedu.trip_buddy.exception.ExceptionHandler;
+import seedu.trip_buddy.exception.InvalidKeywordException;
+import seedu.trip_buddy.framework.CommandHandler;
 import seedu.trip_buddy.framework.Ui;
 
 /**
@@ -9,49 +11,36 @@ import seedu.trip_buddy.framework.Ui;
  * appropriate methods in other classes to execute commands.
  */
 public class Parser {
-    private TripBuddy tripBuddy;
-    private Ui ui;
 
-    public Parser() {
-        this.tripBuddy = new TripBuddy();
-        this.ui = new Ui();
-    }
+    private final CommandHandler cmdRunner;
+    private final ExceptionHandler exceptionHandler;
+    private final Ui ui;
 
-    public Parser(Ui ui, TripBuddy tripBuddy) {
-        this.tripBuddy = tripBuddy;
+    public Parser(Ui ui) {
+        this.cmdRunner = new CommandHandler();
+        this.exceptionHandler = new ExceptionHandler(ui);
         this.ui = ui;
     }
 
-    /**
-     * Checks whether the given user input is valid for continuing the program.
-     * The input is considered invalid if it equals "quit", which is the
-     * command to exit the program.
-     *
-     * @param userInput A string entered by the user.
-     * @return {@code true} if the input is not an exit command, {@code false} otherwise.
-     */
-    public boolean isValidUserInput(String userInput) {
-        return !userInput.equals("quit");
+    public boolean isQuitCommand(String userInput) {
+        return userInput.equals("quit");
     }
 
-    public void handleCommand(String userInput) {
-        String[] tokens = userInput.split(" ");
-        String command = tokens[0].toLowerCase();
+    public void handleUserInput(String userInput) {
+        String[] tokens = userInput.strip().split(" ");
+        String keyword = tokens[0].toLowerCase();
         try {
-            switch (command) {
-            case "tutorial":
-                tripBuddy.handleTutorial();
-                break;
-            case "set-budget":
-                tripBuddy.handleSetBudget(tokens);
-                break;
-            default:
-                ui.printMessage("Invalid command. Please review the user guide for more information.");
-            }
+            String message = switch (keyword) {
+                case "tutorial" -> cmdRunner.handleTutorial();
+                case "set-budget" -> cmdRunner.handleSetBudget(Integer.parseInt(tokens[1]));
+                case "view-budget" -> cmdRunner.handleViewBudget();
+                default -> throw new InvalidKeywordException(keyword);
+            };
+            ui.printMessage(message);
+        } catch(InvalidKeywordException e) {
+            exceptionHandler.handleInvalidKeywordException(e);
         } catch (NumberFormatException e) {
-            System.out.println("Uh oh! Invalid number format. Please enter a valid integer.");
-        } catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("Uh oh! Missing arguments for command. Please review the user guide.");
+            exceptionHandler.handleNumberFormatException(e);
         }
 
     }
