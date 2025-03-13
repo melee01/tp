@@ -1,13 +1,13 @@
 package seedu.trip_buddy.dataclass;
 
 /**
- * stores info of a travel expense.
+ * Stores info of a travel expense.
  * */
 public class Expense {
 
     private String name;
     private int amount;
-    private Category category;
+    private String category;
 
     public Expense(String name, int amount) {
         this.name = name;
@@ -15,7 +15,7 @@ public class Expense {
         this.category = null;
     }
 
-    public Expense(String name, int amount, Category category) {
+    public Expense(String name, int amount, String category) {
         this.name = name;
         this.amount = amount;
         this.category = category;
@@ -37,11 +37,16 @@ public class Expense {
         this.amount = amount;
     }
 
-    public Category getCategory() {
+    public String getCategory() {
         return category;
     }
 
-    public void setCategory(Category category) {
+    public void setCategory(String category) {
         this.category = category;
+    }
+
+    @Override
+    public String toString() {
+        return name + ", " + amount + ", " + category;
     }
 }
