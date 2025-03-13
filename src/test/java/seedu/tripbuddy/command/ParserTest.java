@@ -1,7 +1,7 @@
-package seedu.trip_buddy.command;
+package seedu.tripbuddy.command;
 
 import org.junit.jupiter.api.Test;
-import seedu.trip_buddy.framework.Ui;
+import seedu.tripbuddy.framework.Ui;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;

@@ -1,7 +1,7 @@
-package seedu.trip_buddy;
+package seedu.tripbuddy;
 
-import seedu.trip_buddy.command.Parser;
-import seedu.trip_buddy.framework.Ui;
+import seedu.tripbuddy.command.Parser;
+import seedu.tripbuddy.framework.Ui;
 
 public class TripBuddy {
 

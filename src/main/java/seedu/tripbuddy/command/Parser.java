@@ -1,9 +1,9 @@
-package seedu.trip_buddy.command;
+package seedu.tripbuddy.command;
 
-import seedu.trip_buddy.exception.ExceptionHandler;
-import seedu.trip_buddy.exception.InvalidKeywordException;
-import seedu.trip_buddy.framework.CommandHandler;
-import seedu.trip_buddy.framework.Ui;
+import seedu.tripbuddy.exception.ExceptionHandler;
+import seedu.tripbuddy.exception.InvalidKeywordException;
+import seedu.tripbuddy.framework.CommandHandler;
+import seedu.tripbuddy.framework.Ui;
 
 /**
  * Handles parsing of user commands and delegates the execution of tasks.
@@ -31,10 +31,10 @@ public class Parser {
         String keyword = tokens[0].toLowerCase();
         try {
             String message = switch (keyword) {
-                case "tutorial" -> cmdRunner.handleTutorial();
-                case "set-budget" -> cmdRunner.handleSetBudget(Integer.parseInt(tokens[1]));
-                case "view-budget" -> cmdRunner.handleViewBudget();
-                default -> throw new InvalidKeywordException(keyword);
+            case "tutorial" -> cmdRunner.handleTutorial();
+            case "set-budget" -> cmdRunner.handleSetBudget(Integer.parseInt(tokens[1]));
+            case "view-budget" -> cmdRunner.handleViewBudget();
+            default -> throw new InvalidKeywordException(keyword);
             };
             ui.printMessage(message);
         } catch(InvalidKeywordException e) {

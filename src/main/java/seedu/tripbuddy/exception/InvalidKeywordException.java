@@ -1,4 +1,4 @@
-package seedu.trip_buddy.exception;
+package seedu.tripbuddy.exception;
 
 /**
  * Thrown when a command keyword is not recognized.

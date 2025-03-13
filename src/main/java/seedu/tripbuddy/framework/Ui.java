@@ -1,4 +1,4 @@
-package seedu.trip_buddy.framework;
+package seedu.tripbuddy.framework;
 
 import java.util.Scanner;
 
@@ -8,9 +8,11 @@ import java.util.Scanner;
  */
 public class Ui {
 
-    private static final String LINE = "____________________________________________________________";
-    public static final String START_MESSAGE = "Welcome to TripBuddy! Type `tutorial` for a list of available commands.";
-    public static final String END_MESSAGE = "Your TripBuddy session has ended. Bye!";
+    private static final String LINE =
+            "____________________________________________________________";
+    private static final String START_MESSAGE =
+            "Welcome to TripBuddy! Type `tutorial` for a list of available commands.";
+    private static final String END_MESSAGE = "Your TripBuddy session has ended. Bye!";
 
     private final Scanner scanner;
 

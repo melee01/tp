@@ -1,4 +1,4 @@
-package seedu.trip_buddy.exception;
+package seedu.tripbuddy.exception;
 
 public abstract class TripBuddyException extends Exception {
 

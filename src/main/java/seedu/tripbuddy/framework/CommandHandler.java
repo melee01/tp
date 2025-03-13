@@ -1,4 +1,4 @@
-package seedu.trip_buddy.framework;
+package seedu.tripbuddy.framework;
 
 /**
  * Handles commands and return message strings.

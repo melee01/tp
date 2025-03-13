@@ -1,7 +1,7 @@
-package seedu.trip_buddy.framework;
+package seedu.tripbuddy.framework;
 
-import seedu.trip_buddy.dataclass.Expense;
-import seedu.trip_buddy.exception.InvalidArgumentException;
+import seedu.tripbuddy.dataclass.Expense;
+import seedu.tripbuddy.exception.InvalidArgumentException;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -53,7 +53,9 @@ public class ExpenseManager {
 
     /**
      * Adds a new{@link Expense} with a specific category.
-     * <ul><li>A new category will be created if not exists.
+     * <ul>
+     *     <li>A new category will be created if not exists.
+     * </ul>
      * */
     public void addExpense(String name, int amount, String categoryName) {
         createCategory(categoryName);

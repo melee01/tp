@@ -1,4 +1,4 @@
-package seedu.trip_buddy.dataclass;
+package seedu.tripbuddy.dataclass;
 
 /**
  * Stores info of a travel expense.

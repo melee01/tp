@@ -1,13 +1,15 @@
-package seedu.trip_buddy.framework;
+package seedu.tripbuddy.framework;
 
 import org.junit.jupiter.api.Test;
-import seedu.trip_buddy.dataclass.Expense;
-import seedu.trip_buddy.exception.InvalidArgumentException;
+import seedu.tripbuddy.dataclass.Expense;
+import seedu.tripbuddy.exception.InvalidArgumentException;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 class ExpenseManagerTest {
 

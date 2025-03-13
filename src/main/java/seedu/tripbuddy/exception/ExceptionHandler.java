@@ -1,6 +1,6 @@
-package seedu.trip_buddy.exception;
+package seedu.tripbuddy.exception;
 
-import seedu.trip_buddy.framework.Ui;
+import seedu.tripbuddy.framework.Ui;
 
 public class ExceptionHandler {
 
