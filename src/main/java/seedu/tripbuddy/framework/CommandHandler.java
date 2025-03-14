@@ -1,6 +1,9 @@
 package seedu.tripbuddy.framework;
 
+import seedu.tripbuddy.dataclass.Expense;
 import seedu.tripbuddy.exception.InvalidArgumentException;
+
+import java.util.List;
 
 
 /**
@@ -73,5 +76,15 @@ public class CommandHandler {
         return "Expense " + tokens[1] + " added successfully.\n" +
                 "Your current budget is $" + expenseManager.getBudget() + ".";
 
+    }
+
+    public String handleListExpense(String category) throws InvalidArgumentException {
+        List<Expense> expenses = (category == null? expenseManager.getExpenses() :
+                expenseManager.getExpensesByCategory(category));
+        String expensesString = "";
+        for (Expense expense : expenses) {
+            expensesString += "\n - " + expense.toString() ;
+        }
+        return expenses.isEmpty()? "There are no expenses." : "Expense list is: " + expensesString;
     }
 }

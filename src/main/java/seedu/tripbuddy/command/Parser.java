@@ -39,6 +39,7 @@ public class Parser {
             case "set-category" -> cmdRunner.handleSetCategory(tokens[1], tokens[2]);
             case "add-expense" -> cmdRunner.handleAddExpense(tokens);
             case "delete-expense" -> cmdRunner.handleDeleteExpense(tokens[1]);
+            case "list-expense" -> cmdRunner.handleListExpense(tokens.length == 1? null : tokens[1]);
             default -> throw new InvalidKeywordException(keyword);
             };
             ui.printMessage(message);
