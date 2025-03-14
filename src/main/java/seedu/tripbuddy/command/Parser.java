@@ -35,7 +35,9 @@ public class Parser {
             case "tutorial" -> cmdRunner.handleTutorial();
             case "set-budget" -> cmdRunner.handleSetBudget(Integer.parseInt(tokens[1]));
             case "view-budget" -> cmdRunner.handleViewBudget();
+            case "create-category" -> cmdRunner.handleCreateCategory(tokens[1]);
             case "set-category" -> cmdRunner.handleSetCategory(tokens[1], tokens[2]);
+            case "add-expense" -> cmdRunner.handleAddExpense(tokens);
             case "delete-expense" -> cmdRunner.handleDeleteExpense(tokens[1]);
             default -> throw new InvalidKeywordException(keyword);
             };
@@ -43,9 +45,11 @@ public class Parser {
         } catch (InvalidKeywordException e) {
             exceptionHandler.handleInvalidKeywordException(e);
         } catch (NumberFormatException e) {
-            exceptionHandler.handleNumberFormatException(e);
+            exceptionHandler.handleNumberFormatException();
         } catch (InvalidArgumentException e) {
             exceptionHandler.handleInvalidArgumentException(e);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            exceptionHandler.handleArrayIndexOutOfBoundsException();
         }
     }
 }

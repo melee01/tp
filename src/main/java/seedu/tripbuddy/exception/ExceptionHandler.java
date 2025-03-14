@@ -22,7 +22,11 @@ public class ExceptionHandler {
                 "\". Please review the user guide for more information.");
     }
 
-    public void handleNumberFormatException(NumberFormatException e) {
+    public void handleNumberFormatException() {
         ui.printMessage("Uh oh! Invalid number format. Please enter a valid integer.");
+    }
+
+    public void handleArrayIndexOutOfBoundsException() {
+        ui.printMessage("Uh oh! Not enough arguments for this command.");
     }
 }

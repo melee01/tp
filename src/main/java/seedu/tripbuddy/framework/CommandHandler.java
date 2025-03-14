@@ -20,10 +20,13 @@ public class CommandHandler {
         return """
                         Welcome to the tutorial of TripBuddy!
                         
-                        Note on format: [] means optional!
+                        Format Guidelines:
+                        - Square brackets [] indicate optional elements.
+                        - Expense and category names must be a single word or multiple words joined with a dash (-).
+                        - AMOUNT must be a positive integer.
                         
                         Here are the commands you can use:
-                        1. set-budget AMOUNT - Set your total trip budget.
+                        1. set-budget AMOUNT - Set your total trip budget. Default budget is $1000.
                         2. add-expense EXPENSE_NAME AMOUNT [CATEGORY] - Add a new expense.
                         3. delete-expense EXPENSE_NAME - Remove an expense by name.
                         4. create-category CATEGORY - Create a new expense category.
@@ -45,13 +48,30 @@ public class CommandHandler {
         return "Your budget has been set to $" + budget + ".";
     }
 
+    public String handleCreateCategory(String category) throws InvalidArgumentException {
+        expenseManager.createCategory(category);
+        return "Successfully created category: " + category + ".";
+    }
+
     public String handleSetCategory(String expenseName, String category) throws InvalidArgumentException {
         expenseManager.setExpenseCategory(expenseName, category);
-        return "Category set successfully for " + expenseName + ".";
+        return "Successfully set category for " + expenseName + " to " + category + ".";
     }
 
     public String handleDeleteExpense(String expenseName) throws InvalidArgumentException {
         expenseManager.deleteExpense(expenseName);
-        return "Expense " + expenseName + "deleted successfully.";
+        return "Expense " + expenseName + " deleted successfully.\n" +
+                "Your current budget is $" + expenseManager.getBudget() + ".";
+    }
+
+    public String handleAddExpense(String[] tokens) throws InvalidArgumentException {
+        if (tokens.length >= 4) {
+            expenseManager.addExpense(tokens[1], Integer.parseInt(tokens[2]), tokens[3]);
+        } else {
+            expenseManager.addExpense(tokens[1], Integer.parseInt(tokens[2]));
+        }
+        return "Expense " + tokens[1] + " added successfully.\n" +
+                "Your current budget is $" + expenseManager.getBudget() + ".";
+
     }
 }
