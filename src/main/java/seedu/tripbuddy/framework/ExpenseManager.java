@@ -49,6 +49,7 @@ public class ExpenseManager {
     public void addExpense(String name, int amount) {
         Expense expense = new Expense(name, amount);
         expenses.add(expense);
+        this.budget -= amount;
     }
 
     /**
@@ -61,6 +62,7 @@ public class ExpenseManager {
         createCategory(categoryName);
         Expense expense = new Expense(name, amount);
         expenses.add(expense);
+        this.budget -= amount;
     }
 
     public Expense getExpense(int id) throws InvalidArgumentException {
@@ -74,7 +76,19 @@ public class ExpenseManager {
         if (id < 0 || id >= expenses.size()) {
             throw new InvalidArgumentException(Integer.toString(id));
         }
+        this.budget += expenses.get(id).getAmount();
         expenses.remove(id);
+    }
+
+    public void deleteExpense(String expenseName) throws InvalidArgumentException {
+        for (Expense expense : expenses) {
+            if (expense.getName().equalsIgnoreCase(expenseName)) {
+                expenses.remove(expense);
+                this.budget += expense.getAmount();
+                return;
+            }
+        }
+        throw new InvalidArgumentException(expenseName);
     }
 
     public List<Expense> getExpensesByCategory(String category) throws InvalidArgumentException {
@@ -95,16 +109,6 @@ public class ExpenseManager {
         for (Expense expense : expenses) {
             if (expense.getName().equalsIgnoreCase(expenseName)) {
                 expense.setCategory(category);
-                return;
-            }
-        }
-        throw new InvalidArgumentException(expenseName);
-    }
-
-    public void deleteExpense(String expenseName) throws InvalidArgumentException {
-        for (Expense expense : expenses) {
-            if (expense.getName().equalsIgnoreCase(expenseName)) {
-                expenses.remove(expense);
                 return;
             }
         }
