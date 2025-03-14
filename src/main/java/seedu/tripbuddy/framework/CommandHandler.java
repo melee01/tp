@@ -55,7 +55,7 @@ public class CommandHandler {
 
     public String handleSetCategory(String expenseName, String category) throws InvalidArgumentException {
         expenseManager.setExpenseCategory(expenseName, category);
-        return "Successfully set category for " + expenseName + "to" + category + ".";
+        return "Successfully set category for " + expenseName + " to " + category + ".";
     }
 
     public String handleDeleteExpense(String expenseName) throws InvalidArgumentException {
