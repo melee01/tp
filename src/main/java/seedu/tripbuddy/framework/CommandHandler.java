@@ -87,4 +87,13 @@ public class CommandHandler {
         }
         return expenses.isEmpty()? "There are no expenses." : "Expense list is: " + expensesString;
     }
+
+    public String handleViewHistory() {
+        String expensesString = "The history of all expenses made is: ";
+        for (Expense expense : expenseManager.getExpenses()) {
+            expensesString += "\n - " + expense.toString() ;
+
+        }
+        return expensesString;
+    }
 }

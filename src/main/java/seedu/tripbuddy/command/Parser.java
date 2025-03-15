@@ -40,6 +40,7 @@ public class Parser {
             case "add-expense" -> cmdRunner.handleAddExpense(tokens);
             case "delete-expense" -> cmdRunner.handleDeleteExpense(tokens[1]);
             case "list-expense" -> cmdRunner.handleListExpense(tokens.length == 1? null : tokens[1]);
+            case "view-history" -> cmdRunner.handleViewHistory();
             default -> throw new InvalidKeywordException(keyword);
             };
             ui.printMessage(message);
