@@ -60,7 +60,7 @@ public class ExpenseManager {
      * */
     public void addExpense(String name, int amount, String categoryName) {
         createCategory(categoryName);
-        Expense expense = new Expense(name, amount);
+        Expense expense = new Expense(name, amount, categoryName);
         expenses.add(expense);
         this.budget -= amount;
     }
