@@ -33,10 +33,8 @@ public class ExpenseManager {
         return List.copyOf(expenses);
     }
 
-    public void setBudget(int budget) throws InvalidArgumentException {
-        if (budget <= 0) {
-            throw new InvalidArgumentException(Integer.toString(budget));
-        }
+    public void setBudget(int budget) {
+        assert budget > 0 : "Budget must be positive";
         this.budget = budget;
     }
 
@@ -51,6 +49,7 @@ public class ExpenseManager {
      * Adds a new {@link Expense} without category.
      * */
     public void addExpense(String name, int amount) {
+        assert amount > 0 : "Amount must be positive";
         Expense expense = new Expense(name, amount);
         expenses.add(expense);
         this.budget -= amount;
@@ -63,6 +62,7 @@ public class ExpenseManager {
      * </ul>
      * */
     public void addExpense(String name, int amount, String categoryName) {
+        assert amount > 0 : "Amount must be positive";
         createCategory(categoryName);
         Expense expense = new Expense(name, amount, categoryName);
         expenses.add(expense);

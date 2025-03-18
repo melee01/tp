@@ -37,7 +37,14 @@ public class Parser {
             case "view-budget" -> cmdRunner.handleViewBudget();
             case "create-category" -> cmdRunner.handleCreateCategory(tokens[1]);
             case "set-category" -> cmdRunner.handleSetCategory(tokens[1], tokens[2]);
-            case "add-expense" -> cmdRunner.handleAddExpense(tokens);
+            case "add-expense" -> {
+                if (tokens.length >= 4) {
+                    yield cmdRunner.handleAddExpense(tokens[1], Integer.parseInt(tokens[2]), tokens[3]);
+                } if (tokens.length == 3) {
+                    yield cmdRunner.handleAddExpense(tokens[1], Integer.parseInt(tokens[2]));
+                }
+                throw new ArrayIndexOutOfBoundsException();
+            }
             case "delete-expense" -> cmdRunner.handleDeleteExpense(tokens[1]);
             case "list-expense" -> cmdRunner.handleListExpense(tokens.length == 1? null : tokens[1]);
             case "view-history" -> cmdRunner.handleViewHistory();
