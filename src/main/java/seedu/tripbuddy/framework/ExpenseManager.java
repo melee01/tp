@@ -17,6 +17,7 @@ public class ExpenseManager {
     private final ArrayList<Expense> expenses = new ArrayList<>();
 
     public ExpenseManager(int budget) {
+        assert budget > 0 : "Budget must be positive";
         this.budget = budget;
     }
 
@@ -32,7 +33,10 @@ public class ExpenseManager {
         return List.copyOf(expenses);
     }
 
-    public void setBudget(int budget) {
+    public void setBudget(int budget) throws InvalidArgumentException {
+        if (budget <= 0) {
+            throw new InvalidArgumentException(Integer.toString(budget));
+        }
         this.budget = budget;
     }
 

@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 class ExpenseManagerTest {
 
     @Test
-    void budgetTest() {
+    void budgetTest() throws InvalidArgumentException {
         ExpenseManager manager = new ExpenseManager(2333);
         assertEquals(2333, manager.getBudget(), "1");
         manager.setBudget(233);
@@ -47,7 +47,7 @@ class ExpenseManagerTest {
     @Test
     void addExpenseTest_categoryNotExists() {
         ExpenseManager manager = new ExpenseManager(2333);
-        assertArrayEquals(manager.getCategories().toArray(), new String[]{});
+        assertArrayEquals(new String[]{}, manager.getCategories().toArray());
 
         manager.addExpense("lunch", 100, "food");
         System.err.println(Arrays.toString(manager.getCategories().toArray()));

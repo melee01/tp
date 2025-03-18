@@ -46,8 +46,7 @@ public class CommandHandler {
         return "Your current budget is $" + budget + ".";
     }
 
-    public String handleSetBudget(int budget) {
-        assert budget >= 0 : "Budget must be a positive integer.";
+    public String handleSetBudget(int budget) throws InvalidArgumentException {
         expenseManager.setBudget(budget);
         return "Your budget has been set to $" + budget + ".";
     }
