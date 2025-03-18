@@ -13,6 +13,7 @@ import java.util.List;
 public class ExpenseManager {
 
     private int budget;
+    private int totalExpense = 0;
     private final HashSet<String> categories = new HashSet<>();
     private final ArrayList<Expense> expenses = new ArrayList<>();
 
@@ -22,7 +23,7 @@ public class ExpenseManager {
     }
 
     public int getBudget() {
-        return budget;
+        return budget - totalExpense;
     }
 
     public List<String> getCategories() {
@@ -52,7 +53,7 @@ public class ExpenseManager {
         assert amount > 0 : "Amount must be positive";
         Expense expense = new Expense(name, amount);
         expenses.add(expense);
-        this.budget -= amount;
+        totalExpense += amount;
     }
 
     /**
@@ -66,7 +67,7 @@ public class ExpenseManager {
         createCategory(categoryName);
         Expense expense = new Expense(name, amount, categoryName);
         expenses.add(expense);
-        this.budget -= amount;
+        totalExpense += amount;
     }
 
     public Expense getExpense(int id) throws InvalidArgumentException {
@@ -80,7 +81,7 @@ public class ExpenseManager {
         if (id < 0 || id >= expenses.size()) {
             throw new InvalidArgumentException(Integer.toString(id));
         }
-        this.budget += expenses.get(id).getAmount();
+        totalExpense -= expenses.get(id).getAmount();
         expenses.remove(id);
     }
 
@@ -88,7 +89,7 @@ public class ExpenseManager {
         for (Expense expense : expenses) {
             if (expense.getName().equalsIgnoreCase(expenseName)) {
                 expenses.remove(expense);
-                this.budget += expense.getAmount();
+                totalExpense -= expense.getAmount();
                 return;
             }
         }
