@@ -47,6 +47,9 @@ public class CommandHandler {
     }
 
     public String handleSetBudget(int budget) throws InvalidArgumentException {
+        if (budget <= 0) {
+            throw new InvalidArgumentException(Integer.toString(budget));
+        }
         expenseManager.setBudget(budget);
         return "Your budget has been set to $" + budget + ".";
     }
@@ -67,15 +70,22 @@ public class CommandHandler {
                 "Your current budget is $" + expenseManager.getBudget() + ".";
     }
 
-    public String handleAddExpense(String[] tokens) throws InvalidArgumentException {
-        if (tokens.length >= 4) {
-            expenseManager.addExpense(tokens[1], Integer.parseInt(tokens[2]), tokens[3]);
-        } else {
-            expenseManager.addExpense(tokens[1], Integer.parseInt(tokens[2]));
+    public String handleAddExpense(String expenseName, int amount, String category) throws InvalidArgumentException {
+        if (amount <= 0) {
+            throw new InvalidArgumentException(Integer.toString(amount));
         }
-        return "Expense " + tokens[1] + " added successfully.\n" +
+        expenseManager.addExpense(expenseName, amount, category);
+        return "Expense " + expenseName + " added successfully to category " + category + ".\n" +
                 "Your current budget is $" + expenseManager.getBudget() + ".";
+    }
 
+    public String handleAddExpense(String expenseName, int amount) throws InvalidArgumentException {
+        if (amount <= 0) {
+            throw new InvalidArgumentException(Integer.toString(amount));
+        }
+        expenseManager.addExpense(expenseName, amount);
+        return "Expense " + expenseName + " added successfully.\n" +
+                "Your current budget is $" + expenseManager.getBudget() + ".";
     }
 
     public String handleListExpense(String category) throws InvalidArgumentException {
