@@ -46,7 +46,7 @@ public class CommandHandler {
         return "Your current budget is $" + budget + ".";
     }
 
-    public String handleSetBudget(int budget) {
+    public String handleSetBudget(int budget) throws InvalidArgumentException {
         expenseManager.setBudget(budget);
         return "Your budget has been set to $" + budget + ".";
     }
@@ -81,19 +81,19 @@ public class CommandHandler {
     public String handleListExpense(String category) throws InvalidArgumentException {
         List<Expense> expenses = (category == null? expenseManager.getExpenses() :
                 expenseManager.getExpensesByCategory(category));
-        String expensesString = "";
+        StringBuilder expensesString = new StringBuilder();
         for (Expense expense : expenses) {
-            expensesString += "\n - " + expense.toString() ;
+            expensesString.append("\n - ").append(expense.toString());
         }
         return expenses.isEmpty()? "There are no expenses." : "Expense list is: " + expensesString;
     }
 
     public String handleViewHistory() {
-        String expensesString = "The history of all expenses made is: ";
+        StringBuilder expensesString = new StringBuilder("The history of all expenses made is: ");
         for (Expense expense : expenseManager.getExpenses()) {
-            expensesString += "\n - " + expense.toString() ;
+            expensesString.append("\n - ").append(expense.toString());
 
         }
-        return expensesString;
+        return expensesString.toString();
     }
 }
