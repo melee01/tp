@@ -2,12 +2,76 @@
 
 ## Acknowledgements
 
-{list here sources of all reused/adapted ideas, code, documentation, and third-party libraries -- include links to the original source as well}
+- [JSON-java](https://github.com/stleary/JSON-java): a third-party library for
+JSON conversion and parsing.
 
 ## Design & implementation
 
 {Describe the design and implementation of the product. Use UML diagrams and short code snippets where applicable.}
 
+TripBuddy allows user interactions via a CLI, which is activated by `TripBuddy`.
+
+The main framework consists of three layers: `command.Parser`, `framework.CommandHandler`
+and `framework.ExpenseManager`, both following the singleton design pattern.
+This layered design results in less conflicts while developing multiple
+features, as well as ensuring testability of different modules.
+
+### ExpenseManager
+
+`ExpenseManager` stores all user data, and has direct CRUD access to them.
+
+Return values of methods of `ExpenseManager` are unprocessed, i.e. not parsed
+into `String` or other formats for UI output.
+
+E.g., the following method from `ExpenseManager`returns a list of `Expense`
+entities. 
+
+``` java
+public List<Expense> getExpensesByCategory(String category) throws InvalidArgumentException {
+    if (!categories.contains(category)) {
+        throw new InvalidArgumentException(category);
+    }
+
+    ArrayList<Expense> ret = new ArrayList<>();
+    for (Expense expense : expenses) {
+        if (category.equals(expense.getCategory())) {
+            ret.add(expense);
+        }
+    }
+    return ret;
+}
+```
+
+### CommandHandler
+
+`CommandHandler` is responsible for collecting data from `ExpenseManager` and
+processing then into `String` messages to be shown on UI.
+
+Parameters of `CommandHandler` methods should be parsed by `Parser` already.
+
+E.g., the following method from `CommandHandler` receives an `int` as a
+parameter and returns a `String` message for display.
+
+``` java
+public String handleSetBudget(int budget) throws InvalidArgumentException {
+    if (budget <= 0) {
+        throw new InvalidArgumentException(Integer.toString(budget));
+    }
+    expenseManager.setBudget(budget);
+    return "Your budget has been set to $" + budget + ".";
+}
+```
+
+### Parser
+
+`Parser` is responsible for the following tasks:
+
+- Analyzing user input and converting arguments into correct data types for
+`CommandHandler` methods.
+
+- Invoking `CommandHandler` methods for command execution.
+
+- Handling exceptions caused by user actions.
 
 ## Product scope
 ### Target user profile
@@ -31,7 +95,8 @@
 
 ## Glossary
 
-* *glossary item* - Definition
+* *expense* - a record of a purchase made by the user, stored as an `Expense`
+entity.
 
 ## Instructions for manual testing
 
