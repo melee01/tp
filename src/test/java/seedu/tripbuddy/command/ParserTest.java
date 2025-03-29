@@ -18,6 +18,10 @@ public class ParserTest {
         userInput = "quit";
         result = parser.isQuitCommand(userInput);
         assertTrue(result);
+
+        userInput = "quit 123";
+        result = parser.isQuitCommand(userInput);
+        assertTrue(result);
     }
 
     @Test
@@ -26,6 +30,7 @@ public class ParserTest {
         assertAll(
                 () -> parser.handleUserInput("tutorial"),
                 () -> parser.handleUserInput("set-budget 381"),
+                () -> parser.handleUserInput("adjust-budget 432"),
                 () -> parser.handleUserInput("view-budget"),
                 () -> parser.handleUserInput("create-category accommodation"),
                 () -> parser.handleUserInput("add-expense greek-meal 10"),

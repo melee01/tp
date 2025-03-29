@@ -37,13 +37,18 @@ public class CommandHandler {
                         6. view-budget - Check your remaining budget.
                         7. list-expense [CATEGORY] - Calculate sum of recorded expenses.
                         8. view-history - See a history of all expenses made.
+                        9. adjust-budget AMOUNT - Modify the budget amount.
                         
                         Enjoy tracking your expenses with TripBuddy!""";
     }
 
     public String handleViewBudget() {
         int budget = expenseManager.getBudget();
-        return "Your current budget is $" + budget + ".";
+        int totalExpense = expenseManager.getTotalExpense();
+        int remainingBudget = budget - totalExpense;
+        return "The original budget you set was $" + budget + ".\nSo far, you have spent $" +
+                totalExpense + ".\nThis leaves you with a remaining budget of $" +
+                remainingBudget + ".";
     }
 
     public String handleSetBudget(int budget) throws InvalidArgumentException {
@@ -52,6 +57,15 @@ public class CommandHandler {
         }
         expenseManager.setBudget(budget);
         return "Your budget has been set to $" + budget + ".";
+    }
+
+    public String handleAdjustBudget(int budget) throws InvalidArgumentException {
+        if (budget <= 0) {
+            throw new InvalidArgumentException(Integer.toString(budget));
+        }
+        expenseManager.setBudget(budget);
+        return "Your budget has been updated to $" + budget + ".\nYou have $" + expenseManager.getRemainingBudget() +
+                " remaining to spend!";
     }
 
     public String handleCreateCategory(String category) throws InvalidArgumentException {
@@ -67,7 +81,7 @@ public class CommandHandler {
     public String handleDeleteExpense(String expenseName) throws InvalidArgumentException {
         expenseManager.deleteExpense(expenseName);
         return "Expense " + expenseName + " deleted successfully.\n" +
-                "Your current budget is $" + expenseManager.getBudget() + ".";
+                "Your remaining budget is $" + expenseManager.getRemainingBudget() + ".";
     }
 
     public String handleAddExpense(String expenseName, int amount, String category) throws InvalidArgumentException {
@@ -76,7 +90,7 @@ public class CommandHandler {
         }
         expenseManager.addExpense(expenseName, amount, category);
         return "Expense " + expenseName + " added successfully to category " + category + ".\n" +
-                "Your current budget is $" + expenseManager.getBudget() + ".";
+                "Your remaining budget is $" + expenseManager.getRemainingBudget() + ".";
     }
 
     public String handleAddExpense(String expenseName, int amount) throws InvalidArgumentException {
@@ -85,7 +99,7 @@ public class CommandHandler {
         }
         expenseManager.addExpense(expenseName, amount);
         return "Expense " + expenseName + " added successfully.\n" +
-                "Your current budget is $" + expenseManager.getBudget() + ".";
+                "Your remaining budget is $" + expenseManager.getRemainingBudget() + ".";
     }
 
     public String handleListExpense(String category) throws InvalidArgumentException {

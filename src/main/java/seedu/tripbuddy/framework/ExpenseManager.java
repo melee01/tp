@@ -23,6 +23,14 @@ public class ExpenseManager {
     }
 
     public int getBudget() {
+        return budget;
+    }
+
+    public int getTotalExpense() {
+        return totalExpense;
+    }
+
+    public int getRemainingBudget() {
         return budget - totalExpense;
     }
 

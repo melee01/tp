@@ -19,6 +19,8 @@ class CommandHandlerTest {
         CommandHandler handler = new CommandHandler();
         handler.handleSetBudget(135);
         String message = handler.handleViewBudget();
-        assertEquals("Your current budget is $135.", message);
+        assertEquals("The original budget you set was $135.\n" +
+                "So far, you have spent $0.\n" +
+                "This leaves you with a remaining budget of $135.", message);
     }
 }
