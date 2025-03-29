@@ -24,7 +24,7 @@ public class Parser {
     }
 
     public boolean isQuitCommand(String userInput) {
-        return userInput.equals("quit");
+        return userInput.split(" ")[0].equals("quit");
     }
 
     public void handleUserInput(String userInput) {

@@ -37,7 +37,7 @@ public class CommandHandler {
                         6. view-budget - Check your remaining budget.
                         7. list-expense [CATEGORY] - Calculate sum of recorded expenses.
                         8. view-history - See a history of all expenses made.
-                        9. adjust-budget AMOUNT - Modify the budget amount, but not alter the expenses already submitted.
+                        9. adjust-budget AMOUNT - Modify the budget amount.
                         
                         Enjoy tracking your expenses with TripBuddy!""";
     }
@@ -46,8 +46,9 @@ public class CommandHandler {
         int budget = expenseManager.getBudget();
         int totalExpense = expenseManager.getTotalExpense();
         int remainingBudget = budget - totalExpense;
-        return "The original budget you set was $" + budget + ".\nSo far, you have spent $" + totalExpense + ".\nThis " +
-                "leaves you with a remaining budget of $" + remainingBudget + ".";
+        return "The original budget you set was $" + budget + ".\nSo far, you have spent $" +
+                totalExpense + ".\nThis leaves you with a remaining budget of $" +
+                remainingBudget + ".";
     }
 
     public String handleSetBudget(int budget) throws InvalidArgumentException {
