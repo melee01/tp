@@ -124,17 +124,21 @@ A command that manually updates/adds conversion rates.
 - prefers typing to mouse interactions
 - is reasonably comfortable using CLI apps
 
-
 ### Value proposition
 
-{Describe the value proposition: what problem does it solve?}
+TripBuddy helps travelers stay on top of their finances by simplifying expense tracking 
+and budgeting during trips. TripBuddy provides an intuitive platform to log expenses and 
+track spending in real time. By eliminating the confusion of manual calculations, TripBuddy
+ensures a stress-free travel experience where everyone stays financially organized and accountable.
 
 ## User Stories
 
-|Version| As a ... | I want to ... | So that I can ...|
-|--------|----------|---------------|------------------|
-|v1.0|new user|see usage instructions|refer to them when I forget how to use the application|
-|v2.0|user|find a to-do item by name|locate a to-do without having to go through the entire list|
+|Version| As a ... | I want to ...             | So that I can ...                                    |
+|--------|----------|---------------------------|------------------------------------------------------|
+|v1.0| new user | see usage instructions    | refer to them when I forget how to use the application |
+|v1.0| budget-conscious user |set a travel budget|monitor spending to avoid overspending during the trip|
+|v1.0| user     | view past expenses        | review my past expenses for accuracy                 |
+|v2.0| user     | find a to-do item by name | locate a to-do without having to go through the entire list |
 
 ## Non-Functional Requirements
 
