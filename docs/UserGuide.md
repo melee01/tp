@@ -6,7 +6,6 @@ TripBuddy is a simple expense-tracking application designed to help users manage
 travelers to log expenses, categorize them, and view a summary of their spendings in one place. TripBuddy ensures 
 budgeting is easy and hassle-free, so travelers can focus on enjoying their trip.
 
-
 ## Quick Start
 
 {Give steps to get started quickly}
