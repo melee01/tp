@@ -34,6 +34,7 @@ public class Parser {
             String message = switch (keyword) {
             case "tutorial" -> cmdRunner.handleTutorial();
             case "set-budget" -> cmdRunner.handleSetBudget(Integer.parseInt(tokens[1]));
+            case "adjust-budget" -> cmdRunner.handleAdjustBudget(Integer.parseInt(tokens[1]));
             case "view-budget" -> cmdRunner.handleViewBudget();
             case "create-category" -> cmdRunner.handleCreateCategory(tokens[1]);
             case "set-category" -> cmdRunner.handleSetCategory(tokens[1], tokens[2]);
