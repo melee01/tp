@@ -94,7 +94,7 @@ currency.
 ``` 
 
 We can also see the current currency rates available in our app using the command 
-`view-rate`. This will display thee above `json`. 
+`view-rate`. This will display the above `json`. 
 
 Moreover, we can also change the base currency. In order to do this, we will:
 1. Recalculate existing expenses: all previously recorded expenses need to be recalculated to reflect their values in the neew base currency. 
@@ -119,10 +119,10 @@ A command that manually updates/adds conversion rates.
 ### Target user profile
 
 **Target user profile**
-- is planning on going on a trip / on a trip 
-- likes to have a budget and plan his/her expenses 
-- prefers typing to mouse interactions
-- is reasonably comfortable using CLI apps
+- Individuals who are planning a trip or currently traveling.
+- Budget-travelers who intend to establish a budget and track their expenses effectively.
+- Users who prefer to use keyboard-based interactions over mouse-based navigation.
+- Users who are comfortable using command-line interface (CLI) applications.
 
 ### Value proposition
 
@@ -133,21 +133,30 @@ ensures a stress-free travel experience where everyone stays financially organiz
 
 ## User Stories
 
-|Version| As a ... | I want to ...             | So that I can ...                                    |
-|--------|----------|---------------------------|------------------------------------------------------|
-|v1.0| new user | see usage instructions    | refer to them when I forget how to use the application |
-|v1.0| budget-conscious user |set a travel budget|monitor spending to avoid overspending during the trip|
-|v1.0| user     | view past expenses        | review my past expenses for accuracy                 |
-|v2.0| user     | find a to-do item by name | locate a to-do without having to go through the entire list |
+| Version | As a ...        | I want to ...            | So that I can ...                                      |
+|---------|-----------------|--------------------------|--------------------------------------------------------|
+| v1.0    | new user        | see usage instructions   | refer to them when I forget how to use the app         |
+| v1.0    | budget-traveler | set a travel budget      | monitor spending to avoid overspending during the trip |
+| v1.0    | user            | add an expense           | track my expenses and total remaining budget.          |
+| v1.0    | user            | delete an expense        | correct an earlier mistake.                            |
+| v1.0    | user            | view my remaining budget | see how much money I have left to spend.               |
+| v1.0    | user            | adjust my total budget   | modify my spending habits accordingly.                 |
+| v1.0    | user            | view past expenses       | review my past expenses for accuracy                   |
 
 ## Non-Functional Requirements
 
-{Give non-functional requirements}
+* Performance: The application should process user commands within 1 second.
+* Usability: The system should have an intuitive CLI interface with clear error messages and user guidance.
+* Reliability: TripBuddy should be able to handle at least 100 expense entries without crashing.
+* Portability: The application should be compatible with Windows, macOS, and Linux environments.
+* Scalability: The system should allow future enhancements, such as more expense categories, without significant rework.
 
 ## Glossary
 
 * *expense* - a record of a purchase made by the user, stored as an `Expense`
 entity.
+* *budget* – a spending limit set by the user to track expenses and manage finances during a trip.
+* *category* – a classification assigned to an expense (e.g., Food, Transport) to help users organize their spending.
 
 ## Instructions for manual testing
 
