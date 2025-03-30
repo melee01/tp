@@ -33,7 +33,7 @@ public class CommandHandler {
                         
                         Here are the commands you can use:
                         1. set-budget AMOUNT - Set your total trip budget. Default budget is $1000.
-                        2. add-expense EXPENSE_NAME AMOUNT [CATEGORY] - Add a new expense.
+                        2. add-expense EXPENSE_NAME AMOUNT [CATEGORY] [CURRENCY] - Add a new expense.
                         3. delete-expense EXPENSE_NAME - Remove an expense by name.
                         4. create-category CATEGORY - Create a new expense category.
                         5. set-category EXPENSE_NAME CATEGORY - Assign an expense to a category.

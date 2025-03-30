@@ -58,14 +58,16 @@ Examples of usage:
 Adds an expense to the trip and automatically updates the remaining budget, taking into account 
 the new expenditure.
 
-Format: `add-expense NAME_EXPENSE AMOUNT [CATEGORY]`
+Format: `add-expense NAME_EXPENSE AMOUNT [CATEGORY] [CURRENCY]`
 
 - NAME_EXPENSE must not contain spaces. If it consists of multiple words, use dashes or underscores instead.
+- Base currency is SGD. Everything will be converted to the base currency. 
 
 Examples of usage:
 - `add-expense mcdonalds 5`
 - `add-expense the-plaza-hotel 300 Accommodation`
-
+- `add-expense lunch 100 USD`
+- `add-expense capibara-museum 10000 Activities IDR`
 
 ### Set Category: `set-cateogry`
 
