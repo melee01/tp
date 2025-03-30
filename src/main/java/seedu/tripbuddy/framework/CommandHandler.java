@@ -1,9 +1,12 @@
 package seedu.tripbuddy.framework;
 
+import seedu.tripbuddy.dataclass.Currency;
 import seedu.tripbuddy.dataclass.Expense;
 import seedu.tripbuddy.exception.InvalidArgumentException;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 
 /**
@@ -30,7 +33,7 @@ public class CommandHandler {
                         
                         Here are the commands you can use:
                         1. set-budget AMOUNT - Set your total trip budget. Default budget is $1000.
-                        2. add-expense EXPENSE_NAME AMOUNT [CATEGORY] - Add a new expense.
+                        2. add-expense EXPENSE_NAME AMOUNT [CATEGORY] [CURRENCY] - Add a new expense.
                         3. delete-expense EXPENSE_NAME - Remove an expense by name.
                         4. create-category CATEGORY - Create a new expense category.
                         5. set-category EXPENSE_NAME CATEGORY - Assign an expense to a category.
@@ -43,29 +46,29 @@ public class CommandHandler {
     }
 
     public String handleViewBudget() {
-        int budget = expenseManager.getBudget();
-        int totalExpense = expenseManager.getTotalExpense();
-        int remainingBudget = budget - totalExpense;
+        double budget = expenseManager.getBudget();
+        double totalExpense = expenseManager.getTotalExpense();
+        double remainingBudget = budget - totalExpense;
         return "The original budget you set was $" + budget + ".\nSo far, you have spent $" +
                 totalExpense + ".\nThis leaves you with a remaining budget of $" +
-                remainingBudget + ".";
+                String.format("%.2f", remainingBudget) + ".";
     }
 
-    public String handleSetBudget(int budget) throws InvalidArgumentException {
+    public String handleSetBudget(double budget) throws InvalidArgumentException {
         if (budget <= 0) {
-            throw new InvalidArgumentException(Integer.toString(budget));
+            throw new InvalidArgumentException(Double.toString(budget));
         }
         expenseManager.setBudget(budget);
-        return "Your budget has been set to $" + budget + ".";
+        return "Your budget has been set to $" + String.format("%.2f", budget) + ".";
     }
 
-    public String handleAdjustBudget(int budget) throws InvalidArgumentException {
+    public String handleAdjustBudget(double budget) throws InvalidArgumentException {
         if (budget <= 0) {
-            throw new InvalidArgumentException(Integer.toString(budget));
+            throw new InvalidArgumentException(Double.toString(budget));
         }
         expenseManager.setBudget(budget);
-        return "Your budget has been updated to $" + budget + ".\nYou have $" + expenseManager.getRemainingBudget() +
-                " remaining to spend!";
+        return "Your budget has been updated to $" + budget + ".\nYou have $" +
+                String.format("%.2f", expenseManager.getRemainingBudget()) + " remaining to spend!";
     }
 
     public String handleCreateCategory(String category) throws InvalidArgumentException {
@@ -81,25 +84,48 @@ public class CommandHandler {
     public String handleDeleteExpense(String expenseName) throws InvalidArgumentException {
         expenseManager.deleteExpense(expenseName);
         return "Expense " + expenseName + " deleted successfully.\n" +
-                "Your remaining budget is $" + expenseManager.getRemainingBudget() + ".";
+                "Your remaining budget is $" + String.format("%.2f", expenseManager.getRemainingBudget()) + ".";
     }
 
-    public String handleAddExpense(String expenseName, int amount, String category) throws InvalidArgumentException {
+    public String handleAddExpense(String expenseName, double amount, String category) throws InvalidArgumentException {
         if (amount <= 0) {
-            throw new InvalidArgumentException(Integer.toString(amount));
+            throw new InvalidArgumentException(Double.toString(amount));
         }
-        expenseManager.addExpense(expenseName, amount, category);
+
+        try {
+            /* the value entered is a currency */
+            Currency currency = Currency.valueOf(category);
+            expenseManager.addExpense(expenseName, currency.convert(amount));
+        } catch (IllegalArgumentException e) {
+            /* the value entered is a category */
+            expenseManager.addExpense(expenseName, amount, category);
+        }
+
         return "Expense " + expenseName + " added successfully to category " + category + ".\n" +
                 "Your remaining budget is $" + expenseManager.getRemainingBudget() + ".";
     }
 
-    public String handleAddExpense(String expenseName, int amount) throws InvalidArgumentException {
+    public String handleAddExpense(String expenseName, double amount, String category, String currencyStr) throws InvalidArgumentException {
         if (amount <= 0) {
-            throw new InvalidArgumentException(Integer.toString(amount));
+            throw new InvalidArgumentException(Double.toString(amount));
+        }
+        try {
+            Currency currency = Currency.valueOf(currencyStr);
+            expenseManager.addExpense(expenseName, currency.convert(amount), category);
+        } catch (IllegalArgumentException e) {
+            throw new InvalidArgumentException(currencyStr);
+        }
+        return "Expense " + expenseName + " added successfully.\n" +
+                "Your remaining budget is $" + String.format("%.2f", expenseManager.getRemainingBudget()) + ".";
+    }
+
+    public String handleAddExpense(String expenseName, double amount) throws InvalidArgumentException {
+        if (amount <= 0) {
+            throw new InvalidArgumentException(Double.toString(amount));
         }
         expenseManager.addExpense(expenseName, amount);
         return "Expense " + expenseName + " added successfully.\n" +
-                "Your remaining budget is $" + expenseManager.getRemainingBudget() + ".";
+                "Your remaining budget is $" + String.format("%.2f", expenseManager.getRemainingBudget()) + ".";
     }
 
     public String handleListExpense(String category) throws InvalidArgumentException {
