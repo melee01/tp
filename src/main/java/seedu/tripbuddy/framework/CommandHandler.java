@@ -105,8 +105,18 @@ public class CommandHandler {
                 "Your remaining budget is $" + expenseManager.getRemainingBudget() + ".";
     }
 
-    public String handleAddExpense(String expenseName, int amount, String category, String currency) throws InvalidArgumentException {
-        return null;
+    public String handleAddExpense(String expenseName, int amount, String category, String currencyStr) throws InvalidArgumentException {
+        if (amount <= 0) {
+            throw new InvalidArgumentException(Integer.toString(amount));
+        }
+        try {
+            Currency currency = Currency.valueOf(currencyStr);
+            expenseManager.addExpense(expenseName, currency.convert(amount), category);
+        } catch (IllegalArgumentException e) {
+            throw new InvalidArgumentException("Invalid currency: " + currencyStr);
+        }
+        return "Expense " + expenseName + " added successfully.\n" +
+                "Your remaining budget is $" + expenseManager.getRemainingBudget() + ".";
     }
 
     public String handleAddExpense(String expenseName, int amount) throws InvalidArgumentException {
