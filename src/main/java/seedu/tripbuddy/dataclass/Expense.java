@@ -48,8 +48,8 @@ public class Expense {
     @Override
     public String toString() {
         if (category == null) {
-            return "name: " + name + ", amount: " + amount;
+            return "name: " + name + ", amount: " + String.format("%.2f", amount);
         }
-        return "name: " + name + ", amount: " + amount + ", category:" + category;
+        return "name: " + name + ", amount: " + String.format("%.2f", amount) + ", category:" + category;
     }
 }
