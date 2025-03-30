@@ -6,16 +6,16 @@ package seedu.tripbuddy.dataclass;
 public class Expense {
 
     private String name;
-    private int amount;
+    private double amount;
     private String category;
 
-    public Expense(String name, int amount) {
+    public Expense(String name, double amount) {
         this.name = name;
         this.amount = amount;
         this.category = null;
     }
 
-    public Expense(String name, int amount, String category) {
+    public Expense(String name, double amount, String category) {
         this.name = name;
         this.amount = amount;
         this.category = category;
@@ -29,11 +29,11 @@ public class Expense {
         this.name = name;
     }
 
-    public int getAmount() {
+    public double getAmount() {
         return amount;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 

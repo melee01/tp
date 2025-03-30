@@ -1,9 +1,12 @@
 package seedu.tripbuddy.framework;
 
+import seedu.tripbuddy.dataclass.Currency;
 import seedu.tripbuddy.dataclass.Expense;
 import seedu.tripbuddy.exception.InvalidArgumentException;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 
 /**
@@ -88,14 +91,27 @@ public class CommandHandler {
         if (amount <= 0) {
             throw new InvalidArgumentException(Integer.toString(amount));
         }
-        expenseManager.addExpense(expenseName, amount, category);
+
+        try {
+            /* the value entered is a currency */
+            Currency currency = Currency.valueOf(category);
+            expenseManager.addExpense(expenseName, currency.convert(amount));
+        } catch (IllegalArgumentException e) {
+            /* the value entered is a category */
+            expenseManager.addExpense(expenseName, amount, category);
+        }
+
         return "Expense " + expenseName + " added successfully to category " + category + ".\n" +
                 "Your remaining budget is $" + expenseManager.getRemainingBudget() + ".";
     }
 
+    public String handleAddExpense(String expenseName, int amount, String category, String currency) throws InvalidArgumentException {
+        return null;
+    }
+
     public String handleAddExpense(String expenseName, int amount) throws InvalidArgumentException {
         if (amount <= 0) {
-            throw new InvalidArgumentException(Integer.toString(amount));
+            throw new InvalidArgumentException(Double.toString(amount));
         }
         expenseManager.addExpense(expenseName, amount);
         return "Expense " + expenseName + " added successfully.\n" +
