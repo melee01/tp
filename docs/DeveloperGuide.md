@@ -84,6 +84,12 @@ The `Ui` class is responsible for displaying messages to the user via the comman
 ## Implementation
 This section describes an explanation on some of the implemented features. 
 
+### Min-expense
+Allows users to be informed on the lowest expense made in real-time
+
+### Max-expense
+Allows users to be informed on the highest expense made in real-time
+
 ### Multi-currency support 
 Allows users to have multi-currency expenses in the app.
 #### **Step 1**: Conversion rates storage
@@ -138,18 +144,22 @@ TripBuddy helps travelers stay on top of their finances by simplifying expense t
 and budgeting during trips. TripBuddy provides an intuitive platform to log expenses and 
 track spending in real time. By eliminating the confusion of manual calculations, TripBuddy
 ensures a stress-free travel experience where everyone stays financially organized and accountable.
+With features like real-time summaries, total spending insights, and visibility into your highest
+and lowest expenses, TripBuddy empowers users to make informed financial decisions on the go.
 
 ## User Stories
 
-| Version | As a ...        | I want to ...            | So that I can ...                                      |
-|---------|-----------------|--------------------------|--------------------------------------------------------|
-| v1.0    | new user        | see usage instructions   | refer to them when I forget how to use the app         |
-| v1.0    | budget-traveler | set a travel budget      | monitor spending to avoid overspending during the trip |
-| v1.0    | user            | add an expense           | track my expenses and total remaining budget.          |
-| v1.0    | user            | delete an expense        | correct an earlier mistake.                            |
-| v1.0    | user            | view my remaining budget | see how much money I have left to spend.               |
-| v1.0    | user            | view past expenses       | review my past expenses for accuracy                   |
-| v2.0    | user            | adjust my total budget   | modify my spending habits accordingly.                 |
+| Version | As a ...        | I want to ...                     | So that I can ...                                      |
+|---------|-----------------|-----------------------------------|--------------------------------------------------------|
+| v1.0    | new user        | see usage instructions            | refer to them when I forget how to use the app         |
+| v1.0    | budget-traveler | set a travel budget               | monitor spending to avoid overspending during the trip |
+| v1.0    | user            | add an expense                    | track my expenses and total remaining budget.          |
+| v1.0    | user            | delete an expense                 | correct an earlier mistake.                            |
+| v1.0    | user            | view my remaining budget          | see how much money I have left to spend.               |
+| v1.0    | user            | view past expenses                | review my past expenses for accuracy                   |
+| v2.0    | user            | adjust my total budget            | modify my spending habits accordingly.                 |
+| v2.0    | user            | see total amount spent            | understand my overall spending up to date              |
+| v2.0    | user            | see minimum and maximum expense   | identify the smallest and largest purchases I've made  |
 
 ## Non-Functional Requirements
 
