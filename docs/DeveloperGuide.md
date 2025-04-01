@@ -73,6 +73,14 @@ public String handleSetBudget(int budget) throws InvalidArgumentException {
 
 - Handling exceptions caused by user actions.
 
+### Ui
+
+The `Ui` class is responsible for displaying messages to the user via the command-line interface (CLI). It handles:
+* Printing prompts and responses for user interactions.
+* Displaying success and error messages.
+* Formatting outputs for clarity and readability.
+* Ensuring smooth user experience by maintaining a consistent UI flow.
+
 ## Implementation
 This section describes an explanation on some of the implemented features. 
 
@@ -140,8 +148,8 @@ ensures a stress-free travel experience where everyone stays financially organiz
 | v1.0    | user            | add an expense           | track my expenses and total remaining budget.          |
 | v1.0    | user            | delete an expense        | correct an earlier mistake.                            |
 | v1.0    | user            | view my remaining budget | see how much money I have left to spend.               |
-| v1.0    | user            | adjust my total budget   | modify my spending habits accordingly.                 |
 | v1.0    | user            | view past expenses       | review my past expenses for accuracy                   |
+| v2.0    | user            | adjust my total budget   | modify my spending habits accordingly.                 |
 
 ## Non-Functional Requirements
 
@@ -160,4 +168,18 @@ entity.
 
 ## Instructions for manual testing
 
-{Give instructions on how to do a manual product testing e.g., how to load sample data to be used for testing}
+Testing Budgeting Features:
+* Set a budget using the set-budget command and verify that the amount is correct.
+* Add and delete expenses to confirm that budget calculations update correctly.
+* Use the adjust-budget command to modify the budget and ensure that all dependent calculations reflect the changes.
+
+Testing Command Handling:
+* Run all supported commands and check for correct execution and expected output.
+* Input invalid commands and confirm that proper error messages are displayed.
+
+Verifying UI Responses:
+* Ensure that the CLI provides appropriate feedback for each user action.
+* Test edge cases such as invalid formats and unexpected inputs.
+
+Checking Exception Handling:
+* Deliberately introduce invalid data to ensure the system appropriately handles errors without crashing.
