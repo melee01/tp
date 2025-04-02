@@ -12,25 +12,25 @@ import java.util.List;
  * */
 public class ExpenseManager {
 
-    private int budget;
-    private int totalExpense = 0;
+    private double budget;
+    private double totalExpense = 0;
     private final HashSet<String> categories = new HashSet<>();
     private final ArrayList<Expense> expenses = new ArrayList<>();
 
-    public ExpenseManager(int budget) {
+    public ExpenseManager(double budget) {
         assert budget > 0 : "Budget must be positive";
         this.budget = budget;
     }
 
-    public int getBudget() {
+    public double getBudget() {
         return budget;
     }
 
-    public int getTotalExpense() {
+    public double getTotalExpense() {
         return totalExpense;
     }
 
-    public int getRemainingBudget() {
+    public double getRemainingBudget() {
         return budget - totalExpense;
     }
 
@@ -42,7 +42,7 @@ public class ExpenseManager {
         return List.copyOf(expenses);
     }
 
-    public void setBudget(int budget) {
+    public void setBudget(double budget) {
         assert budget > 0 : "Budget must be positive";
         this.budget = budget;
     }
@@ -57,7 +57,7 @@ public class ExpenseManager {
     /**
      * Adds a new {@link Expense} without category.
      * */
-    public void addExpense(String name, int amount) {
+    public void addExpense(String name, double amount) {
         assert amount > 0 : "Amount must be positive";
         Expense expense = new Expense(name, amount);
         expenses.add(expense);
@@ -70,7 +70,7 @@ public class ExpenseManager {
      *     <li>A new category will be created if not exists.
      * </ul>
      * */
-    public void addExpense(String name, int amount, String categoryName) {
+    public void addExpense(String name, double amount, String categoryName) {
         assert amount > 0 : "Amount must be positive";
         createCategory(categoryName);
         Expense expense = new Expense(name, amount, categoryName);

@@ -39,9 +39,11 @@ public class Parser {
             case "create-category" -> cmdRunner.handleCreateCategory(tokens[1]);
             case "set-category" -> cmdRunner.handleSetCategory(tokens[1], tokens[2]);
             case "add-expense" -> {
-                if (tokens.length >= 4) {
+                if (tokens.length == 4) {
                     yield cmdRunner.handleAddExpense(tokens[1], Integer.parseInt(tokens[2]), tokens[3]);
-                } if (tokens.length == 3) {
+                } else if (tokens.length > 4) {
+                    yield cmdRunner.handleAddExpense(tokens[1], Integer.parseInt(tokens[2]), tokens[3], tokens[4]);
+                } else if (tokens.length == 3) {
                     yield cmdRunner.handleAddExpense(tokens[1], Integer.parseInt(tokens[2]));
                 }
                 throw new ArrayIndexOutOfBoundsException();
