@@ -41,6 +41,8 @@ public class Parser {
             case "delete-expense" -> CommandHandler.handleDeleteExpense(tokens[1]);
             case "list-expense" -> CommandHandler.handleListExpense(tokens.length == 1? null : tokens[1]);
             case "view-history" -> CommandHandler.handleViewHistory();
+            case "max-expense" -> CommandHandler.handleMaxExpense();
+            case "min-expense" -> CommandHandler.handleMinExpense();
             default -> throw new InvalidKeywordException(keyword);
             };
             Ui.printMessage(message);

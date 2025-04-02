@@ -133,4 +133,30 @@ public class ExpenseManager {
         }
         throw new InvalidArgumentException(expenseName);
     }
+
+    public static Expense getMaxExpense() throws InvalidArgumentException {
+        if (expenses.isEmpty()) {
+            throw new InvalidArgumentException("No expenses available");
+        }
+        Expense maxExpense = expenses.get(0);
+        for (Expense expense : expenses) {
+            if (expense.getAmount() > maxExpense.getAmount()) {
+                maxExpense = expense;
+            }
+        }
+        return maxExpense;
+    }
+
+    public static Expense getMinExpense() throws InvalidArgumentException {
+        if (expenses.isEmpty()) {
+            throw new InvalidArgumentException("No expenses available");
+        }
+        Expense minExpense = expenses.get(0);
+        for (Expense expense : expenses) {
+            if (expense.getAmount() < minExpense.getAmount()) {
+                minExpense = expense;
+            }
+        }
+        return minExpense;
+    }
 }
