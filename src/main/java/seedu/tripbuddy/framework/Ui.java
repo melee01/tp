@@ -14,23 +14,19 @@ public class Ui {
             "Welcome to TripBuddy! Type `tutorial` for a list of available commands.";
     private static final String END_MESSAGE = "Your TripBuddy session has ended. Bye!";
 
-    private final Scanner scanner;
-
-    public Ui() {
-        scanner = new Scanner(System.in);
-    }
+    private static final Scanner scanner = new Scanner(System.in);
 
     /**
      * Prints a line separator for better readability.
      */
-    public void printLineSeparator() {
+    public static void printLineSeparator() {
         System.out.println(LINE);
     }
 
     /**
      * Prints a start message when the program begins.
      */
-    public void printStartMessage() {
+    public static void printStartMessage() {
         printLineSeparator();
         System.out.println(START_MESSAGE);
         printLineSeparator();
@@ -41,20 +37,20 @@ public class Ui {
      *
      * @return The command entered by the user, whitespace stripped.
      */
-    public String getUserInput() {
+    public static String getUserInput() {
         return scanner.nextLine().strip();
     }
 
     /**
      * Prints a message indicating that the program is exiting.
      */
-    public void printEndMessage() {
+    public static void printEndMessage() {
         printLineSeparator();
         System.out.println(END_MESSAGE);
         printLineSeparator();
     }
 
-    public void printMessage(String message) {
+    public static void printMessage(String message) {
         printLineSeparator();
         System.out.println(message);
         printLineSeparator();
