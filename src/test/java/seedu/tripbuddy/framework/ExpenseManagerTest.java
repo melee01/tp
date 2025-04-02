@@ -71,4 +71,42 @@ class ExpenseManagerTest {
         }
         assertEquals(3, ExpenseManager.getExpenses().size(), "4");
     }
+
+    @Test
+    void getMaxExpenseTest() throws InvalidArgumentException {
+        ExpenseManager.initExpenseManager(1000);
+        ExpenseManager.addExpense("expense1", 100);
+        ExpenseManager.addExpense("expense2", 300);
+        ExpenseManager.addExpense("expense3", 200);
+
+        Expense maxExpense = ExpenseManager.getMaxExpense();
+        // Expect "expense2" with amount 300.00
+        assertEquals("expense2", maxExpense.getName());
+        assertEquals(300.00, maxExpense.getAmount(), 0.001);
+    }
+
+    @Test
+    void getMinExpenseTest() throws InvalidArgumentException {
+        ExpenseManager.initExpenseManager(1000);
+        ExpenseManager.addExpense("expense1", 100);
+        ExpenseManager.addExpense("expense2", 300);
+        ExpenseManager.addExpense("expense3", 200);
+
+        Expense minExpense = ExpenseManager.getMinExpense();
+        // Expect "expense1" with amount 100.00
+        assertEquals("expense1", minExpense.getName());
+        assertEquals(100.00, minExpense.getAmount(), 0.001);
+    }
+
+    @Test
+    void getMaxExpense_emptyExpenses_throwsException() {
+        ExpenseManager.initExpenseManager(1000);
+        assertThrows(InvalidArgumentException.class, () -> ExpenseManager.getMaxExpense());
+    }
+
+    @Test
+    void getMinExpense_emptyExpenses_throwsException() {
+        ExpenseManager.initExpenseManager(1000);
+        assertThrows(InvalidArgumentException.class, () -> ExpenseManager.getMinExpense());
+    }
 }
