@@ -5,6 +5,7 @@ import seedu.tripbuddy.exception.InvalidArgumentException;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -158,5 +159,17 @@ public class ExpenseManager {
             }
         }
         return minExpense;
+    }
+
+    public static List<Expense> getExpensesByDateRange(LocalDateTime start, LocalDateTime end) {
+        ArrayList<Expense> filteredExpenses = new ArrayList<>();
+        for (Expense expense : expenses) {
+            LocalDateTime expenseDateTime = expense.getDateTime();
+            if ((expenseDateTime.isEqual(start) || expenseDateTime.isAfter(start))
+                    && (expenseDateTime.isEqual(end) || expenseDateTime.isBefore(end))) {
+                filteredExpenses.add(expense);
+            }
+        }
+        return filteredExpenses;
     }
 }

@@ -43,6 +43,13 @@ public class Parser {
             case "view-history" -> CommandHandler.handleViewHistory();
             case "max-expense" -> CommandHandler.handleMaxExpense();
             case "min-expense" -> CommandHandler.handleMinExpense();
+            case "filter-date" -> {
+                if (tokens.length >= 5) {
+                    yield CommandHandler.handleFilterExpenseByDateRange(tokens[1] + " " + tokens[2],
+                            tokens[3] + " " + tokens[4]);
+                }
+                throw new ArrayIndexOutOfBoundsException();
+            }
             default -> throw new InvalidKeywordException(keyword);
             };
             Ui.printMessage(message);

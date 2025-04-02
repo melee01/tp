@@ -4,6 +4,8 @@ import seedu.tripbuddy.dataclass.Currency;
 import seedu.tripbuddy.dataclass.Expense;
 import seedu.tripbuddy.exception.InvalidArgumentException;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 
@@ -33,6 +35,7 @@ public class CommandHandler {
                         9. adjust-budget AMOUNT - Modify the budget amount.
                         10. max-expense - Display the expense with the highest amount.
                         11. min-expense - Display the expense with the lowest amount.
+                        12. filter-date yyyy-MM-dd HH:mm:ss yyyy-MM-dd HH:mm:ss - Filter expenses between two date/time ranges START_DATE START_TIME END_DATE END_TIME.
                         
                         Enjoy tracking your expenses with TripBuddy!""";
     }
@@ -131,7 +134,7 @@ public class CommandHandler {
             expensesString.append("\n - ").append(expense.toString());
             totalAmount += expense.getAmount();
         }
-        return expenses.isEmpty()? "There are no expenses." : "Expense list is: " + expensesString;
+        return expenses.isEmpty()? "There are no expenses." : "Expense list (date and time included): " + expensesString;
     }
 
     public static String handleViewHistory() {
@@ -151,5 +154,28 @@ public class CommandHandler {
     public static String handleMinExpense() throws InvalidArgumentException {
         Expense minExpense = ExpenseManager.getMinExpense();
         return "Minimum expense: " + minExpense.toString();
+    }
+
+    public static String handleFilterExpenseByDateRange(String startStr, String endStr) throws InvalidArgumentException {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime start;
+        LocalDateTime end;
+        try {
+            start = LocalDateTime.parse(startStr, formatter);
+            end = LocalDateTime.parse(endStr, formatter);
+        } catch (Exception e) {
+            throw new InvalidArgumentException("Invalid date format. Please use yyyy-MM-dd HH:mm:ss");
+        }
+
+        List<Expense> filteredExpenses = ExpenseManager.getExpensesByDateRange(start, end);
+        if (filteredExpenses.isEmpty()) {
+            return "No expenses found between " + startStr + " and " + endStr + ".";
+        } else {
+            StringBuilder sb = new StringBuilder("Expenses between " + startStr + " and " + endStr + ":");
+            for (Expense expense : filteredExpenses) {
+                sb.append("\n - ").append(expense.toString());
+            }
+            return sb.toString();
+        }
     }
 }
