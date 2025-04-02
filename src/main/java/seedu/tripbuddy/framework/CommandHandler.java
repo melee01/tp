@@ -31,6 +31,8 @@ public class CommandHandler {
                         7. list-expense [CATEGORY] - Calculate sum of recorded expenses.
                         8. view-history - See a history of all expenses made.
                         9. adjust-budget AMOUNT - Modify the budget amount.
+                        10. max-expense - Display the expense with the highest amount.
+                        11. min-expense - Display the expense with the lowest amount.
                         
                         Enjoy tracking your expenses with TripBuddy!""";
     }
@@ -124,8 +126,10 @@ public class CommandHandler {
         List<Expense> expenses = (category == null? ExpenseManager.getExpenses() :
                 ExpenseManager.getExpensesByCategory(category));
         StringBuilder expensesString = new StringBuilder();
+        double totalAmount = 0;
         for (Expense expense : expenses) {
             expensesString.append("\n - ").append(expense.toString());
+            totalAmount += expense.getAmount();
         }
         return expenses.isEmpty()? "There are no expenses." : "Expense list is: " + expensesString;
     }
@@ -137,5 +141,15 @@ public class CommandHandler {
 
         }
         return expensesString.toString();
+    }
+
+    public static String handleMaxExpense() throws InvalidArgumentException {
+        Expense maxExpense = ExpenseManager.getMaxExpense();
+        return "Maximum expense: " + maxExpense.toString();
+    }
+
+    public static String handleMinExpense() throws InvalidArgumentException {
+        Expense minExpense = ExpenseManager.getMinExpense();
+        return "Minimum expense: " + minExpense.toString();
     }
 }

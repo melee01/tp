@@ -54,15 +54,15 @@ public class ParserTest {
         );
     }
 
-/* TODO: update after parser rework
-    @Test
-    public void handlerUserInput_tuutorial_expectInvalidKeywordException() {
-        assertThrows(InvalidKeywordException.class, () -> Parser.handleUserInput("tuutorial"));
-    }
+    /* TODO: update after parser rework
+        @Test
+        public void handlerUserInput_tuutorial_expectInvalidKeywordException() {
+            assertThrows(InvalidKeywordException.class, () -> Parser.handleUserInput("tuutorial"));
+        }
 
-    @Test
-    public void handlerUserInput_tuutorial_expectInvalidKeywordException() {
-        assertThrows(InvalidKeywordException.class, () -> Parser.handleUserInput("add-expense greek-meal twenty"));
-    }
-*/
+        @Test
+        public void handlerUserInput_tuutorial_expectInvalidKeywordException() {
+            assertThrows(InvalidKeywordException.class, () -> Parser.handleUserInput("add-expense greek-meal twenty"));
+        }
+    */
 }
