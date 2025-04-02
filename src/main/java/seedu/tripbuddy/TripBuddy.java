@@ -1,6 +1,6 @@
 package seedu.tripbuddy;
 
-import seedu.tripbuddy.command.Parser;
+import seedu.tripbuddy.framework.InputHandler;
 import seedu.tripbuddy.framework.ExpenseManager;
 import seedu.tripbuddy.framework.Ui;
 
@@ -21,12 +21,12 @@ public class TripBuddy {
                 continue;
             }
 
-            if (Parser.isQuitCommand(userInput)) {
+            if (InputHandler.isQuitCommand(userInput)) {
                 Ui.printEndMessage();
                 return;
             }
 
-            Parser.handleUserInput(userInput);
+            InputHandler.handleUserInput(userInput);
         }
     }
 
