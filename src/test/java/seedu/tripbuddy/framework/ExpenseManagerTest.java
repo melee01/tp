@@ -14,22 +14,27 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 class ExpenseManagerTest {
 
     @Test
-    void budgetTest() throws InvalidArgumentException {
-        ExpenseManager manager = new ExpenseManager(2333);
-        assertEquals(2333, manager.getBudget(), "1");
-        manager.setBudget(233);
-        assertEquals(233, manager.getBudget(), "2");
+    void initBudgetTest() {
+        ExpenseManager.initExpenseManager(2333);
+        assertEquals(2333, ExpenseManager.getBudget());
+    }
+
+    @Test
+    void setBudgetTest() {
+        ExpenseManager.initExpenseManager(2333);
+        ExpenseManager.setBudget(233);
+        assertEquals(233, ExpenseManager.getBudget());
     }
 
     @Test
     void addDeleteExpenseTest_add3Delete1() throws InvalidArgumentException {
-        ExpenseManager manager = new ExpenseManager(2333);
-        manager.addExpense("a", 1);
-        manager.addExpense("b", 2);
-        manager.deleteExpense(1);
-        manager.addExpense("c", 3);
+        ExpenseManager.initExpenseManager(2333);
+        ExpenseManager.addExpense("a", 1);
+        ExpenseManager.addExpense("b", 2);
+        ExpenseManager.deleteExpense(1);
+        ExpenseManager.addExpense("c", 3);
 
-        List<Expense> expenses = manager.getExpenses();
+        List<Expense> expenses = ExpenseManager.getExpenses();
         for (Expense expense : expenses) {
             System.err.println(expense);
         }
@@ -38,32 +43,32 @@ class ExpenseManagerTest {
 
     @Test
     void addDeleteTest_invalidDeleteID_expectInvalidArgumentException() {
-        ExpenseManager manager = new ExpenseManager(2333);
-        manager.addExpense("a", 1);
-        manager.addExpense("b", 2);
-        assertThrows(InvalidArgumentException.class, () -> manager.deleteExpense(3));
+        ExpenseManager.initExpenseManager(2333);
+        ExpenseManager.addExpense("a", 1);
+        ExpenseManager.addExpense("b", 2);
+        assertThrows(InvalidArgumentException.class, () -> ExpenseManager.deleteExpense(3));
     }
 
     @Test
     void addExpenseTest_categoryNotExists() {
-        ExpenseManager manager = new ExpenseManager(2333);
-        assertArrayEquals(new String[]{}, manager.getCategories().toArray());
+        ExpenseManager.initExpenseManager(2333);
+        assertArrayEquals(new String[]{}, ExpenseManager.getCategories().toArray());
 
-        manager.addExpense("lunch", 100, "food");
-        System.err.println(Arrays.toString(manager.getCategories().toArray()));
-        assertArrayEquals(new String[]{"food"}, manager.getCategories().toArray(), "1");
+        ExpenseManager.addExpense("lunch", 100, "food");
+        System.err.println(Arrays.toString(ExpenseManager.getCategories().toArray()));
+        assertArrayEquals(new String[]{"food"}, ExpenseManager.getCategories().toArray(), "1");
 
-        manager.addExpense("lol", 233);
-        System.err.println(Arrays.toString(manager.getCategories().toArray()));
-        assertArrayEquals(new String[]{"food"}, manager.getCategories().toArray(), "2");
+        ExpenseManager.addExpense("lol", 233);
+        System.err.println(Arrays.toString(ExpenseManager.getCategories().toArray()));
+        assertArrayEquals(new String[]{"food"}, ExpenseManager.getCategories().toArray(), "2");
 
-        manager.addExpense("a", 10, "sth");
-        System.err.println(Arrays.toString(manager.getCategories().toArray()));
-        assertEquals(2, manager.getCategories().size(), "3");
+        ExpenseManager.addExpense("a", 10, "sth");
+        System.err.println(Arrays.toString(ExpenseManager.getCategories().toArray()));
+        assertEquals(2, ExpenseManager.getCategories().size(), "3");
 
-        for (Expense expense : manager.getExpenses()) {
+        for (Expense expense : ExpenseManager.getExpenses()) {
             System.err.println(expense);
         }
-        assertEquals(3, manager.getExpenses().size(), "4");
+        assertEquals(3, ExpenseManager.getExpenses().size(), "4");
     }
 }
