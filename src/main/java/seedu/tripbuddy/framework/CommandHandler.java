@@ -126,8 +126,10 @@ public class CommandHandler {
         List<Expense> expenses = (category == null? ExpenseManager.getExpenses() :
                 ExpenseManager.getExpensesByCategory(category));
         StringBuilder expensesString = new StringBuilder();
+        double totalAmount = 0;
         for (Expense expense : expenses) {
             expensesString.append("\n - ").append(expense.toString());
+            totalAmount += expense.getAmount();
         }
         return expenses.isEmpty()? "There are no expenses." : "Expense list is: " + expensesString;
     }
