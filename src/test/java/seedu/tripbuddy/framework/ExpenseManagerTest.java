@@ -107,4 +107,52 @@ class ExpenseManagerTest {
         ExpenseManager.initExpenseManager(1000);
         assertThrows(InvalidArgumentException.class, () -> ExpenseManager.getMinExpense());
     }
+
+    @Test
+    void getExpensesByDateRangeTest() throws InvalidArgumentException {
+        ExpenseManager.initExpenseManager(1000);
+
+        ExpenseManager.addExpense("expense1", 100);
+        ExpenseManager.addExpense("expense2", 200);
+        ExpenseManager.addExpense("expense3", 300);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        ExpenseManager.getExpenses().get(0).setDateTime(LocalDateTime.parse("2025-04-01 10:00:00", formatter));
+        ExpenseManager.getExpenses().get(1).setDateTime(LocalDateTime.parse("2025-04-03 15:30:00", formatter));
+        ExpenseManager.getExpenses().get(2).setDateTime(LocalDateTime.parse("2025-04-05 20:00:00", formatter));
+
+        LocalDateTime start = LocalDateTime.parse("2025-04-01 00:00:00", formatter);
+        LocalDateTime end = LocalDateTime.parse("2025-04-04 23:59:59", formatter);
+
+        List<Expense> filteredExpenses = ExpenseManager.getExpensesByDateRange(start, end);
+
+        assertEquals(2, filteredExpenses.size(), "Should return 2 expenses within the date range");
+
+        boolean containsExp1 = filteredExpenses.stream().anyMatch(exp -> exp.getName().equals("expense1"));
+        boolean containsExp2 = filteredExpenses.stream().anyMatch(exp -> exp.getName().equals("expense2"));
+        boolean containsExp3 = filteredExpenses.stream().anyMatch(exp -> exp.getName().equals("expense3"));
+
+        assertTrue(containsExp1, "Filtered expenses should contain expense1");
+        assertTrue(containsExp2, "Filtered expenses should contain expense2");
+        assertFalse(containsExp3, "Filtered expenses should not contain expense3");
+    }
+
+    @Test
+    void getExpensesByDateRangeEmptyResultTest() throws InvalidArgumentException {
+        ExpenseManager.initExpenseManager(1000);
+
+        ExpenseManager.addExpense("expenseA", 100);
+        ExpenseManager.addExpense("expenseB", 200);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        ExpenseManager.getExpenses().get(0).setDateTime(LocalDateTime.parse("2025-03-25 09:00:00", formatter));
+        ExpenseManager.getExpenses().get(1).setDateTime(LocalDateTime.parse("2025-03-30 18:00:00", formatter));
+
+        LocalDateTime start = LocalDateTime.parse("2025-04-01 00:00:00", formatter);
+        LocalDateTime end = LocalDateTime.parse("2025-04-05 23:59:59", formatter);
+
+        List<Expense> filteredExpenses = ExpenseManager.getExpensesByDateRange(start, end);
+
+        assertEquals(0, filteredExpenses.size(), "Should return 0 expenses since none are within the date range");
+    }
 }
