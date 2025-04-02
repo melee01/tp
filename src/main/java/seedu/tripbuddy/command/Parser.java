@@ -61,6 +61,8 @@ public class Parser {
             ExceptionHandler.handleInvalidArgumentException(e);
         } catch (ArrayIndexOutOfBoundsException e) {
             ExceptionHandler.handleArrayIndexOutOfBoundsException();
+        } catch (DateTimeParseException e) {
+            ExceptionHandler.handleDateTimeParseException(e);
         }
     }
 }

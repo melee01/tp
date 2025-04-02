@@ -6,6 +6,8 @@ import seedu.tripbuddy.exception.InvalidArgumentException;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+
 import java.util.List;
 
 
@@ -156,16 +158,11 @@ public class CommandHandler {
         return "Minimum expense: " + minExpense.toString();
     }
 
-    public static String handleFilterExpenseByDateRange(String startStr, String endStr) throws InvalidArgumentException {
+    public static String handleFilterExpenseByDateRange(String startStr, String endStr) throws DateTimeParseException, InvalidArgumentException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime start;
-        LocalDateTime end;
-        try {
-            start = LocalDateTime.parse(startStr, formatter);
-            end = LocalDateTime.parse(endStr, formatter);
-        } catch (Exception e) {
-            throw new InvalidArgumentException("Invalid date format. Please use yyyy-MM-dd HH:mm:ss");
-        }
+
+        LocalDateTime start = LocalDateTime.parse(startStr, formatter);
+        LocalDateTime end = LocalDateTime.parse(endStr, formatter);
 
         List<Expense> filteredExpenses = ExpenseManager.getExpensesByDateRange(start, end);
         if (filteredExpenses.isEmpty()) {

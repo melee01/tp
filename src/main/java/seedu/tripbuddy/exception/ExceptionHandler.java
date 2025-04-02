@@ -1,6 +1,7 @@
 package seedu.tripbuddy.exception;
 
 import seedu.tripbuddy.framework.Ui;
+import java.time.format.DateTimeParseException;
 
 public class ExceptionHandler {
 
@@ -22,5 +23,9 @@ public class ExceptionHandler {
 
     public static void handleArrayIndexOutOfBoundsException() {
         Ui.printMessage("Uh oh! Not enough arguments for this command.");
+    }
+
+    public static void handleDateTimeParseException(DateTimeParseException e) {
+        Ui.printMessage("Invalid date/time format! Please use yyyy-MM-dd HH:mm:ss");
     }
 }
