@@ -27,30 +27,30 @@ public class InputHandler {
             Keyword keyword = cmd.getKeyword();
             int optCount = cmd.getOptCount();
             String message = switch (keyword) {
-                case TUTORIAL -> CommandHandler.handleTutorial();
-                case SET_BUDGET -> CommandHandler.handleSetBudget(Double.parseDouble(cmd.getOpt("")));
-                case ADJUST_BUDGET -> CommandHandler.handleAdjustBudget(Double.parseDouble(cmd.getOpt("")));
-                case VIEW_BUDGET -> CommandHandler.handleViewBudget();
-                case CREATE_CATEGORY -> CommandHandler.handleCreateCategory(cmd.getOpt(""));
-                case SET_CATEGORY -> CommandHandler.handleSetCategory(cmd.getOpt(""), cmd.getOpt("c"));
-                case ADD_EXPENSE -> {
-                    double amount = Double.parseDouble(cmd.getOpt("a"));
-                    if (cmd.hasOpt("c")) {
-                        yield CommandHandler.handleAddExpense(cmd.getOpt(""), amount, cmd.getOpt("c"));
-                    }
-                    yield CommandHandler.handleAddExpense(cmd.getOpt(""), amount);
+            case TUTORIAL -> CommandHandler.handleTutorial();
+            case SET_BUDGET -> CommandHandler.handleSetBudget(Double.parseDouble(cmd.getOpt("")));
+            case ADJUST_BUDGET -> CommandHandler.handleAdjustBudget(Double.parseDouble(cmd.getOpt("")));
+            case VIEW_BUDGET -> CommandHandler.handleViewBudget();
+            case CREATE_CATEGORY -> CommandHandler.handleCreateCategory(cmd.getOpt(""));
+            case SET_CATEGORY -> CommandHandler.handleSetCategory(cmd.getOpt(""), cmd.getOpt("c"));
+            case ADD_EXPENSE -> {
+                double amount = Double.parseDouble(cmd.getOpt("a"));
+                if (cmd.hasOpt("c")) {
+                    yield CommandHandler.handleAddExpense(cmd.getOpt(""), amount, cmd.getOpt("c"));
                 }
-                case DELETE_EXPENSE -> CommandHandler.handleDeleteExpense(cmd.getOpt(""));
-                case LIST_EXPENSE -> CommandHandler.handleListExpense(optCount == 0 ? null : cmd.getOpt(""));
-                case VIEW_HISTORY -> CommandHandler.handleViewHistory();
-                case MAX_EXPENSE -> CommandHandler.handleMaxExpense();
-                case MIN_EXPENSE -> CommandHandler.handleMinExpense();
-                case FILTER_DATE -> CommandHandler.handleFilterExpenseByDateRange(cmd.getOpt("f"), cmd.getOpt("t"));
-                case VIEW_CURRENCY -> CommandHandler.handleViewCurrency();
-                case SEARCH -> CommandHandler.handleSearch(cmd.getOpt(""));
-                case VIEW_CATEGORIES -> CommandHandler.handleViewCategories();
-                case SET_BASE_CURRENCY -> CommandHandler.handleSetBaseCurrency(cmd.getOpt(""));
-                case CLEAR -> CommandHandler.handleClearAll();
+                yield CommandHandler.handleAddExpense(cmd.getOpt(""), amount);
+            }
+            case DELETE_EXPENSE -> CommandHandler.handleDeleteExpense(cmd.getOpt(""));
+            case LIST_EXPENSE -> CommandHandler.handleListExpense(optCount == 0 ? null : cmd.getOpt(""));
+            case VIEW_HISTORY -> CommandHandler.handleViewHistory();
+            case MAX_EXPENSE -> CommandHandler.handleMaxExpense();
+            case MIN_EXPENSE -> CommandHandler.handleMinExpense();
+            case FILTER_DATE -> CommandHandler.handleFilterExpenseByDateRange(cmd.getOpt("f"), cmd.getOpt("t"));
+            case VIEW_CURRENCY -> CommandHandler.handleViewCurrency();
+            case SEARCH -> CommandHandler.handleSearch(cmd.getOpt(""));
+            case VIEW_CATEGORIES -> CommandHandler.handleViewCategories();
+            case SET_BASE_CURRENCY -> CommandHandler.handleSetBaseCurrency(cmd.getOpt(""));
+            case CLEAR -> CommandHandler.handleClearAll();
             };
             Ui.printMessage(message);
         } catch (DateTimeParseException e) {

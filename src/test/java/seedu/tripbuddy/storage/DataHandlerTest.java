@@ -2,7 +2,9 @@ package seedu.tripbuddy.storage;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import seedu.tripbuddy.dataclass.Expense;
 import seedu.tripbuddy.framework.ExpenseManager;
 
@@ -20,9 +22,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 class DataHandlerTest {
 
+    private final int DEFAULT_BUDGET = 2333;
     private final PrintStream originalOut = System.out;
     private ByteArrayOutputStream outContent;
-    final int DEFAULT_BUDGET = 2333;
+
 
     @BeforeEach
     void setUp() {

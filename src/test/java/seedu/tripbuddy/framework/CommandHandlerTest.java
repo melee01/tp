@@ -213,7 +213,7 @@ class CommandHandlerTest {
     }
 
     @Test
-    public void set_base_currency_correct() throws InvalidArgumentException {
+    public void setBaseCurrency_correct() throws InvalidArgumentException {
         ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
         try{
             CommandHandler.handleSetBaseCurrency("USD");
@@ -227,7 +227,7 @@ class CommandHandlerTest {
     }
 
     @Test
-    public void set_base_currency_incorrect() {
+    public void setBaseCurrency_incorrect() {
         ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
         assertThrows(InvalidArgumentException.class, () -> CommandHandler.handleSetBaseCurrency("XXX"));
     }
