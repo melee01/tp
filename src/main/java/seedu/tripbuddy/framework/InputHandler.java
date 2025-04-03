@@ -63,8 +63,6 @@ public class InputHandler {
             ExceptionHandler.handleNumberFormatException();
         } catch (InvalidArgumentException e) {
             ExceptionHandler.handleInvalidArgumentException(e);
-        } catch (ArrayIndexOutOfBoundsException e) {
-            ExceptionHandler.handleArrayIndexOutOfBoundsException();
         }
     }
 }
