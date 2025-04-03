@@ -4,25 +4,19 @@ import seedu.tripbuddy.dataclass.Currency;
 import seedu.tripbuddy.dataclass.Expense;
 import seedu.tripbuddy.exception.InvalidArgumentException;
 
-import java.util.Arrays;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+
 import java.util.List;
-import java.util.Objects;
 
 
 /**
  * Handles commands and return message strings.
- * */
+ */
 public class CommandHandler {
 
-    private static final int DEFAULT_BUDGET = 1000;
-
-    private final ExpenseManager expenseManager;
-
-    public CommandHandler() {
-        this.expenseManager = new ExpenseManager(DEFAULT_BUDGET);
-    }
-
-    public String handleTutorial() {
+    public static String handleTutorial() {
         return """
                         Welcome to the tutorial of TripBuddy!
                         
@@ -41,53 +35,57 @@ public class CommandHandler {
                         7. list-expense [CATEGORY] - Calculate sum of recorded expenses.
                         8. view-history - See a history of all expenses made.
                         9. adjust-budget AMOUNT - Modify the budget amount.
+                        10. max-expense - Display the expense with the highest amount.
+                        11. min-expense - Display the expense with the lowest amount.
+                        12. filter-date yyyy-MM-dd HH:mm:ss yyyy-MM-dd HH:mm:ss - Filter expenses between two date/time ranges START_DATE START_TIME END_DATE END_TIME.
                         
                         Enjoy tracking your expenses with TripBuddy!""";
     }
 
-    public String handleViewBudget() {
-        double budget = expenseManager.getBudget();
-        double totalExpense = expenseManager.getTotalExpense();
+    public static String handleViewBudget() {
+        double budget = ExpenseManager.getBudget();
+        double totalExpense = ExpenseManager.getTotalExpense();
         double remainingBudget = budget - totalExpense;
         return "The original budget you set was $" + budget + ".\nSo far, you have spent $" +
                 totalExpense + ".\nThis leaves you with a remaining budget of $" +
                 String.format("%.2f", remainingBudget) + ".";
     }
 
-    public String handleSetBudget(double budget) throws InvalidArgumentException {
+    public static String handleSetBudget(double budget) throws InvalidArgumentException {
         if (budget <= 0) {
             throw new InvalidArgumentException(Double.toString(budget));
         }
-        expenseManager.setBudget(budget);
+        ExpenseManager.setBudget(budget);
         return "Your budget has been set to $" + String.format("%.2f", budget) + ".";
     }
 
-    public String handleAdjustBudget(double budget) throws InvalidArgumentException {
+    public static String handleAdjustBudget(double budget) throws InvalidArgumentException {
         if (budget <= 0) {
             throw new InvalidArgumentException(Double.toString(budget));
         }
-        expenseManager.setBudget(budget);
+        ExpenseManager.setBudget(budget);
         return "Your budget has been updated to $" + budget + ".\nYou have $" +
-                String.format("%.2f", expenseManager.getRemainingBudget()) + " remaining to spend!";
+                String.format("%.2f", ExpenseManager.getRemainingBudget()) + " remaining to spend!";
     }
 
-    public String handleCreateCategory(String category) throws InvalidArgumentException {
-        expenseManager.createCategory(category);
+    public static String handleCreateCategory(String category) throws InvalidArgumentException {
+        ExpenseManager.createCategory(category);
         return "Successfully created category: " + category + ".";
     }
 
-    public String handleSetCategory(String expenseName, String category) throws InvalidArgumentException {
-        expenseManager.setExpenseCategory(expenseName, category);
+    public static String handleSetCategory(String expenseName, String category) throws InvalidArgumentException {
+        ExpenseManager.setExpenseCategory(expenseName, category);
         return "Successfully set category for " + expenseName + " to " + category + ".";
     }
 
-    public String handleDeleteExpense(String expenseName) throws InvalidArgumentException {
-        expenseManager.deleteExpense(expenseName);
+    public static String handleDeleteExpense(String expenseName) throws InvalidArgumentException {
+        ExpenseManager.deleteExpense(expenseName);
         return "Expense " + expenseName + " deleted successfully.\n" +
-                "Your remaining budget is $" + String.format("%.2f", expenseManager.getRemainingBudget()) + ".";
+                "Your remaining budget is $" + String.format("%.2f", ExpenseManager.getRemainingBudget()) + ".";
     }
 
-    public String handleAddExpense(String expenseName, double amount, String category) throws InvalidArgumentException {
+    public static String handleAddExpense(String expenseName, double amount, String category)
+            throws InvalidArgumentException {
         if (amount <= 0) {
             throw new InvalidArgumentException(Double.toString(amount));
         }
@@ -95,55 +93,86 @@ public class CommandHandler {
         try {
             /* the value entered is a currency */
             Currency currency = Currency.valueOf(category);
-            expenseManager.addExpense(expenseName, currency.convert(amount));
+            ExpenseManager.addExpense(expenseName, currency.convert(amount));
         } catch (IllegalArgumentException e) {
             /* the value entered is a category */
-            expenseManager.addExpense(expenseName, amount, category);
+            ExpenseManager.addExpense(expenseName, amount, category);
         }
 
         return "Expense " + expenseName + " added successfully to category " + category + ".\n" +
-                "Your remaining budget is $" + expenseManager.getRemainingBudget() + ".";
+                "Your remaining budget is $" + ExpenseManager.getRemainingBudget() + ".";
     }
 
-    public String handleAddExpense(String expenseName, double amount, String category, String currencyStr) throws InvalidArgumentException {
+    public static String handleAddExpense(String expenseName, double amount, String category, String currencyStr)
+            throws InvalidArgumentException {
         if (amount <= 0) {
             throw new InvalidArgumentException(Double.toString(amount));
         }
         try {
             Currency currency = Currency.valueOf(currencyStr);
-            expenseManager.addExpense(expenseName, currency.convert(amount), category);
+            ExpenseManager.addExpense(expenseName, currency.convert(amount), category);
         } catch (IllegalArgumentException e) {
             throw new InvalidArgumentException(currencyStr);
         }
         return "Expense " + expenseName + " added successfully.\n" +
-                "Your remaining budget is $" + String.format("%.2f", expenseManager.getRemainingBudget()) + ".";
+                "Your remaining budget is $" + String.format("%.2f", ExpenseManager.getRemainingBudget()) + ".";
     }
 
-    public String handleAddExpense(String expenseName, double amount) throws InvalidArgumentException {
+    public static String handleAddExpense(String expenseName, double amount) throws InvalidArgumentException {
         if (amount <= 0) {
             throw new InvalidArgumentException(Double.toString(amount));
         }
-        expenseManager.addExpense(expenseName, amount);
+        ExpenseManager.addExpense(expenseName, amount);
         return "Expense " + expenseName + " added successfully.\n" +
-                "Your remaining budget is $" + String.format("%.2f", expenseManager.getRemainingBudget()) + ".";
+                "Your remaining budget is $" + String.format("%.2f", ExpenseManager.getRemainingBudget()) + ".";
     }
 
-    public String handleListExpense(String category) throws InvalidArgumentException {
-        List<Expense> expenses = (category == null? expenseManager.getExpenses() :
-                expenseManager.getExpensesByCategory(category));
+    public static String handleListExpense(String category) throws InvalidArgumentException {
+        List<Expense> expenses = (category == null? ExpenseManager.getExpenses() :
+                ExpenseManager.getExpensesByCategory(category));
         StringBuilder expensesString = new StringBuilder();
+        double totalAmount = 0;
         for (Expense expense : expenses) {
             expensesString.append("\n - ").append(expense.toString());
+            totalAmount += expense.getAmount();
         }
-        return expenses.isEmpty()? "There are no expenses." : "Expense list is: " + expensesString;
+        return expenses.isEmpty()? "There are no expenses." : "Expense list (date and time included): " + expensesString;
     }
 
-    public String handleViewHistory() {
+    public static String handleViewHistory() {
         StringBuilder expensesString = new StringBuilder("The history of all expenses made is: ");
-        for (Expense expense : expenseManager.getExpenses()) {
+        for (Expense expense : ExpenseManager.getExpenses()) {
             expensesString.append("\n - ").append(expense.toString());
 
         }
         return expensesString.toString();
+    }
+
+    public static String handleMaxExpense() throws InvalidArgumentException {
+        Expense maxExpense = ExpenseManager.getMaxExpense();
+        return "Maximum expense: " + maxExpense.toString();
+    }
+
+    public static String handleMinExpense() throws InvalidArgumentException {
+        Expense minExpense = ExpenseManager.getMinExpense();
+        return "Minimum expense: " + minExpense.toString();
+    }
+
+    public static String handleFilterExpenseByDateRange(String startStr, String endStr) throws DateTimeParseException, InvalidArgumentException {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        LocalDateTime start = LocalDateTime.parse(startStr, formatter);
+        LocalDateTime end = LocalDateTime.parse(endStr, formatter);
+
+        List<Expense> filteredExpenses = ExpenseManager.getExpensesByDateRange(start, end);
+        if (filteredExpenses.isEmpty()) {
+            return "No expenses found between " + startStr + " and " + endStr + ".";
+        } else {
+            StringBuilder sb = new StringBuilder("Expenses between " + startStr + " and " + endStr + ":");
+            for (Expense expense : filteredExpenses) {
+                sb.append("\n - ").append(expense.toString());
+            }
+            return sb.toString();
+        }
     }
 }

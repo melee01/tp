@@ -40,6 +40,17 @@ Examples of usage:
 - `set-budget 750`
 - `set-budget 1000`
 
+### Adjust budget : `adjust-budget`
+
+Modifies the initial budget set.
+
+Format: `adjust-budget 1200`
+
+- Previous expenses are not overridden, and remaining budget is still calculated using prior expenses.
+
+Examples of usage:
+- `adjust-budget 750`
+
 ### Create Category: `create-category`
 
 Creates a category for storing expenses, such as accommodation or food.

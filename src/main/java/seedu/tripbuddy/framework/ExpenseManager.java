@@ -5,6 +5,7 @@ import seedu.tripbuddy.exception.InvalidArgumentException;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -12,52 +13,58 @@ import java.util.List;
  * */
 public class ExpenseManager {
 
-    private double budget;
-    private double totalExpense = 0;
-    private final HashSet<String> categories = new HashSet<>();
-    private final ArrayList<Expense> expenses = new ArrayList<>();
+    private static double budget;
+    private static double totalExpense = 0;
+    private static final HashSet<String> categories = new HashSet<>();
+    private static final ArrayList<Expense> expenses = new ArrayList<>();
 
-    public ExpenseManager(double budget) {
+    /**
+     * Clears all existing data and initializes budget value.
+     */
+    public static void initExpenseManager(double budget) {
         assert budget > 0 : "Budget must be positive";
-        this.budget = budget;
+        ExpenseManager.budget = budget;
+        ExpenseManager.totalExpense = 0;
+        categories.clear();
+        expenses.clear();
     }
 
-    public double getBudget() {
+    public static double getBudget() {
         return budget;
     }
 
-    public double getTotalExpense() {
+    public static double getTotalExpense() {
         return totalExpense;
     }
 
-    public double getRemainingBudget() {
+    public static double getRemainingBudget() {
         return budget - totalExpense;
     }
 
-    public List<String> getCategories() {
+    public static List<String> getCategories() {
         return categories.stream().toList();
     }
 
-    public List<Expense> getExpenses() {
+    public static List<Expense> getExpenses() {
         return List.copyOf(expenses);
     }
 
-    public void setBudget(double budget) {
+    public static void setBudget(double budget) {
         assert budget > 0 : "Budget must be positive";
-        this.budget = budget;
+        ExpenseManager.budget = budget;
     }
 
     /**
      * Adds a new category name into {@code categories} if not exists.
      * */
-    public void createCategory(String categoryName) {
+    public static void createCategory(String categoryName) {
         categories.add(categoryName);
     }
 
     /**
      * Adds a new {@link Expense} without category.
      * */
-    public void addExpense(String name, double amount) {
+    public static void addExpense(String name, double amount) {
         assert amount > 0 : "Amount must be positive";
         Expense expense = new Expense(name, amount);
         expenses.add(expense);
@@ -70,7 +77,7 @@ public class ExpenseManager {
      *     <li>A new category will be created if not exists.
      * </ul>
      * */
-    public void addExpense(String name, double amount, String categoryName) {
+    public static void addExpense(String name, double amount, String categoryName) {
         assert amount > 0 : "Amount must be positive";
         createCategory(categoryName);
         Expense expense = new Expense(name, amount, categoryName);
@@ -78,14 +85,14 @@ public class ExpenseManager {
         totalExpense += amount;
     }
 
-    public Expense getExpense(int id) throws InvalidArgumentException {
+    public static Expense getExpense(int id) throws InvalidArgumentException {
         if (id < 0 || id >= expenses.size()) {
             throw new InvalidArgumentException(Integer.toString(id));
         }
         return expenses.get(id);
     }
 
-    public void deleteExpense(int id) throws InvalidArgumentException {
+    public static void deleteExpense(int id) throws InvalidArgumentException {
         if (id < 0 || id >= expenses.size()) {
             throw new InvalidArgumentException(Integer.toString(id));
         }
@@ -93,7 +100,7 @@ public class ExpenseManager {
         expenses.remove(id);
     }
 
-    public void deleteExpense(String expenseName) throws InvalidArgumentException {
+    public static void deleteExpense(String expenseName) throws InvalidArgumentException {
         for (Expense expense : expenses) {
             if (expense.getName().equalsIgnoreCase(expenseName)) {
                 expenses.remove(expense);
@@ -104,7 +111,7 @@ public class ExpenseManager {
         throw new InvalidArgumentException(expenseName);
     }
 
-    public List<Expense> getExpensesByCategory(String category) throws InvalidArgumentException {
+    public static List<Expense> getExpensesByCategory(String category) throws InvalidArgumentException {
         if (!categories.contains(category)) {
             throw new InvalidArgumentException(category);
         }
@@ -118,7 +125,7 @@ public class ExpenseManager {
         return ret;
     }
 
-    public void setExpenseCategory(String expenseName, String category) throws InvalidArgumentException {
+    public static void setExpenseCategory(String expenseName, String category) throws InvalidArgumentException {
         for (Expense expense : expenses) {
             if (expense.getName().equalsIgnoreCase(expenseName)) {
                 expense.setCategory(category);
@@ -126,5 +133,43 @@ public class ExpenseManager {
             }
         }
         throw new InvalidArgumentException(expenseName);
+    }
+
+    public static Expense getMaxExpense() throws InvalidArgumentException {
+        if (expenses.isEmpty()) {
+            throw new InvalidArgumentException("No expenses available");
+        }
+        Expense maxExpense = expenses.get(0);
+        for (Expense expense : expenses) {
+            if (expense.getAmount() > maxExpense.getAmount()) {
+                maxExpense = expense;
+            }
+        }
+        return maxExpense;
+    }
+
+    public static Expense getMinExpense() throws InvalidArgumentException {
+        if (expenses.isEmpty()) {
+            throw new InvalidArgumentException("No expenses available");
+        }
+        Expense minExpense = expenses.get(0);
+        for (Expense expense : expenses) {
+            if (expense.getAmount() < minExpense.getAmount()) {
+                minExpense = expense;
+            }
+        }
+        return minExpense;
+    }
+
+    public static List<Expense> getExpensesByDateRange(LocalDateTime start, LocalDateTime end) {
+        ArrayList<Expense> filteredExpenses = new ArrayList<>();
+        for (Expense expense : expenses) {
+            LocalDateTime expenseDateTime = expense.getDateTime();
+            if ((expenseDateTime.isEqual(start) || expenseDateTime.isAfter(start))
+                    && (expenseDateTime.isEqual(end) || expenseDateTime.isBefore(end))) {
+                filteredExpenses.add(expense);
+            }
+        }
+        return filteredExpenses;
     }
 }

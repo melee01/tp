@@ -8,19 +8,77 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CommandHandlerTest {
 
+    final int DEFAULT_BUDGET = 2333;
+
+    @Test
+    void addExpense_a1() throws InvalidArgumentException {
+        ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
+        String message = CommandHandler.handleAddExpense("a", 1);
+        assertEquals("Expense a added successfully.\n" +
+                "Your remaining budget is $" + String.format("%.2f", DEFAULT_BUDGET - 1.) + ".",
+                message);
+    }
+
     @Test
     void addExpense_negativeAmount_expectInvalidArgumentException() {
-        CommandHandler handler = new CommandHandler();
-        assertThrows(InvalidArgumentException.class, () -> handler.handleAddExpense("a", -1));
+        ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
+        assertThrows(InvalidArgumentException.class,
+                () -> CommandHandler.handleAddExpense("a", -1));
     }
 
     @Test
     void setBudget_set135() throws InvalidArgumentException {
-        CommandHandler handler = new CommandHandler();
-        handler.handleSetBudget(135);
-        String message = handler.handleViewBudget();
-        assertEquals("The original budget you set was $135.\n" +
-                "So far, you have spent $0.\n" +
-                "This leaves you with a remaining budget of $135.", message);
+        ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
+        String message = CommandHandler.handleSetBudget(135);
+        assertEquals("Your budget has been set to $" + String.format("%.2f", 135) + ".",
+                message);
+    }
+
+    @Test
+    void handleMaxExpenseTest() throws InvalidArgumentException {
+        ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
+        ExpenseManager.addExpense("a", 10);
+        ExpenseManager.addExpense("b", 20);
+
+        String expected = "Maximum expense: name: b, amount: 20.00";
+        String actual = CommandHandler.handleMaxExpense();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void handleMinExpenseTest() throws InvalidArgumentException {
+        ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
+        ExpenseManager.addExpense("a", 10);
+        ExpenseManager.addExpense("b", 20);
+
+        String expected = "Minimum expense: name: a, amount: 10.00";
+        String actual = CommandHandler.handleMinExpense();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void handleMaxExpense_noExpenses_throwsException() {
+        ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
+        assertThrows(InvalidArgumentException.class, () -> CommandHandler.handleMaxExpense());
+    }
+
+    @Test
+    void handleMinExpense_noExpenses_throwsException() {
+        ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
+        assertThrows(InvalidArgumentException.class, () -> CommandHandler.handleMinExpense());
+    }
+
+    @Test
+    void handleListExpense_totalAmountSpent() throws InvalidArgumentException {
+        ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
+        ExpenseManager.addExpense("a", 50);
+        ExpenseManager.addExpense("b", 100);
+
+        String expected = "Expense list is:" +
+                "\n - name: a, amount: 50.00" +
+                "\n - name: b, amount: 100.00" +
+                "\nTotal amount spent: $150.00";
+        String actual = CommandHandler.handleListExpense(null);
+        assertEquals(expected, actual);
     }
 }
