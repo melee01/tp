@@ -15,7 +15,7 @@ TripBuddy allows user interactions via a CLI, which is activated by `TripBuddy`.
 
 The main framework consists of four layers: `CommandHandler`, `ExpenseManager`, `InputHandler` and `Ui`.
 
-<img src="diagrams/TripBuddyClassDiagram.png" alt="GeneralDesign" width="700">
+<img src="diagrams/class/TripBuddyClassDiagram.png" alt="GeneralDesign" width="700">
 
 This layered design results in less conflicts while developing multiple
 features, as well as ensuring testability of different modules.
@@ -28,7 +28,7 @@ of the user so far, and the list of **categories**.
 Return values of methods of `ExpenseManager` are unprocessed, i.e. not parsed
 into `String` or other formats for UI output. 
 
-<img src="diagrams/ExpenseDiagram.png" alt="Expense Design" width="300">
+<img src="diagrams/class/ExpenseDiagram.png" alt="Expense Design" width="300">
 
 It manipulates the array of expenses and has methods to do the following tasks:
 * Adds an expense 
@@ -39,32 +39,58 @@ It manipulates the array of expenses and has methods to do the following tasks:
 
 #### Expense
 This is a class that saves the data of a specific expense made by the user. It holds important information such as
-the name, the amount and the date the expenditure was made. The use of the category is optional. The
+the name, the amount and the date the expenditure was made. The use of the category is optional.
+
+The amount of the expense is calculated in the base currency. You can change the base currency using the command 
+`set-base-currency`. 
 
 #### Currency
-
+This is an enumeration class explaining all the available currencies. The base currency is the one whose exchange rate
+is one. The default base currency is SGD. 
 
 ### CommandHandler
 
-`CommandHandler` is responsible for collecting data from `ExpenseManager` and
-processing then into `String` messages to be shown on UI.
+`CommandHandler` is responsible for the following tasks:
+- Collecting and manipulating data from `ExpenseManager` 
 
-Parameters of `CommandHandler` methods should be parsed by `Parser` already.
+- Processing the output into `String` messages to be shown on UI
 
-E.g., the following method from `CommandHandler` receives an `int` as a
-parameter and returns a `String` message for display.
+Parameters of `CommandHandler` methods should be parsed by `InputHandler` already. Every method corresponds to a 
+command that can be done in the system. 
+
+For example, in the following sequence diagram, we show how `handlerAddExpense` works.
+<img src="diagrams/sequence/AddExpense.png" alt="Add Expense Diagram" width=600>
 
 
 ### InputHandler
 
-`Parser` is responsible for the following tasks:
+`InputHandler` is responsible for the following tasks:
 
-- Analyzing user input and converting arguments into correct data types for
-`CommandHandler` methods.
+- Analyzing user input and converting arguments into `Command` objects
 
 - Invoking `CommandHandler` methods for command execution.
 
 - Handling exceptions caused by user actions.
+
+Inside this logic, we also find other classes. 
+
+<img src="diagrams/class/CommandDiagram.png" alt="Command Classes" width=400>
+
+#### Command
+This class keeps the information of a Command, such as, `view-currency` or `add-expense`. 
+It has the following attributes: 
+- Keyword: this keeps the information of the type of command (eg. `view-currency`)
+- OptList: this keeps a list with the possible optional tokens (eg. `add-expense AMOUNT CURRENCY`)
+- OptMap: this keeps information about the optional tokens. The keys are the names of the optional values
+  (eg. '-c' if we want to input a currency when using 'add-expense') and the values are the actual values inputted
+by the user. 
+
+#### Keyword
+This is an enumeration that indicates the different types of commands there are available.
+
+#### Option
+
+#### Parser
 
 ### Ui
 
@@ -74,11 +100,16 @@ The `Ui` class is responsible for displaying messages to the user via the comman
 * Formatting outputs for clarity and readability.
 * Ensuring smooth user experience by maintaining a consistent UI flow.
 
+### Exceptions 
+We have defined different exception types to ensure that all errors are properly covered. 
+
+<img src="diagrams/class/ExceptionDiagram.png" alt="Exception Diagram" width=400>
+
 ## Implementation
 This section describes an explanation on some of the implemented features. 
 
 ### Min-expense
-Allows users to be informed on the lowest expense made in real-time
+Allows users to be informed on the lowest expense made in real-time.
 
 ### Max-expense
 Allows users to be informed on the highest expense made in real-time
@@ -101,12 +132,16 @@ currency.
 ``` 
 
 We can also see the current currency rates available in our app using the command 
-`view-rate`. This will display the above `json`. 
+`view-currency`. This will display the above `json`. 
 
 Moreover, we can also change the base currency. In order to do this, we will:
-1. Recalculate existing expenses: all previously recorded expenses need to be recalculated to reflect their values in the neew base currency. 
+1. Recalculate existing expenses: all previously recorded expenses need to be recalculated to reflect their values in the new base currency. 
 2. Update the budget: update the value of the budget so that is consistent with the current currency.
 3. Recalculate Conversion Rates: divide all the values in the conversion dictionary by the current rate to that currency. 
+
+We can see how we do it in the following sequence diagram. 
+
+<img src="diagrams/sequence/setBaseCurrency.png" alt="Set Base Currency Diagram" width="700">
 
 
 #### **Step 2**: Conversion logic
@@ -115,9 +150,6 @@ When an expense is added:
 2. Multiply the expense amount by the conversion rate
 3. The value in the base 
 
-#### [Optional] **Step 3**: Updating conversion rates
-A command that manually updates/adds conversion rates.
-`update-rate CURRENCY_CODE NEW_RATE`
 
 #### **Alternatives Considered**
 - Keep the original value of the expense as well as the converted value. 
@@ -142,17 +174,19 @@ and lowest expenses, TripBuddy empowers users to make informed financial decisio
 
 ## User Stories
 
-| Version | As a ...        | I want to ...                     | So that I can ...                                      |
-|---------|-----------------|-----------------------------------|--------------------------------------------------------|
-| v1.0    | new user        | see usage instructions            | refer to them when I forget how to use the app         |
-| v1.0    | budget-traveler | set a travel budget               | monitor spending to avoid overspending during the trip |
-| v1.0    | user            | add an expense                    | track my expenses and total remaining budget.          |
-| v1.0    | user            | delete an expense                 | correct an earlier mistake.                            |
-| v1.0    | user            | view my remaining budget          | see how much money I have left to spend.               |
-| v1.0    | user            | view past expenses                | review my past expenses for accuracy                   |
-| v2.0    | user            | adjust my total budget            | modify my spending habits accordingly.                 |
-| v2.0    | user            | see total amount spent            | understand my overall spending up to date              |
-| v2.0    | user            | see minimum and maximum expense   | identify the smallest and largest purchases I've made  |
+| Version | As a ...        | I want to ...                          | So that I can ...                                               |
+|---------|-----------------|----------------------------------------|-----------------------------------------------------------------|
+| v1.0    | new user        | see usage instructions                 | refer to them when I forget how to use the app                  |
+| v1.0    | budget-traveler | set a travel budget                    | monitor spending to avoid overspending during the trip          |
+| v1.0    | user            | add an expense                         | track my expenses and total remaining budget.                   |
+| v1.0    | user            | delete an expense                      | correct an earlier mistake.                                     |
+| v1.0    | user            | view my remaining budget               | see how much money I have left to spend.                        |
+| v1.0    | user            | view past expenses                     | review my past expenses for accuracy                            |
+| v2.0    | user            | adjust my total budget                 | modify my spending habits accordingly.                          |
+| v2.0    | user            | see total amount spent                 | understand my overall spending up to date                       |
+| v2.0    | user            | see minimum and maximum expense        | identify the smallest and largest purchases I've made           |
+| v2.0    | user            | add an expense in a different currency | add expenses in the local currency and not think about the rate |
+| v2.0    | user            | save/load the information of a trip    | i don't have to keep adding expenses every time                 |
 
 ## Non-Functional Requirements
 
