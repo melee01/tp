@@ -13,7 +13,7 @@ public class Expense {
     private String category;
     private LocalDateTime dateTime;
 
-    private final static DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public Expense(String name, double amount) {
         this.name = name;
