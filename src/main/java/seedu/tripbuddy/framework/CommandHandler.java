@@ -138,7 +138,8 @@ public class CommandHandler {
             expensesString.append("\n - ").append(expense.toString());
             totalAmount += expense.getAmount();
         }
-        return expenses.isEmpty()? "There are no expenses." : "Expense list (date and time included): "
+        expensesString.append("\nTotal amount spent: $" + String.format("%.2f", totalAmount) + ".");
+        return expenses.isEmpty()? "There are no expenses." : "Expense list is: "
                 + expensesString;
     }
 

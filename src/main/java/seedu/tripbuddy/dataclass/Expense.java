@@ -12,7 +12,7 @@ public class Expense {
     private double amount;
     private String category;
     private LocalDateTime dateTime;
-    
+
     public Expense(String name, double amount) {
         this.name = name;
         this.amount = amount;
@@ -45,6 +45,10 @@ public class Expense {
 
     public String getCategory() {
         return category;
+    }
+
+    public String getDateTimeString() {
+        return dateTime.format(FORMATTER);
     }
 
     public void setCategory(String category) {
