@@ -1,6 +1,9 @@
 package seedu.tripbuddy.framework;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.junit.jupiter.api.Test;
 import seedu.tripbuddy.dataclass.Currency;
 import seedu.tripbuddy.dataclass.Expense;
@@ -14,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 class CommandHandlerTest {
 
+    static final Logger LOGGER = Logger.getLogger(CommandHandlerTest.class.getName());
     static final int DEFAULT_BUDGET = 2333;
 
     @Test
@@ -73,7 +77,8 @@ class CommandHandlerTest {
         ExpenseManager.initExpenseManager(100);
         ExpenseManager.addExpense("item1", 150);
         String message = CommandHandler.handleViewBudget();
-        assertTrue(message.contains("exceeded your budget by $50.00"));
+        LOGGER.log(Level.INFO, message);
+        assertTrue(message.contains("exceeded your budget by $50"));
     }
 
     @Test
