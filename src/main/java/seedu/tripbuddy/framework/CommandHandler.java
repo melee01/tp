@@ -37,7 +37,8 @@ public class CommandHandler {
                         9. adjust-budget AMOUNT - Modify the budget amount.
                         10. max-expense - Display the expense with the highest amount.
                         11. min-expense - Display the expense with the lowest amount.
-                        12. filter-date yyyy-MM-dd HH:mm:ss yyyy-MM-dd HH:mm:ss - Filter expenses between two date/time ranges START_DATE START_TIME END_DATE END_TIME.
+                        12. filter-date yyyy-MM-dd HH:mm:ss yyyy-MM-dd HH:mm:ss 
+                        - Filter expenses between two date/time ranges START_DATE START_TIME END_DATE END_TIME.
                         13. view-currency - Displays the actual rates of currencies. 
                         
                         Enjoy tracking your expenses with TripBuddy!""";
@@ -137,7 +138,8 @@ public class CommandHandler {
             expensesString.append("\n - ").append(expense.toString());
             totalAmount += expense.getAmount();
         }
-        return expenses.isEmpty()? "There are no expenses." : "Expense list (date and time included): " + expensesString;
+        return expenses.isEmpty()? "There are no expenses." : "Expense list (date and time included): "
+                + expensesString;
     }
 
     public static String handleViewHistory() {
@@ -159,7 +161,8 @@ public class CommandHandler {
         return "Minimum expense: " + minExpense.toString();
     }
 
-    public static String handleFilterExpenseByDateRange(String startStr, String endStr) throws DateTimeParseException, InvalidArgumentException {
+    public static String handleFilterExpenseByDateRange(String startStr, String endStr)
+            throws DateTimeParseException, InvalidArgumentException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
         LocalDateTime start = LocalDateTime.parse(startStr, formatter);
