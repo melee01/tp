@@ -11,7 +11,7 @@ budgeting is easy and hassle-free, so travelers can focus on enjoying their trip
 {Give steps to get started quickly}
 
 1. Ensure that you have Java 17 or above installed.
-1. Down the latest version of `TripBuddy` from [here](http://link.to/duke).
+2. Down the latest version of `TripBuddy` from [here](http://link.to/duke).
 
 ## Notes about the command format
 
@@ -61,7 +61,7 @@ Format:  `create-category NAME`
 
 Examples of usage:
 - `create-category Accommodation`
-- `create-category food-and-drink`
+- `create-category food and drink`
 
 
 ### Add Expense: `add-expense`
@@ -69,29 +69,29 @@ Examples of usage:
 Adds an expense to the trip and automatically updates the remaining budget, taking into account 
 the new expenditure.
 
-Format: `add-expense NAME_EXPENSE AMOUNT [CATEGORY] [CURRENCY]`
+Format: `add-expense NAME_EXPENSE -a AMOUNT [CURRENCY] -c [CATEGORY]`
 
 - NAME_EXPENSE must not contain spaces. If it consists of multiple words, use dashes or underscores instead.
 - Base currency is SGD. Everything will be converted to the base currency. 
 
 Examples of usage:
-- `add-expense mcdonalds 5`
-- `add-expense the-plaza-hotel 300 Accommodation`
-- `add-expense lunch 100 USD`
-- `add-expense capibara-museum 10000 Activities IDR`
+- `add-expense mcdonalds -a 5`
+- `add-expense the plaza hotel -a 300 -c Accommodation`
+- `add-expense lunch -a 100 USD`
+- `add-expense capybara museum -a 10000 IDR -c Activities `
 
 ### Set Category: `set-cateogry`
 
 Set the category for a particular expense that has been already inputted by the user. This command will override a 
 prior category that was set for that specific expense.
 
-Format: `set-category NAME_EXPENSE CATEGORY`
+Format: `set-category NAME_EXPENSE -c CATEGORY`
 
 - If CATEGORY does not exist in the existing record of categories, then a new category will be created with
 the specified name.
 
 Examples:
-- `set-category mcdonalds food`
+- `set-category mcdonalds -c food`
 
 ### Delete Expense: `delete-expense`
 
@@ -101,6 +101,15 @@ Format: `delete-expense NAME_EXPENSE`
 
 Examples of usage:
 - delete-expense the-plaza-hotel
+
+### Search Expense: `search`
+
+Search the expense list by search word.
+
+Format: `search SEARCHWORD`
+
+Examples of usage:
+- search shopping
 
 ### Exit the program: `quit`
 
@@ -113,9 +122,3 @@ Format: `quit`
 **Q**: How do I transfer my data to another computer? 
 
 **A**: {your answer here}
-
-## Command Summary
-
-{Give a 'cheat sheet' of commands here}
-
-* Add todo `todo n/TODO_NAME d/DEADLINE`

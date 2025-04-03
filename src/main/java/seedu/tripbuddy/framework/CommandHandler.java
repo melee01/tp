@@ -18,39 +18,66 @@ public class CommandHandler {
 
     public static String handleTutorial() {
         return """
-                        Welcome to the tutorial of TripBuddy!
-                        
-                        Format Guidelines:
-                        - Square brackets [] indicate optional elements.
-                        - Expense and category names must be a single word or multiple words joined with a dash (-).
-                        - AMOUNT must be a positive integer.
-                        
-                        Here are the commands you can use:
-                        1. set-budget AMOUNT - Set your total trip budget. Default budget is $1000.
-                        2. add-expense EXPENSE_NAME AMOUNT [CATEGORY] [CURRENCY] - Add a new expense.
-                        3. delete-expense EXPENSE_NAME - Remove an expense by name.
-                        4. create-category CATEGORY - Create a new expense category.
-                        5. set-category EXPENSE_NAME CATEGORY - Assign an expense to a category.
-                        6. view-budget - Check your remaining budget.
-                        7. list-expense [CATEGORY] - Calculate sum of recorded expenses.
-                        8. view-history - See a history of all expenses made.
-                        9. adjust-budget AMOUNT - Modify the budget amount.
-                        10. max-expense - Display the expense with the highest amount.
-                        11. min-expense - Display the expense with the lowest amount.
-                        12. filter-date yyyy-MM-dd HH:mm:ss yyyy-MM-dd HH:mm:ss
-                        - Filter expenses between two date/time ranges START_DATE START_TIME END_DATE END_TIME.
-                        13. view-currency - Displays the actual rates of currencies.
-                        
-                        Enjoy tracking your expenses with TripBuddy!""";
+                Welcome to the tutorial of TripBuddy!
+                
+                Format Guidelines:
+                - Square brackets [] indicate optional elements.
+                - Expense and category names must be a single word or multiple words joined with a dash (-).
+                - AMOUNT must be a positive integer.
+                
+                Here are the commands you can use:
+                1. set-budget AMOUNT
+                        - Set your total trip budget. Default budget is $1000.
+                2. add-expense EXPENSE_NAME -a AMOUNT [CURRENCY] -c [CATEGORY]
+                        - Add a new expense.
+                3. delete-expense EXPENSE_NAME
+                        - Remove an expense by name.
+                4. create-category CATEGORY
+                        - Create a new expense category.
+                5. set-category EXPENSE_NAME -c CATEGORY
+                        - Assign an expense to a category.
+                6. view-budget
+                        - Check your remaining budget.
+                7. list-expense [CATEGORY]
+                        - Calculate sum of recorded expenses.
+                8. view-history
+                        - See a history of all expenses made.
+                9. adjust-budget AMOUNT
+                        - Modify the budget amount.
+                10. max-expense
+                        - Display the expense with the highest amount.
+                11. min-expense
+                        - Display the expense with the lowest amount.
+                12. filter-date -f yyyy-MM-dd HH:mm:ss -t yyyy-MM-dd HH:mm:ss
+                        - Get all expenses within date range.
+                - Filter expenses between two date/time ranges START_DATE START_TIME END_DATE END_TIME.
+                13. view-currency
+                        - Displays the actual rates of currencies.
+                        - default base currency: SGD
+                14. search SEARCHWORD
+                        - Displays expenses that include the given search word.
+                15. view-categories
+                        - Displays all categories.
+                16. clear
+                        - Clears all past expenses and categories.
+                
+                Enjoy tracking your expenses with TripBuddy!""";
     }
 
     public static String handleViewBudget() {
         double budget = ExpenseManager.getBudget();
         double totalExpense = ExpenseManager.getTotalExpense();
         double remainingBudget = budget - totalExpense;
-        return "The original budget you set was $" + budget + ".\nSo far, you have spent $" +
-                totalExpense + ".\nThis leaves you with a remaining budget of $" +
-                String.format("%.2f", remainingBudget) + ".";
+        if (remainingBudget > 0) {
+            return "The original budget you set was $" + budget + ".\nSo far, you have spent $" +
+                    totalExpense + ".\nThis leaves you with a remaining budget of $" +
+                    String.format("%.2f", remainingBudget) + ".";
+        } else {
+            double amountOfDebt = remainingBudget * -1;
+            return "The original budget you set was $" + budget + ".\nSo far, you have spent $" +
+                    totalExpense + ".\nUh oh! You have exceeded your budget by $" + amountOfDebt + ".\n" +
+                    "Consider adjusting your budget to get back on track.";
+        }
     }
 
     public static String handleSetBudget(double budget) throws InvalidArgumentException {
@@ -101,8 +128,17 @@ public class CommandHandler {
             ExpenseManager.addExpense(expenseName, amount, category);
         }
 
-        return "Expense " + expenseName + " added successfully to category " + category + ".\n" +
-                "Your remaining budget is $" + ExpenseManager.getRemainingBudget() + ".";
+        double remainingBudget = ExpenseManager.getRemainingBudget();
+        if (remainingBudget >= 0) {
+            return "Expense " + expenseName + " added successfully to category " + category + ".\n" +
+                    "Your remaining budget is $" + remainingBudget + ".";
+        } else {
+            double amountOfDebt = remainingBudget * -1;
+            return "Expense " + expenseName + " added successfully to category " + category + ".\n" +
+                    "Uh oh! You've exceeded your budget.\n" +
+                    "You are now in debt by $" + amountOfDebt + ". Time to rein it in!\n" +
+                    "Consider adjusting your budget to get back on track!";
+        }
     }
 
     public static String handleAddExpense(String expenseName, double amount, String category, String currencyStr)
@@ -116,8 +152,17 @@ public class CommandHandler {
         } catch (IllegalArgumentException e) {
             throw new InvalidArgumentException(currencyStr);
         }
-        return "Expense " + expenseName + " added successfully.\n" +
-                "Your remaining budget is $" + String.format("%.2f", ExpenseManager.getRemainingBudget()) + ".";
+        double remainingBudget = ExpenseManager.getRemainingBudget();
+        if (remainingBudget >= 0) {
+            return "Expense " + expenseName + " added successfully.\n" +
+                    "Your remaining budget is $" + String.format("%.2f", remainingBudget) + ".";
+        } else {
+            double amountOfDebt = remainingBudget * -1;
+            return "Expense " + expenseName + " added successfully.\n" +
+                    "Uh oh! You've exceeded your budget.\n" +
+                    "You are now in debt by $" + amountOfDebt + ". Time to rein it in!\n" +
+                    "Consider adjusting your budget to get back on track!";
+        }
     }
 
     public static String handleAddExpense(String expenseName, double amount) throws InvalidArgumentException {
@@ -125,8 +170,17 @@ public class CommandHandler {
             throw new InvalidArgumentException(Double.toString(amount));
         }
         ExpenseManager.addExpense(expenseName, amount);
-        return "Expense " + expenseName + " added successfully.\n" +
-                "Your remaining budget is $" + String.format("%.2f", ExpenseManager.getRemainingBudget()) + ".";
+        double remainingBudget = ExpenseManager.getRemainingBudget();
+        if (remainingBudget >= 0) {
+            return "Expense " + expenseName + " added successfully.\n" +
+                    "Your remaining budget is $" + String.format("%.2f", remainingBudget) + ".";
+        } else {
+            double amountOfDebt = remainingBudget * -1;
+            return "Expense " + expenseName + " added successfully.\n" +
+                    "Uh oh! You've exceeded your budget.\n" +
+                    "You are now in debt by $" + amountOfDebt + ". Time to rein it in!\n" +
+                    "Consider adjusting your budget to get back on track!";
+        }
     }
 
     public static String handleListExpense(String category) throws InvalidArgumentException {
@@ -139,12 +193,12 @@ public class CommandHandler {
             totalAmount += expense.getAmount();
         }
         expensesString.append("\nTotal amount spent: $" + String.format("%.2f", totalAmount) + ".");
-        return expenses.isEmpty()? "There are no expenses." : "Expense list is: "
+        return expenses.isEmpty()? "There are no expenses." : "Here is a list of your past expenses: "
                 + expensesString;
     }
 
     public static String handleViewHistory() {
-        StringBuilder expensesString = new StringBuilder("The history of all expenses made is: ");
+        StringBuilder expensesString = new StringBuilder("Here is a history of your past expenses: ");
         for (Expense expense : ExpenseManager.getExpenses()) {
             expensesString.append("\n - ").append(expense.toString());
 
@@ -181,8 +235,8 @@ public class CommandHandler {
         }
     }
 
-    public static String handlerViewCurrency() {
-        StringBuilder message = new StringBuilder("The current exchange rate is: \n");
+    public static String handleViewCurrency() {
+        StringBuilder message = new StringBuilder("The current exchange rate against base currency is: \n");
         for (Currency currency : Currency.values()) {
             message.append("Rate of base currency and ")
                     .append(currency.toString())
@@ -190,7 +244,37 @@ public class CommandHandler {
                     .append(currency.getRate())
                     .append(" \n");
         }
-
         return message.toString();
+    }
+
+    public static String handleSearch(String searchWord) {
+        List<Expense> expenses = ExpenseManager.getExpensesBySearchword(searchWord);
+        if (expenses.isEmpty()) {
+            return "There are no expenses that matched your search word: " + searchWord + ".";
+        } else {
+            StringBuilder sb = new StringBuilder("Expenses that matched your search word '" + searchWord + "':");
+            for (Expense expense : expenses) {
+                sb.append("\n - ").append(expense.toString());
+            }
+            return sb.toString();
+        }
+    }
+
+    public static String handleViewCategories() {
+        List<String> categories = ExpenseManager.getCategories();
+        if (categories.isEmpty()) {
+            return "There are no categories.";
+        } else {
+            StringBuilder sb = new StringBuilder("Here is the category list:");
+            for (String category : categories) {
+                sb.append("\n - ").append(category);
+            }
+            return sb.toString();
+        }
+    }
+
+    public static String handleClearAll() {
+        ExpenseManager.clearExpensesAndCategories();
+        return "All past expenses and categories have been cleared.";
     }
 }

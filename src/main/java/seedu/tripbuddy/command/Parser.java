@@ -1,68 +1,71 @@
 package seedu.tripbuddy.command;
 
-import seedu.tripbuddy.exception.ExceptionHandler;
-import seedu.tripbuddy.exception.InvalidArgumentException;
 import seedu.tripbuddy.exception.InvalidKeywordException;
-import seedu.tripbuddy.framework.CommandHandler;
-import seedu.tripbuddy.framework.Ui;
 
-/**
- * Handles parsing of user commands and delegates the execution of tasks.
- * This class is responsible for interpreting user input and calling
- * appropriate methods in other classes to execute commands.
- */
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class Parser {
 
-    public static boolean isQuitCommand(String userInput) {
-        return userInput.split(" ")[0].equals("quit");
+    private static final Logger LOGGER = Logger.getLogger(Parser.class.getName());
+
+    /**
+     * Checks if a {@code String} is an option expression.
+     * <p>Returns {@code true} if the string starts with {@code '-'}.
+     */
+    private static boolean isOpt(String s) {
+        return s.startsWith("-");
     }
 
-    public static void handleUserInput(String userInput) {
-        String[] tokens = userInput.strip().split(" ");
-        String keyword = tokens[0].toLowerCase();
-        try {
-            String message = switch (keyword) {
-            case "tutorial" -> CommandHandler.handleTutorial();
-            case "set-budget" -> CommandHandler.handleSetBudget(Integer.parseInt(tokens[1]));
-            case "adjust-budget" -> CommandHandler.handleAdjustBudget(Integer.parseInt(tokens[1]));
-            case "view-budget" -> CommandHandler.handleViewBudget();
-            case "create-category" -> CommandHandler.handleCreateCategory(tokens[1]);
-            case "set-category" -> CommandHandler.handleSetCategory(tokens[1], tokens[2]);
-            case "add-expense" -> {
-                if (tokens.length == 4) {
-                    yield CommandHandler.handleAddExpense(tokens[1], Integer.parseInt(tokens[2]), tokens[3]);
-                } else if (tokens.length > 4) {
-                    yield CommandHandler.handleAddExpense(tokens[1], Integer.parseInt(tokens[2]), tokens[3], tokens[4]);
-                } else if (tokens.length == 3) {
-                    yield CommandHandler.handleAddExpense(tokens[1], Integer.parseInt(tokens[2]));
-                }
-                throw new ArrayIndexOutOfBoundsException();
-            }
-            case "delete-expense" -> CommandHandler.handleDeleteExpense(tokens[1]);
-            case "list-expense" -> CommandHandler.handleListExpense(tokens.length == 1? null : tokens[1]);
-            case "view-history" -> CommandHandler.handleViewHistory();
-            case "max-expense" -> CommandHandler.handleMaxExpense();
-            case "min-expense" -> CommandHandler.handleMinExpense();
-            case "filter-date" -> {
-                if (tokens.length >= 5) {
-                    yield CommandHandler.handleFilterExpenseByDateRange(tokens[1] + " " + tokens[2],
-                            tokens[3] + " " + tokens[4]);
-                }
-                throw new ArrayIndexOutOfBoundsException();
-            }
-            case "view-currency" -> CommandHandler.handlerViewCurrency();
-            default -> throw new InvalidKeywordException(keyword);
-            };
+    /**
+     * Parses an input line into {@link Command}.
+     */
+    public static Command parseCommand(String cmdInput) throws InvalidKeywordException {
+        LOGGER.log(Level.INFO, "Start parsing: \"" + cmdInput + '"');
 
-            Ui.printMessage(message);
-        } catch (InvalidKeywordException e) {
-            ExceptionHandler.handleInvalidKeywordException(e);
-        } catch (NumberFormatException e) {
-            ExceptionHandler.handleNumberFormatException();
-        } catch (InvalidArgumentException e) {
-            ExceptionHandler.handleInvalidArgumentException(e);
-        } catch (ArrayIndexOutOfBoundsException e) {
-            ExceptionHandler.handleArrayIndexOutOfBoundsException();
+        String[] tokens = cmdInput.strip().split(" ");
+        Command cmd = null;
+
+        String keywordString = tokens[0];
+        for (Keyword i : Keyword.values()) {
+            if (keywordString.equals(i.toString())) {
+                cmd = new Command(i);
+                break;
+            }
         }
+
+        // Not a legit keyword
+        if (cmd == null) {
+            throw new InvalidKeywordException(keywordString);
+        }
+
+        int numTokens = tokens.length;
+        if (numTokens == 1) {
+            return cmd;
+        }
+
+        String opt = "";
+        StringBuilder val = new StringBuilder();
+        for (int i = 1; i < numTokens; ++i) {
+            if (!isOpt(tokens[i])) {
+                val.append(tokens[i]).append(' ');
+                continue;
+            }
+            // Has extra tokens before the first opt-val pair
+            if (i > 1) {
+                Option newOpt = new Option(opt, val.toString().strip());
+                cmd.addOption(newOpt);
+                LOGGER.log(Level.INFO, "New option: \"" + newOpt + '"');
+            }
+            opt = tokens[i].substring(1);
+            val = new StringBuilder();
+        }
+
+        Option newOpt = new Option(opt, val.toString().strip());
+        cmd.addOption(newOpt);
+        LOGGER.log(Level.INFO, "New option: \"" + newOpt + '"');
+
+        LOGGER.log(Level.INFO, "End parsing: \"" + cmd + '"');
+        return cmd;
     }
 }
