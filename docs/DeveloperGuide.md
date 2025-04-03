@@ -1,4 +1,6 @@
 # Developer Guide
+<!-- TOC -->
+<!-- /TOC -->
 
 ## Acknowledgements
 
@@ -11,36 +13,36 @@ This section describes some details on the design.
 
 TripBuddy allows user interactions via a CLI, which is activated by `TripBuddy`.
 
-The main framework consists of three layers: `command.Parser`, `framework.CommandHandler`
-and `framework.ExpenseManager`, both following the singleton design pattern.
+The main framework consists of four layers: `CommandHandler`, `ExpenseManager`, `InputHandler` and `Ui`.
+
+<img src="diagrams/TripBuddyClassDiagram.png" alt="GeneralDesign" width="700">
+
 This layered design results in less conflicts while developing multiple
 features, as well as ensuring testability of different modules.
 
 ### ExpenseManager
 
-`ExpenseManager` stores all user data, and has direct CRUD access to them.
+`ExpenseManager` stores all user data, and has direct CRUD access to them. It saves the **budget**, the **total expense** 
+of the user so far, and the list of **categories**. 
 
 Return values of methods of `ExpenseManager` are unprocessed, i.e. not parsed
-into `String` or other formats for UI output.
+into `String` or other formats for UI output. 
 
-E.g., the following method from `ExpenseManager`returns a list of `Expense`
-entities. 
+<img src="diagrams/ExpenseDiagram.png" alt="Expense Design" width="300">
 
-``` java
-public List<Expense> getExpensesByCategory(String category) throws InvalidArgumentException {
-    if (!categories.contains(category)) {
-        throw new InvalidArgumentException(category);
-    }
+It manipulates the array of expenses and has methods to do the following tasks:
+* Adds an expense 
+* Deletes an expense
+* Retrieves the maximum expense
+* Retrieves the minimum expense
+* Retrieves expenses by category or date
 
-    ArrayList<Expense> ret = new ArrayList<>();
-    for (Expense expense : expenses) {
-        if (category.equals(expense.getCategory())) {
-            ret.add(expense);
-        }
-    }
-    return ret;
-}
-```
+#### Expense
+This is a class that saves the data of a specific expense made by the user. It holds important information such as
+the name, the amount and the date the expenditure was made. The use of the category is optional. The
+
+#### Currency
+
 
 ### CommandHandler
 
@@ -52,17 +54,8 @@ Parameters of `CommandHandler` methods should be parsed by `Parser` already.
 E.g., the following method from `CommandHandler` receives an `int` as a
 parameter and returns a `String` message for display.
 
-``` java
-public String handleSetBudget(int budget) throws InvalidArgumentException {
-    if (budget <= 0) {
-        throw new InvalidArgumentException(Integer.toString(budget));
-    }
-    expenseManager.setBudget(budget);
-    return "Your budget has been set to $" + budget + ".";
-}
-```
 
-### Parser
+### InputHandler
 
 `Parser` is responsible for the following tasks:
 

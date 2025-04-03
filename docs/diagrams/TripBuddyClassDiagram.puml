@@ -1,0 +1,71 @@
+@startuml
+hide circle
+skinparam classAttributeIconSize 0
+
+' Remove the default class icon
+skinparam classIconSize 0
+
+
+
+class InputHandler {
+  +<u>isQuitCommand(userInput: String): boolean
+  +<u>handleUserInput(userInput: String): void
+}
+
+
+class CommandHandler {
++ <u>handleTutorial(): String
++ <u>handleViewBudget(): String
++ <u>handleSetBudget(budget: double): String
++ <u>handleAdjustBudget(budget: double): String
++ <u>handleCreateCategory(category: String): String
++ <u>handleSetCategory(expenseName: String, category: String): String
++ <u>handleDeleteExpense(expenseName: String): String
++ <u>handleAddExpense(expenseName: String, amount: double, category: String): String
++ <u>handleAddExpense(expenseName: String, amount: double, category: String, currencyStr: String): String
++ <u>handleAddExpense(expenseName: String, amount: double): String
++ <u>handleListExpense(category: String): String
++ <u>handleViewHistory(): String
++ <u>handleMaxExpense(): String
++ <u>handleMinExpense(): String
++ <u>handleFilterExpenseByDateRange(startStr: String, endStr: String): String
++ <u>handlerViewCurrency(): String
+
+}
+
+class FileHandler {
+- FILE_PATH: String
+---
+- <u> readJsonObject: JSONObject
+- <u> writeJsonObject: void
+- <u> saveData: void
+- <u> loadData: void
+}
+
+class Ui {
+- <u> LINE: String
+- <u> START_MESSAGE: String
+- <u> END_MESSAGE: String
+- <u> scanner: Scanner
+
++ <u>printLineSeparator(): void
++ <u>printStartMessage(): void
++ <u>getUserInput(): String
++ <u>printEndMessage(): void
++ <u>printMessage(Message: String): void
+
+
+}
+
+class TripBuddy{
+- <u> DEFALUT_BUDGET=1000
+
++ <u>run(): void
++ <u>main(): void
+
+}
+
+
+
+@enduml
+

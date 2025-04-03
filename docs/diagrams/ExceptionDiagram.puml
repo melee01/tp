@@ -1,0 +1,43 @@
+@startuml
+hide circle
+skinparam classAttributeIconSize 0
+
+' Remove the default class icon
+skinparam classIconSize 0
+class "<<abstract>> \n InvalidCommandException"
+class "<<abstract>> \n TripBuddyException"
+class InvalidKeywordException
+class InvalidArgumentException
+
+"<<abstract>> \n TripBuddyException" <|-- "<<abstract>> \n InvalidCommandException"
+"<<abstract>> \n InvalidCommandException" <|-- InvalidKeywordException
+"<<abstract>> \n InvalidCommandException" <|-- InvalidArgumentException
+"<<abstract>> \n InvalidCommandException" <|-- MissingOptionException
+
+class ExceptionHandler {
+
++ <u>handleInvalidKeywordException(e: InvalidKeywordException):void
++ <u>handleInvalidArgumentException(e: InvalidArgumentException): void
++ <u>handleArrayIndexOutOfBoundsException(): void
++ <u>handleDateTimeParseException(e: DateTimeParseException): void
+}
+
+class InvalidArgumentException {
+- argument: String
+}
+
+class "<<abstract>> \n InvalidCommandException" {
+
+}
+
+class MissingOptionException {
+}
+
+class InvalidKeywordException {
+- keyword: String
+
+}
+
+class "<<abstract>> \n TripBuddyException" {
+}
+@enduml

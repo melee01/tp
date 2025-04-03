@@ -5,10 +5,10 @@ ____________________________________________________________
 Invalid command keyword: "james". Please review the user guide for more information.
 ____________________________________________________________
 ____________________________________________________________
-Your budget has been set to $123.
+Your budget has been set to $123.00.
 ____________________________________________________________
 ____________________________________________________________
-The original budget you set was $123.
-So far, you have spent $0.
-This leaves you with a remaining budget of $123.
+The original budget you set was $123.0.
+So far, you have spent $0.0.
+This leaves you with a remaining budget of $123.00.
 ____________________________________________________________
