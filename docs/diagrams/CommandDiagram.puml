@@ -1,0 +1,49 @@
+@startuml
+hide circle
+skinparam classAttributeIconSize 0
+skinparam classIconSize 0
+
+
+
+Command -> "keyword" Keyword
+Command -> "optList" Option: *
+
+
+class Command {
+- optMap: <String, String>
+}
+
+enum Keyword {
+    TUTORIAL
+    SET_BUDGET
+    ADJUST_BUDGET
+    VIEW_BUDGET
+    CREATE_CATEGORY
+    SET_CATEGORY
+    ADD_EXPENSE
+    DELETE_EXPENSE
+    LIST_EXPENSE
+    VIEW_HISTORY
+    MAX_EXPENSE
+    MIN_EXPENSE
+    FILTER_DATE
+    VIEW_CURRENCY
+    SEARCH
+    VIEW_CATEGORIES
+    CLEAR
+    }
+
+class Option {
+}
+
+class Parser {
+- LOGGER
+
+- <u>isOpt(s: String): boolean
+- <u>parseCommand(cmdInput: String): Command
+}
+
+
+
+
+@enduml
