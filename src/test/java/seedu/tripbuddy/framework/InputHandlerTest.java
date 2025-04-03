@@ -7,6 +7,24 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class InputHandlerTest {
+
+    @Test
+    void handleUserInputTutorialTest() {
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        PrintStream originalOut = System.out;
+        System.setOut(new PrintStream(outContent));
+
+        try {
+            InputHandler.handleUserInput("tutorial");
+            String output = outContent.toString();
+            assertTrue(output.contains("Welcome to the tutorial of TripBuddy"));
+            assertTrue(output.contains("set-budget"));
+            assertTrue(output.contains("add-expense"));
+        } finally {
+            System.setOut(originalOut);
+        }
+    }
+
     @Test
     public void isQuitCommandTest_setBudget_expectFalse() {
         String userInput = "set-budget 135";
