@@ -1,8 +1,10 @@
 package seedu.tripbuddy.storage;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import seedu.tripbuddy.dataclass.Expense;
+import seedu.tripbuddy.exception.ExceptionHandler;
 import seedu.tripbuddy.framework.ExpenseManager;
 import seedu.tripbuddy.framework.Ui;
 
@@ -55,13 +57,22 @@ public class DataHandler {
     public static void loadData(String path) throws FileNotFoundException {
         JSONObject root = FileHandler.readJsonObject(path);
 
-        double budget = root.getDouble("budget");
-        ExpenseManager.initExpenseManager(budget);
+        try {
+            double budget = root.getDouble("budget");
+            ExpenseManager.initExpenseManager(budget);
+            LOGGER.log(Level.INFO, "budget loaded: " + budget);
+        } catch (JSONException e) {
+            ExceptionHandler.handleException(e);
+        }
 
         JSONArray categoriesArr = root.getJSONArray("categories");
         Set<String> categories = new HashSet<>();
         for (int i = 0; i < categoriesArr.length(); i++) {
-            categories.add(categoriesArr.getString(i));
+            try {
+                categories.add(categoriesArr.getString(i));
+            } catch (JSONException e) {
+                ExceptionHandler.handleException(e);
+            }
         }
         ExpenseManager.setCategories(categories);
 
@@ -69,8 +80,12 @@ public class DataHandler {
         List<Expense> expenses = new ArrayList<>();
         for (int i = 0; i < expensesArr.length(); i++) {
             JSONObject expObj = expensesArr.getJSONObject(i);
-            Expense expense = Expense.fromJSON(expObj);
-            expenses.add(expense);
+            try {
+                Expense expense = Expense.fromJSON(expObj);
+                expenses.add(expense);
+            } catch (JSONException e) {
+                ExceptionHandler.handleException(e);
+            }
         }
         ExpenseManager.setExpenses(expenses);
         Ui.printMessage("Loaded data from file: " + path);
