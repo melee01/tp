@@ -38,6 +38,7 @@ public class CommandHandler {
                         10. max-expense - Display the expense with the highest amount.
                         11. min-expense - Display the expense with the lowest amount.
                         12. filter-date yyyy-MM-dd HH:mm:ss yyyy-MM-dd HH:mm:ss - Filter expenses between two date/time ranges START_DATE START_TIME END_DATE END_TIME.
+                        13. view-currency - Displays the actual rates of currencies. 
                         
                         Enjoy tracking your expenses with TripBuddy!""";
     }
@@ -174,5 +175,18 @@ public class CommandHandler {
             }
             return sb.toString();
         }
+    }
+
+    public static String handlerViewCurrency() {
+        StringBuilder message = new StringBuilder("The current exchange rate is: \n");
+        for (Currency currency : Currency.values()) {
+            message.append("Rate of base currency and ")
+                    .append(currency.toString())
+                    .append(" is ")
+                    .append(currency.getRate())
+                    .append(" \n");
+        }
+
+        return message.toString();
     }
 }
