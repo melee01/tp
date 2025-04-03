@@ -144,9 +144,3 @@ Format: `set-base-currency CURRENCY`
 Exits the program.
 
 Format: `quit`
-
-## FAQ
-
-**Q**: How do I transfer my data to another computer? 
-
-**A**: {your answer here}
