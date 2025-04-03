@@ -7,10 +7,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Has CRUD access to all user data.
- * */
+ */
 public class ExpenseManager {
 
     private static double budget;
@@ -60,14 +61,14 @@ public class ExpenseManager {
 
     /**
      * Adds a new category name into {@code categories} if not exists.
-     * */
+     */
     public static void createCategory(String categoryName) {
         categories.add(categoryName);
     }
 
     /**
      * Adds a new {@link Expense} without category.
-     * */
+     */
     public static void addExpense(String name, double amount) {
         assert amount > 0 : "Amount must be positive";
         Expense expense = new Expense(name, amount);
@@ -80,7 +81,7 @@ public class ExpenseManager {
      * <ul>
      *     <li>A new category will be created if not exists.
      * </ul>
-     * */
+     */
     public static void addExpense(String name, double amount, String categoryName) {
         assert amount > 0 : "Amount must be positive";
         createCategory(categoryName);
@@ -178,6 +179,20 @@ public class ExpenseManager {
         return filteredExpenses;
     }
 
+    public static void setExpenses(List<Expense> loadedExpenses) {
+        expenses.clear();
+        expenses.addAll(loadedExpenses);
+        totalExpense = 0;
+        for (Expense expense : expenses) {
+            totalExpense += expense.getAmount();
+        }
+    }
+
+    public static void setCategories(Set<String> loadedCategories) {
+        categories.clear();
+        categories.addAll(loadedCategories);
+    }
+  
     public static List<Expense> getExpensesBySearchword(String searchword) {
         ArrayList<Expense> matchingExpenses = new ArrayList<>();
         for (Expense expense : expenses) {

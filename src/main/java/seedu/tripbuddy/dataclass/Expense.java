@@ -2,6 +2,7 @@ package seedu.tripbuddy.dataclass;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import org.json.JSONObject;
 
 /**
  * Stores info of a travel expense.
@@ -25,6 +26,13 @@ public class Expense {
         this.amount = amount;
         this.category = category;
         this.dateTime = LocalDateTime.now();
+    }
+
+    public Expense(String name, double amount, String category, String dateTimeStr) {
+        this.name = name;
+        this.amount = amount;
+        this.category = category;
+        this.dateTime = LocalDateTime.parse(dateTimeStr, FORMATTER);
     }
 
     public String getName() {
@@ -71,5 +79,13 @@ public class Expense {
         }
         return "name: " + name + ", amount: " + String.format("%.2f", amount)
                 + ", category: " + category + ", date: " + dateTimeStr;
+    }
+
+    public static Expense fromJSON(JSONObject json) {
+        String name = json.getString("name");
+        double amount = json.getDouble("amount");
+        String category = json.optString("category", null); // returns null if not present
+        String dateTimeStr = json.getString("dateTime");
+        return new Expense(name, amount, category, dateTimeStr);
     }
 }
