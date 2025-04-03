@@ -33,4 +33,8 @@ public class ExceptionHandler {
     public static void handleDateTimeParseException(DateTimeParseException e) {
         Ui.printMessage("Invalid date/time format! Please use yyyy-MM-dd HH:mm:ss");
     }
+
+    public static void handleException(Exception e) {
+        Ui.printMessage(e.getMessage());
+    }
 }
