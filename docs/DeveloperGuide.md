@@ -141,7 +141,7 @@ Moreover, we can also change the base currency. In order to do this, we will:
 
 We can see how we do it in the following sequence diagram. 
 
-<img src="diagrams/sequence/setBaseCurrency.png" alt="Set Base Currency Diagram" width="700">
+<img src="diagrams/sequence/SetBaseCurrency.png" alt="Set Base Currency Diagram" width="700">
 
 
 #### **Step 2**: Conversion logic
