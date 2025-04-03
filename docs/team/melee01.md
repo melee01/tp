@@ -14,7 +14,7 @@ travelers to log expenses, categorize them, and view a summary of their spending
 * **Features for v2.0:** Implement JSON FileHandler Storage Class
 
 * **JUnit test code:** Came up with test codes to check the accuracy and credibility of TripBuddy.
-  * The JUnit test code covers on problems that might need to be checked with the issues on cases on:
+  * The JUnit test code covers on problems that might need to be checked with the issues on cases, such as:
     * handle user input tutorial test
     * handle command tests format
     * handle max expense
