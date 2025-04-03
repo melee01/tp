@@ -35,7 +35,6 @@ public class InputHandler {
                 case SET_CATEGORY -> CommandHandler.handleSetCategory(cmd.getOpt(""), cmd.getOpt("c"));
                 case ADD_EXPENSE -> {
                     double amount = Double.parseDouble(cmd.getOpt("a"));
-                    // TODO: implement currency
                     if (cmd.hasOpt("c")) {
                         yield CommandHandler.handleAddExpense(cmd.getOpt(""), amount, cmd.getOpt("c"));
                     }

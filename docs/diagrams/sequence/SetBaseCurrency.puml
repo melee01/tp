@@ -1,0 +1,59 @@
+@startuml
+actor Caller
+participant ":CommandHandler" as CH
+participant "Currency" as CUR <<enumeration>>
+participant ":ExpenseManager" as EM
+participant ":Expense" as EXP
+participant ":newBase" as newBase
+
+Caller -> CH: handleSetBaseCurrency(baseCurrency)
+alt Invalid base currency
+    CH -> CUR: valueOf(baseCurrency.toUpperCase())
+    note right: IllegalArgumentException thrown
+    CH -> Caller: throw InvalidArgumentException("Base currency is not a valid currency.")
+else Valid base currency
+    CH -> CUR: valueOf(baseCurrency.toUpperCase())
+    CUR --> CH: newBase
+    CH -> newBase: getRate()
+    newBase --> CH: newBaseRate
+
+    ' Update budget
+    CH -> EM: getBudget()
+    EM --> CH: currentBudget
+    CH -> newBase: convert(currentBudget)
+    newBase --> CH: convertedBudget
+    CH -> EM: setBudget(convertedBudget)
+
+    ' Update total expense
+    CH -> EM: getTotalExpense()
+    EM --> CH: currentTotalSpent
+    CH -> newBase: convert(currentTotalSpent)
+    newBase --> CH: convertedTotalSpent
+    CH -> EM: setTotalExpense(convertedTotalSpent)
+
+    ' Update each expense's amount
+    CH -> EM: getExpenses()
+    EM --> CH: List<Expense>
+    loop For each Expense in List
+        CH -> EXP: getAmount()
+        EXP --> CH: expenseAmount
+        CH -> newBase: convert(expenseAmount)
+        newBase --> CH: convertedExpenseAmount
+        CH -> EXP: setAmount(convertedExpenseAmount)
+    end
+
+    ' Update rates of all currencies
+    loop For each Currency c in Currency.values()
+        CH -> CUR: c.getRate()
+        CUR --> CH: cRate
+        CH -> CH: compute newRate = cRate / newBaseRate
+        CH -> CUR: c.setRate(newRate)
+    end
+
+    ' Return confirmation
+    CH -> newBase: toString()
+    newBase --> CH: baseCurrencyString
+    CH -> Caller: return "Current base is: " + baseCurrencyString
+end
+@enduml
+

@@ -37,6 +37,10 @@ public class ExpenseManager {
         return totalExpense;
     }
 
+    public static void setTotalExpense(double totalExpense) {
+        ExpenseManager.totalExpense = totalExpense;
+    }
+
     public static double getRemainingBudget() {
         return budget - totalExpense;
     }

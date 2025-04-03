@@ -1,0 +1,29 @@
+@startuml
+actor Caller
+participant "<u>:CommandHandler" as CH
+participant "<u>:Currency" as CUR <<enumeration>>
+participant "<u>:ExpenseManager" as EM
+
+Caller -> CH: handleAddExpense(...)
+alt amount <= 0
+    CH -> Caller: throw InvalidArgumentException
+else
+    CH -> CUR: valueOf
+    alt IllegalArgumentException thrown
+        CUR --> CH: throw IllegalArgumentException
+        CH -> Caller: throw InvalidArgumentException()
+    else Valid currencyStr
+        CUR --> CH: currency
+        CH -> CUR: convert(amount)
+        CUR --> CH: convertedAmount
+        CH -> EM: addExpense(...)
+        CH -> EM: getRemainingBudget()
+        EM --> CH: remainingBudget
+        alt remainingBudget >= 0
+            CH -> Caller: return "Expense " + expenseName + " added successfully.\nYour remaining budget is $" + formatted(remainingBudget)
+        else remainingBudget < 0
+            CH -> Caller: return "Expense " + expenseName + " added successfully.\nUh oh! You've exceeded your budget.\nYou are now in debt by $" + (-remainingBudget) + ". Time to rein it in!\nConsider adjusting your budget to get back on track!"
+        end
+    end
+end
+@enduml
