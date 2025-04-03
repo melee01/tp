@@ -60,6 +60,9 @@ public class CommandHandler {
                         - Displays all categories.
                 16. clear
                         - Clears all past expenses and categories.
+                17. set-base-currency CURRENCY
+                        - It sets the new currency. 
+                        - By default, the base currency is SGD. 
                 
                 Enjoy tracking your expenses with TripBuddy!""";
     }
@@ -276,5 +279,23 @@ public class CommandHandler {
     public static String handleClearAll() {
         ExpenseManager.clearExpensesAndCategories();
         return "All past expenses and categories have been cleared.";
+    }
+
+    public static String handleSetBaseCurrency(String baseCurrency) throws InvalidArgumentException {
+        Currency newBase;
+        try {
+            newBase = Currency.valueOf(baseCurrency.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new InvalidArgumentException("Base currency is not a valid currency.");
+        }
+
+        // new base currency
+
+        double newBaseRate = newBase.getRate();
+        for (Currency c : Currency.values()) {
+            c.setRate(c.getRate() / newBaseRate);
+        }
+
+        return "Current base is: " + newBase.toString();
     }
 }

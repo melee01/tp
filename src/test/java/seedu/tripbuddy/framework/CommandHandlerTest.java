@@ -2,12 +2,16 @@ package seedu.tripbuddy.framework;
 
 import java.util.List;
 import org.junit.jupiter.api.Test;
+import seedu.tripbuddy.dataclass.Currency;
 import seedu.tripbuddy.dataclass.Expense;
 import seedu.tripbuddy.exception.InvalidArgumentException;
-
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+
 
 class CommandHandlerTest {
 
@@ -84,7 +88,7 @@ class CommandHandlerTest {
         String expected = "Here is a list of your past expenses: " +
                 "\n - " + expense1 +
                 "\n - " + expense2 +
-                "\nTotal amount spent: $150.00.";
+                "\nTotal amount spent: $150,00.";
         String actual = CommandHandler.handleListExpense(null);
         assertEquals(expected, actual);
     }
@@ -166,5 +170,45 @@ class CommandHandlerTest {
 
         assertEquals(0, categories.size());
         assertEquals(0, expenses.size());
+    }
+
+    @Test
+    public void view_currency_returnsCorrectList() {
+        ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
+        StringBuilder message = new StringBuilder("The current exchange rate against base currency is: \n");
+        for (Currency currency : Currency.values()) {
+            message.append("Rate of base currency and ")
+                    .append(currency.toString())
+                    .append(" is ")
+                    .append(currency.getRate())
+                    .append(" \n");
+        }
+        assertEquals(CommandHandler.handleViewCurrency(),message.toString());
+    }
+
+    @Test
+    public void view_currency_returnsEmptyList() {
+        ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
+        assertNotEquals(null, CommandHandler.handleViewCurrency());
+    }
+
+    @Test
+    public void set_base_currency_correct() throws InvalidArgumentException {
+        ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
+        try{
+            CommandHandler.handleSetBaseCurrency("USD");
+        } catch (InvalidArgumentException e) {
+            fail();
+        }
+
+        assertEquals(Currency.USD.getRate(), 1);
+        assertNotEquals(Currency.SGD.getRate(), 1);
+
+    }
+
+    @Test
+    public void set_base_currency_incorrect() {
+        ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
+        assertThrows(InvalidArgumentException.class, () -> CommandHandler.handleSetBaseCurrency("XXX"));
     }
 }

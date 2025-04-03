@@ -50,6 +50,7 @@ public class InputHandler {
                 case VIEW_CURRENCY -> CommandHandler.handleViewCurrency();
                 case SEARCH -> CommandHandler.handleSearch(cmd.getOpt(""));
                 case VIEW_CATEGORIES -> CommandHandler.handleViewCategories();
+                case SET_BASE_CURRENCY -> CommandHandler.handleSetBaseCurrency(cmd.getOpt(""));
                 case CLEAR -> CommandHandler.handleClearAll();
             };
             Ui.printMessage(message);

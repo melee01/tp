@@ -20,6 +20,7 @@ public enum Keyword {
     VIEW_CURRENCY,
     SEARCH,
     VIEW_CATEGORIES,
+    SET_BASE_CURRENCY,
     CLEAR;
 
     @Override
@@ -41,6 +42,7 @@ public enum Keyword {
             case VIEW_CURRENCY -> "view-currency";
             case SEARCH -> "search";
             case VIEW_CATEGORIES -> "view-categories";
+            case SET_BASE_CURRENCY ->  "set-base-currency";
             case CLEAR -> "clear";
         };
     }
