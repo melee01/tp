@@ -15,11 +15,4 @@ public record Option(String opt, String val) {
         }
         return "-" + opt + ": " + val;
     }
-
-    /**
-     * Checks if a {@code String} is the same option label as this {@link Option}.
-     */
-    public boolean isSameOpt(String opt) {
-        return opt.equals(this.opt);
-    }
 }

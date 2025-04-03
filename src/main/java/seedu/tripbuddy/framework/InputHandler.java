@@ -45,6 +45,10 @@ public class InputHandler {
                 case DELETE_EXPENSE -> CommandHandler.handleDeleteExpense(cmd.getOpt(""));
                 case LIST_EXPENSE -> CommandHandler.handleListExpense(optCount == 0 ? null : cmd.getOpt(""));
                 case VIEW_HISTORY -> CommandHandler.handleViewHistory();
+                case MAX_EXPENSE -> CommandHandler.handleMaxExpense();
+                case MIN_EXPENSE -> CommandHandler.handleMinExpense();
+                case FILTER_DATE -> CommandHandler.handleFilterExpenseByDateRange(cmd.getOpt("f"), cmd.getOpt("t"));
+                case VIEW_CURRENCY -> CommandHandler.handlerViewCurrency();
             };
             Ui.printMessage(message);
         } catch (InvalidKeywordException e) {

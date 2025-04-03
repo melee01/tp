@@ -18,30 +18,43 @@ public class CommandHandler {
 
     public static String handleTutorial() {
         return """
-                        Welcome to the tutorial of TripBuddy!
-                        
-                        Format Guidelines:
-                        - Square brackets [] indicate optional elements.
-                        - Expense and category names must be a single word or multiple words joined with a dash (-).
-                        - AMOUNT must be a positive integer.
-                        
-                        Here are the commands you can use:
-                        1. set-budget AMOUNT - Set your total trip budget. Default budget is $1000.
-                        2. add-expense EXPENSE_NAME AMOUNT [CATEGORY] [CURRENCY] - Add a new expense.
-                        3. delete-expense EXPENSE_NAME - Remove an expense by name.
-                        4. create-category CATEGORY - Create a new expense category.
-                        5. set-category EXPENSE_NAME CATEGORY - Assign an expense to a category.
-                        6. view-budget - Check your remaining budget.
-                        7. list-expense [CATEGORY] - Calculate sum of recorded expenses.
-                        8. view-history - See a history of all expenses made.
-                        9. adjust-budget AMOUNT - Modify the budget amount.
-                        10. max-expense - Display the expense with the highest amount.
-                        11. min-expense - Display the expense with the lowest amount.
-                        12. filter-date yyyy-MM-dd HH:mm:ss yyyy-MM-dd HH:mm:ss
-                        - Filter expenses between two date/time ranges START_DATE START_TIME END_DATE END_TIME.
-                        13. view-currency - Displays the actual rates of currencies.
-                        
-                        Enjoy tracking your expenses with TripBuddy!""";
+                Welcome to the tutorial of TripBuddy!
+                
+                Format Guidelines:
+                - Square brackets [] indicate optional elements.
+                - Expense and category names must be a single word or multiple words joined with a dash (-).
+                - AMOUNT must be a positive integer.
+                
+                Here are the commands you can use:
+                1. set-budget AMOUNT
+                        - Set your total trip budget. Default budget is $1000.
+                2. add-expense EXPENSE_NAME -a AMOUNT [CURRENCY] -c [CATEGORY]
+                        - Add a new expense.
+                3. delete-expense EXPENSE_NAME
+                        - Remove an expense by name.
+                4. create-category CATEGORY
+                        - Create a new expense category.
+                5. set-category EXPENSE_NAME -c CATEGORY
+                        - Assign an expense to a category.
+                6. view-budget
+                        - Check your remaining budget.
+                7. list-expense [CATEGORY]
+                        - Calculate sum of recorded expenses.
+                8. view-history
+                        - See a history of all expenses made.
+                9. adjust-budget AMOUNT
+                        - Modify the budget amount.
+                10. max-expense
+                        - Display the expense with the highest amount.
+                11. min-expense
+                        - Display the expense with the lowest amount.
+                12. filter-date -f yyyy-MM-dd HH:mm:ss -t yyyy-MM-dd HH:mm:ss
+                        - Get all expenses within date range.
+                - Filter expenses between two date/time ranges START_DATE START_TIME END_DATE END_TIME.
+                13. view-currency
+                        - Displays the actual rates of currencies.
+                
+                Enjoy tracking your expenses with TripBuddy!""";
     }
 
     public static String handleViewBudget() {

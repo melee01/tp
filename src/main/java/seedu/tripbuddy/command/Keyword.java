@@ -13,7 +13,11 @@ public enum Keyword {
     ADD_EXPENSE,
     DELETE_EXPENSE,
     LIST_EXPENSE,
-    VIEW_HISTORY;
+    VIEW_HISTORY,
+    MAX_EXPENSE,
+    MIN_EXPENSE,
+    FILTER_DATE,
+    VIEW_CURRENCY;
 
     @Override
     public String toString() {
@@ -28,6 +32,10 @@ public enum Keyword {
             case DELETE_EXPENSE ->  "delete-expense";
             case LIST_EXPENSE ->  "list-expense";
             case VIEW_HISTORY ->  "view-history";
+            case MAX_EXPENSE -> "max-expense";
+            case MIN_EXPENSE -> "min-expense";
+            case FILTER_DATE -> "filter-date";
+            case VIEW_CURRENCY -> "view-currency";
         };
     }
 }
