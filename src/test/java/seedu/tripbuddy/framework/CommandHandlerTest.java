@@ -1,7 +1,10 @@
 package seedu.tripbuddy.framework;
 
 import org.junit.jupiter.api.Test;
+import seedu.tripbuddy.dataclass.Expense;
 import seedu.tripbuddy.exception.InvalidArgumentException;
+
+import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -30,7 +33,7 @@ class CommandHandlerTest {
     void setBudget_set135() throws InvalidArgumentException {
         ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
         String message = CommandHandler.handleSetBudget(135);
-        assertEquals("Your budget has been set to $" + String.format("%.2f", 135) + ".",
+        assertEquals("Your budget has been set to $135,00.",
                 message);
     }
 
@@ -40,7 +43,8 @@ class CommandHandlerTest {
         ExpenseManager.addExpense("a", 10);
         ExpenseManager.addExpense("b", 20);
 
-        String expected = "Maximum expense: name: b, amount: 20.00";
+        Expense expense = new Expense("b", 20);
+        String expected = "Maximum expense: " +  expense.toString();
         String actual = CommandHandler.handleMaxExpense();
         assertEquals(expected, actual);
     }
@@ -51,7 +55,8 @@ class CommandHandlerTest {
         ExpenseManager.addExpense("a", 10);
         ExpenseManager.addExpense("b", 20);
 
-        String expected = "Minimum expense: name: a, amount: 10.00";
+        Expense expense = new Expense("a", 10);
+        String expected = "Minimum expense: " +  expense.toString();
         String actual = CommandHandler.handleMinExpense();
         assertEquals(expected, actual);
     }
@@ -74,10 +79,13 @@ class CommandHandlerTest {
         ExpenseManager.addExpense("a", 50);
         ExpenseManager.addExpense("b", 100);
 
-        String expected = "Expense list is:" +
-                "\n - name: a, amount: 50.00" +
-                "\n - name: b, amount: 100.00" +
-                "\nTotal amount spent: $150.00";
+        Expense expense2 = new Expense("b", 100);
+        Expense expense1 = new Expense("a", 50);
+
+        String expected = "Expense list is: " +
+                "\n - " + expense1.toString() +
+                "\n - " + expense2.toString() +
+                "\nTotal amount spent: $150,00.";
         String actual = CommandHandler.handleListExpense(null);
         assertEquals(expected, actual);
     }

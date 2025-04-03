@@ -50,8 +50,10 @@ public class Parser {
                 }
                 throw new ArrayIndexOutOfBoundsException();
             }
+            case "view-currency" -> CommandHandler.handlerViewCurrency();
             default -> throw new InvalidKeywordException(keyword);
             };
+
             Ui.printMessage(message);
         } catch (InvalidKeywordException e) {
             ExceptionHandler.handleInvalidKeywordException(e);
@@ -61,8 +63,6 @@ public class Parser {
             ExceptionHandler.handleInvalidArgumentException(e);
         } catch (ArrayIndexOutOfBoundsException e) {
             ExceptionHandler.handleArrayIndexOutOfBoundsException();
-        } catch (DateTimeParseException e) {
-            ExceptionHandler.handleDateTimeParseException(e);
         }
     }
 }

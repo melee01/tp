@@ -7,13 +7,11 @@ import java.time.format.DateTimeFormatter;
  * Stores info of a travel expense.
  * */
 public class Expense {
-
+    static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private String name;
     private double amount;
     private String category;
     private LocalDateTime dateTime;
-
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public Expense(String name, double amount) {
         this.name = name;
@@ -49,13 +47,21 @@ public class Expense {
         return category;
     }
 
+    public String getDateTimeString() {
+        return dateTime.format(FORMATTER);
+    }
+
     public void setCategory(String category) {
         this.category = category;
     }
 
-    public LocalDateTime getDateTime() { return dateTime; }
+    public LocalDateTime getDateTime() {
+        return dateTime;
+    }
 
-    public void setDateTime(LocalDateTime dateTime) { this.dateTime = dateTime; }
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
+    }
 
     @Override
     public String toString() {
@@ -63,6 +69,7 @@ public class Expense {
         if (category == null) {
             return "name: " + name + ", amount: " + String.format("%.2f", amount) + ", date: " + dateTimeStr;
         }
-        return "name: " + name + ", amount: " + String.format("%.2f", amount) + ", category: " + category + ", date: " + dateTimeStr;
+        return "name: " + name + ", amount: " + String.format("%.2f", amount)
+                + ", category: " + category + ", date: " + dateTimeStr;
     }
 }
