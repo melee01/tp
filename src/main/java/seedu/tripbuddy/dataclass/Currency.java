@@ -10,6 +10,16 @@ public enum Currency {
     USD("USD", 1.342 ),
     EUR("EUR", 1.453 ),
     JPY("JPY", 0.008953),
+    AUD("AUD", 0.882),
+    CAD("CAD", 0.914),
+    CNY("CNY", 1.009),
+    HKD("HKD", 1.232),
+    INR("INR", 0.0161),
+    KRW("KRW", 0.001),
+    NZD("NZD", 0.815),
+    CHF("CHF", 1.502),
+    TWD("TWD", 0.0425),
+    ZAR("ZAR", 0.0712),
     GBP("GBP", 1.736);
 
     private final String name;

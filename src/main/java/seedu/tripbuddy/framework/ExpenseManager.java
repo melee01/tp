@@ -49,6 +49,11 @@ public class ExpenseManager {
         return List.copyOf(expenses);
     }
 
+    public static void clearExpensesAndCategories() {
+        expenses.clear();
+        categories.clear();
+    }
+
     public static void setBudget(double budget) {
         assert budget > 0 : "Budget must be positive";
         ExpenseManager.budget = budget;
@@ -171,5 +176,15 @@ public class ExpenseManager {
             }
         }
         return filteredExpenses;
+    }
+
+    public static List<Expense> getExpensesBySearchword(String searchword) {
+        ArrayList<Expense> matchingExpenses = new ArrayList<>();
+        for (Expense expense : expenses) {
+            if (expense.getName().toLowerCase().contains(searchword.toLowerCase())) {
+                matchingExpenses.add(expense);
+            }
+        }
+        return matchingExpenses;
     }
 }
