@@ -78,7 +78,7 @@ Examples of usage:
 - `add-expense mcdonalds 5`
 - `add-expense the-plaza-hotel 300 Accommodation`
 - `add-expense lunch 100 USD`
-- `add-expense capibara-museum 10000 Activities IDR`
+- `add-expense capybara-museum 10000 Activities IDR`
 
 ### Set Category: `set-cateogry`
 
@@ -101,6 +101,15 @@ Format: `delete-expense NAME_EXPENSE`
 
 Examples of usage:
 - delete-expense the-plaza-hotel
+
+### Search Expense: `search`
+
+Search the expense list by search word.
+
+Format: `search SEARCHWORD`
+
+Examples of usage:
+- search shopping
 
 ### Exit the program: `quit`
 

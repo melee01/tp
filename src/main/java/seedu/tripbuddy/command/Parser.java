@@ -50,7 +50,10 @@ public class Parser {
                 }
                 throw new ArrayIndexOutOfBoundsException();
             }
-            case "view-currency" -> CommandHandler.handlerViewCurrency();
+            case "view-currency" -> CommandHandler.handleViewCurrency();
+            case "search" -> CommandHandler.handleSearch(tokens[1]);
+            case "view-categories" -> CommandHandler.handleViewCategories();
+            case "clear" -> CommandHandler.handleClearAll();
             default -> throw new InvalidKeywordException(keyword);
             };
 

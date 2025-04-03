@@ -8,13 +8,13 @@ public class ExceptionHandler {
     public static void handleInvalidKeywordException(InvalidKeywordException e) {
         String keyword = e.getKeyword();
         Ui.printMessage("Invalid command keyword: \"" + keyword +
-                "\". Please review the user gUide for more information.");
+                "\". Please review the user guide for more information.");
     }
 
     public static void handleInvalidArgumentException(InvalidArgumentException e) {
         String argument = e.getArgument();
         Ui.printMessage("Invalid command argument: \"" + argument +
-                "\". Please review the user gUide for more information.");
+                "\". Please review the user guide for more information.");
     }
 
     public static void handleNumberFormatException() {
