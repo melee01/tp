@@ -6,13 +6,6 @@ TripBuddy is a simple expense-tracking application designed to help users manage
 travelers to log expenses, categorize them, and view a summary of their spendings in one place. TripBuddy ensures 
 budgeting is easy and hassle-free, so travelers can focus on enjoying their trip.
 
-## Quick Start
-
-{Give steps to get started quickly}
-
-1. Ensure that you have Java 17 or above installed.
-2. Down the latest version of `TripBuddy` from [here](http://link.to/duke).
-
 ## Notes about the command format
 
 - Words in UPPER_CASE are the parameters to be supplied by the user.
@@ -26,7 +19,7 @@ e.g. if the command specifies quit 123, it will be interpreted as quit.
 
 ### View tutorial : `tutorial`
 
-Displays a message explaining key features.
+Displays a message explaining full features.
 
 Format: `tutorial`
 
@@ -57,8 +50,6 @@ Creates a category for storing expenses, such as accommodation or food.
 
 Format:  `create-category NAME`
 
-- NAME must not contain spaces. If it consists of multiple words, use dashes or underscores instead.
-
 Examples of usage:
 - `create-category Accommodation`
 - `create-category food and drink`
@@ -71,7 +62,6 @@ the new expenditure.
 
 Format: `add-expense NAME_EXPENSE -a AMOUNT [CURRENCY] -c [CATEGORY]`
 
-- NAME_EXPENSE must not contain spaces. If it consists of multiple words, use dashes or underscores instead.
 - Base currency is SGD. Everything will be converted to the base currency. 
 
 Examples of usage:
@@ -110,6 +100,44 @@ Format: `search SEARCHWORD`
 
 Examples of usage:
 - search shopping
+
+### Max/min Expense: `max-expense`/`min-expense`
+
+Display the expense with the highest/lowest amount.
+
+Format: `max-expense`
+ 
+### Filter Date: `filter-date`
+
+Get all expenses within date range.
+
+Format: `filter-date -f yyyy-MM-dd HH:mm:ss -t yyyy-MM-dd HH:mm:ss`
+
+### View Currency: `view-currency`
+    
+Displays the actual rates of currencies.
+- default base currency: SGD
+
+Format: `view-currency`
+
+### View Categories: `view-categories`
+
+Displays all categories.
+
+Format: `view-categories`
+
+### Clear: `clear`
+    
+Clears all past expenses and categories.
+
+Format: `clear`
+
+### Set Base Currency: `set-base-currency`
+
+Sets the new currency.
+- By default, the base currency is SGD.
+
+Format: `set-base-currency CURRENCY`
 
 ### Exit the program: `quit`
 
