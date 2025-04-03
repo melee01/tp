@@ -5,8 +5,6 @@ import org.junit.jupiter.api.Test;
 import seedu.tripbuddy.dataclass.Expense;
 import seedu.tripbuddy.exception.InvalidArgumentException;
 
-import java.time.LocalDate;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -46,7 +44,7 @@ class CommandHandlerTest {
         ExpenseManager.addExpense("b", 20);
 
         Expense expense = new Expense("b", 20);
-        String expected = "Maximum expense: " +  expense.toString();
+        String expected = "Maximum expense: " +  expense;
         String actual = CommandHandler.handleMaxExpense();
         assertEquals(expected, actual);
     }
@@ -58,7 +56,7 @@ class CommandHandlerTest {
         ExpenseManager.addExpense("b", 20);
 
         Expense expense = new Expense("a", 10);
-        String expected = "Minimum expense: " +  expense.toString();
+        String expected = "Minimum expense: " +  expense;
         String actual = CommandHandler.handleMinExpense();
         assertEquals(expected, actual);
     }
@@ -85,15 +83,15 @@ class CommandHandlerTest {
         Expense expense1 = new Expense("a", 50);
 
         String expected = "Here is a list of your past expenses: " +
-                "\n - " + expense1.toString() +
-                "\n - " + expense2.toString() +
+                "\n - " + expense1 +
+                "\n - " + expense2 +
                 "\nTotal amount spent: $150.00.";
         String actual = CommandHandler.handleListExpense(null);
         assertEquals(expected, actual);
     }
 
     @Test
-    void handleSearchExpense_matchingExpenses() throws InvalidArgumentException {
+    void handleSearchExpense_matchingExpenses() {
         ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
         ExpenseManager.addExpense("lunch", 20);
         ExpenseManager.addExpense("dinner", 40);
