@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 class CommandHandlerTest {
 
-    final int DEFAULT_BUDGET = 2333;
+    static final int DEFAULT_BUDGET = 2333;
 
     @Test
     void addExpense_a1() throws InvalidArgumentException {
@@ -108,7 +108,7 @@ class CommandHandlerTest {
         String expected = "Here is a list of your past expenses: " +
                 "\n - " + expense1 +
                 "\n - " + expense2 +
-                "\nTotal amount spent: $150,00.";
+                "\nTotal amount spent: $150.00.";
         String actual = CommandHandler.handleListExpense(null);
         assertEquals(expected, actual);
     }
