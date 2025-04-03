@@ -25,8 +25,7 @@ public class ExpenseManager {
         assert budget > 0 : "Budget must be positive";
         ExpenseManager.budget = budget;
         ExpenseManager.totalExpense = 0;
-        categories.clear();
-        expenses.clear();
+        clearExpensesAndCategories();
     }
 
     public static double getBudget() {
@@ -47,6 +46,11 @@ public class ExpenseManager {
 
     public static List<Expense> getExpenses() {
         return List.copyOf(expenses);
+    }
+
+    public static void clearExpensesAndCategories() {
+        expenses.clear();
+        categories.clear();
     }
 
     public static void setBudget(double budget) {
@@ -129,6 +133,7 @@ public class ExpenseManager {
         for (Expense expense : expenses) {
             if (expense.getName().equalsIgnoreCase(expenseName)) {
                 expense.setCategory(category);
+                categories.add(category);
                 return;
             }
         }
@@ -171,5 +176,15 @@ public class ExpenseManager {
             }
         }
         return filteredExpenses;
+    }
+
+    public static List<Expense> getExpensesBySearchword(String searchword) {
+        ArrayList<Expense> matchingExpenses = new ArrayList<>();
+        for (Expense expense : expenses) {
+            if (expense.getName().toLowerCase().contains(searchword.toLowerCase())) {
+                matchingExpenses.add(expense);
+            }
+        }
+        return matchingExpenses;
     }
 }

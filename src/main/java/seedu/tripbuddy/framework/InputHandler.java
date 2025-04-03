@@ -2,14 +2,11 @@ package seedu.tripbuddy.framework;
 
 import seedu.tripbuddy.command.Command;
 import seedu.tripbuddy.command.Keyword;
-import seedu.tripbuddy.command.Option;
 import seedu.tripbuddy.command.Parser;
 import seedu.tripbuddy.exception.ExceptionHandler;
 import seedu.tripbuddy.exception.InvalidArgumentException;
 import seedu.tripbuddy.exception.InvalidKeywordException;
 import seedu.tripbuddy.exception.MissingOptionException;
-
-import java.util.ArrayList;
 
 /**
  * Handles parsing of user commands and delegates the execution of tasks.
@@ -48,7 +45,10 @@ public class InputHandler {
                 case MAX_EXPENSE -> CommandHandler.handleMaxExpense();
                 case MIN_EXPENSE -> CommandHandler.handleMinExpense();
                 case FILTER_DATE -> CommandHandler.handleFilterExpenseByDateRange(cmd.getOpt("f"), cmd.getOpt("t"));
-                case VIEW_CURRENCY -> CommandHandler.handlerViewCurrency();
+                case VIEW_CURRENCY -> CommandHandler.handleViewCurrency();
+                case SEARCH -> CommandHandler.handleSearch(cmd.getOpt(""));
+                case VIEW_CATEGORIES -> CommandHandler.handleViewCategories();
+                case CLEAR -> CommandHandler.handleClearAll();
             };
             Ui.printMessage(message);
         } catch (InvalidKeywordException e) {

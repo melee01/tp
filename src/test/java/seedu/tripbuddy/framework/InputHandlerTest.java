@@ -36,8 +36,8 @@ public class InputHandlerTest {
                 () -> InputHandler.handleUserInput("adjust-budget 432"),
                 () -> InputHandler.handleUserInput("view-budget"),
                 () -> InputHandler.handleUserInput("create-category accommodation"),
-                () -> InputHandler.handleUserInput("add-expense greek-meal 10"),
-                () -> InputHandler.handleUserInput("set-category greek-meal food"),
+                () -> InputHandler.handleUserInput("add-expense greek-meal -a 10"),
+                () -> InputHandler.handleUserInput("set-category greek-meal -c food"),
                 () -> InputHandler.handleUserInput("delete-expense greek-meal")
         );
     }
@@ -48,9 +48,25 @@ public class InputHandlerTest {
                 () -> InputHandler.handleUserInput("tuutorial"),
                 () -> InputHandler.handleUserInput("set-budget"),
                 () -> InputHandler.handleUserInput("create-category"),
-                () -> InputHandler.handleUserInput("add-expense greek-meal twenty"),
+                () -> InputHandler.handleUserInput("add-expense greek-meal -a twenty"),
                 () -> InputHandler.handleUserInput("set-category greek-meal"),
                 () -> InputHandler.handleUserInput("delete-expense greek-meal")
+        );
+    }
+
+    @Test
+    public void handleUserInputTest_edgeCases() {
+        assertAll(
+                () -> InputHandler.handleUserInput("set-budget 0"),
+                () -> InputHandler.handleUserInput("set-budget -100"),
+                () -> InputHandler.handleUserInput("add-expense item -a 0"),
+                () -> InputHandler.handleUserInput("add-expense item -a -5"),
+                () -> InputHandler.handleUserInput("create-category Meals"),
+                () -> InputHandler.handleUserInput("create-category "),
+                () -> InputHandler.handleUserInput("add-expense Lunch -a 15 with extra text"),
+                () -> InputHandler.handleUserInput("delete-expense "),
+                () -> InputHandler.handleUserInput("view-expenses"),
+                () -> InputHandler.handleUserInput("      view-expenses")
         );
     }
 }

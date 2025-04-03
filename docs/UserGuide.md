@@ -11,7 +11,7 @@ budgeting is easy and hassle-free, so travelers can focus on enjoying their trip
 {Give steps to get started quickly}
 
 1. Ensure that you have Java 17 or above installed.
-1. Down the latest version of `TripBuddy` from [here](http://link.to/duke).
+2. Down the latest version of `TripBuddy` from [here](http://link.to/duke).
 
 ## Notes about the command format
 
@@ -78,7 +78,7 @@ Examples of usage:
 - `add-expense mcdonalds -a 5`
 - `add-expense the plaza hotel -a 300 -c Accommodation`
 - `add-expense lunch -a 100 USD`
-- `add-expense capibara museum -a 10000 IDR -c Activities `
+- `add-expense capybara museum -a 10000 IDR -c Activities `
 
 ### Set Category: `set-cateogry`
 
@@ -101,6 +101,15 @@ Format: `delete-expense NAME_EXPENSE`
 
 Examples of usage:
 - delete-expense the-plaza-hotel
+
+### Search Expense: `search`
+
+Search the expense list by search word.
+
+Format: `search SEARCHWORD`
+
+Examples of usage:
+- search shopping
 
 ### Exit the program: `quit`
 

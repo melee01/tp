@@ -17,7 +17,10 @@ public enum Keyword {
     MAX_EXPENSE,
     MIN_EXPENSE,
     FILTER_DATE,
-    VIEW_CURRENCY;
+    VIEW_CURRENCY,
+    SEARCH,
+    VIEW_CATEGORIES,
+    CLEAR;
 
     @Override
     public String toString() {
@@ -36,6 +39,9 @@ public enum Keyword {
             case MIN_EXPENSE -> "min-expense";
             case FILTER_DATE -> "filter-date";
             case VIEW_CURRENCY -> "view-currency";
+            case SEARCH -> "search";
+            case VIEW_CATEGORIES -> "view-categories";
+            case CLEAR -> "clear";
         };
     }
 }
