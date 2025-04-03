@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import seedu.tripbuddy.dataclass.Currency;
 import seedu.tripbuddy.dataclass.Expense;
 import seedu.tripbuddy.exception.InvalidArgumentException;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -31,6 +30,27 @@ class CommandHandlerTest {
         ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
         assertThrows(InvalidArgumentException.class,
                 () -> CommandHandler.handleAddExpense("a", -1));
+    }
+
+    @Test
+    void addExpense_incorrectCurrency() {
+        ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
+        assertThrows(InvalidArgumentException.class,
+                () -> CommandHandler.handleAddExpense("a", 20, "dinner", "XXX"));
+
+    }
+
+    @Test
+    void addExpense_correct() {
+        ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
+        try {
+            CommandHandler.handleAddExpense("a", 20, "dinner", "USD");
+            Expense expense = ExpenseManager.getExpense(0);
+            assertEquals(expense.getAmount(), Currency.USD.convert(20));
+
+        } catch (InvalidArgumentException e) {
+            fail();
+        }
     }
 
     @Test
