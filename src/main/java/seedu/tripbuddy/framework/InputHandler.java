@@ -8,6 +8,8 @@ import seedu.tripbuddy.exception.InvalidArgumentException;
 import seedu.tripbuddy.exception.InvalidKeywordException;
 import seedu.tripbuddy.exception.MissingOptionException;
 
+import java.time.format.DateTimeParseException;
+
 /**
  * Handles parsing of user commands and delegates the execution of tasks.
  * This class is responsible for interpreting user input and calling
@@ -51,6 +53,8 @@ public class InputHandler {
                 case CLEAR -> CommandHandler.handleClearAll();
             };
             Ui.printMessage(message);
+        } catch (DateTimeParseException e) {
+            ExceptionHandler.handleDateTimeParseException(e);
         } catch (InvalidKeywordException e) {
             ExceptionHandler.handleInvalidKeywordException(e);
         } catch (MissingOptionException e) {
