@@ -78,6 +78,15 @@ class ExpenseManagerTest {
     }
 
     @Test
+    void setExpenseCategoryTest() throws InvalidArgumentException {
+        ExpenseManager.initExpenseManager(200);
+        ExpenseManager.addExpense("testExpense", 50);
+        ExpenseManager.setExpenseCategory("testExpense", "utilities");
+        Expense expense = ExpenseManager.getExpense(0);
+        assertEquals("utilities", expense.getCategory());
+    }
+
+    @Test
     void getMaxExpenseTest() throws InvalidArgumentException {
         ExpenseManager.initExpenseManager(1000);
         ExpenseManager.addExpense("expense1", 100);

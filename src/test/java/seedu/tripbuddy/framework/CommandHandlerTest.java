@@ -61,6 +61,66 @@ class CommandHandlerTest {
     }
 
     @Test
+    void handleViewBudgetTest_positiveRemaining() throws InvalidArgumentException {
+        ExpenseManager.initExpenseManager(100);
+        ExpenseManager.addExpense("item1", 40);
+        String message = CommandHandler.handleViewBudget();
+        assertTrue(message.contains("remaining budget of $60.00"));
+    }
+
+    @Test
+    void handleViewBudgetTest_exceededBudget() throws InvalidArgumentException {
+        ExpenseManager.initExpenseManager(100);
+        ExpenseManager.addExpense("item1", 150);
+        String message = CommandHandler.handleViewBudget();
+        assertTrue(message.contains("exceeded your budget by $50.00"));
+    }
+
+    @Test
+    void handleViewHistoryTest() throws InvalidArgumentException {
+        ExpenseManager.initExpenseManager(200);
+        ExpenseManager.addExpense("expense1", 20);
+        ExpenseManager.addExpense("expense2", 30);
+        String history = CommandHandler.handleViewHistory();
+        assertTrue(history.contains("expense1"));
+        assertTrue(history.contains("expense2"));
+    }
+
+    @Test
+    void handleCreateCategoryTest() throws InvalidArgumentException {
+        ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
+        String message = CommandHandler.handleCreateCategory("food");
+        assertEquals("Successfully created category: food.", message);
+        assertTrue(ExpenseManager.getCategories().contains("food"));
+    }
+
+    @Test
+    void handleSetCategoryTest() throws InvalidArgumentException {
+        ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
+        ExpenseManager.addExpense("meal", 50);
+        String message = CommandHandler.handleSetCategory("meal", "dining");
+        assertEquals("Successfully set category for meal to dining.", message);
+        assertEquals("dining", ExpenseManager.getExpense(0).getCategory());
+    }
+
+    @Test
+    void handleDeleteExpenseTest() throws InvalidArgumentException {
+        ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
+        ExpenseManager.addExpense("deleteTest", 20);
+        String message = CommandHandler.handleDeleteExpense("deleteTest");
+        assertTrue(message.contains("Expense deleteTest deleted successfully."));
+        assertEquals(0, ExpenseManager.getExpenses().size());
+    }
+
+    @Test
+    void handleAdjustBudgetTest() throws InvalidArgumentException {
+        ExpenseManager.initExpenseManager(200);
+        String message = CommandHandler.handleAdjustBudget(300);
+        assertTrue(message.contains("Your budget has been updated to $300.0."));
+        assertTrue(message.contains("You have $300.00 remaining to spend!"));
+    }
+
+    @Test
     void handleMaxExpenseTest() throws InvalidArgumentException {
         ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
         ExpenseManager.addExpense("a", 10);
