@@ -53,9 +53,13 @@ public class Expense {
         this.category = category;
     }
 
-    public LocalDateTime getDateTime() { return dateTime; }
+    public LocalDateTime getDateTime() {
+        return dateTime;
+    }
 
-    public void setDateTime(LocalDateTime dateTime) { this.dateTime = dateTime; }
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
+    }
 
     @Override
     public String toString() {
@@ -63,6 +67,7 @@ public class Expense {
         if (category == null) {
             return "name: " + name + ", amount: " + String.format("%.2f", amount) + ", date: " + dateTimeStr;
         }
-        return "name: " + name + ", amount: " + String.format("%.2f", amount) + ", category: " + category + ", date: " + dateTimeStr;
+        return "name: " + name + ", amount: " + String.format("%.2f", amount)
+                + ", category: " + category + ", date: " + dateTimeStr;
     }
 }
