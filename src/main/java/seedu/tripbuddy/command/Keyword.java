@@ -43,6 +43,6 @@ public enum Keyword {
         case VIEW_CATEGORIES -> "view-categories";
         case SET_BASE_CURRENCY ->  "set-base-currency";
         case CLEAR -> "clear";
-    };
+        };
     }
 }

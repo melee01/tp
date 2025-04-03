@@ -108,7 +108,7 @@ class CommandHandlerTest {
         String expected = "Here is a list of your past expenses: " +
                 "\n - " + expense1 +
                 "\n - " + expense2 +
-                "\nTotal amount spent: $150,00.";
+                "\nTotal amount spent: $150.00.";
         String actual = CommandHandler.handleListExpense(null);
         assertEquals(expected, actual);
     }
