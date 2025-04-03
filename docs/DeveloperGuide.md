@@ -89,8 +89,13 @@ by the user.
 This is an enumeration that indicates the different types of commands there are available.
 
 #### Option
+This indicates the different arguments a command can have.  
+Note: if their value is empty ("") they are mandatory arguments. 
 
 #### Parser
+The main tasks for this class are to:
+* Parse the user's input to a `Command` object
+* Check whether an argument is optional or not 
 
 ### Ui
 
@@ -141,7 +146,7 @@ Moreover, we can also change the base currency. In order to do this, we will:
 
 We can see how we do it in the following sequence diagram. 
 
-<img src="diagrams/sequence/setBaseCurrency.png" alt="Set Base Currency Diagram" width="700">
+<img src="diagrams/sequence/SetBaseCurrency.png" alt="Set Base Currency Diagram" width="700">
 
 
 #### **Step 2**: Conversion logic
