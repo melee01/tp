@@ -25,8 +25,7 @@ public class ExpenseManager {
         assert budget > 0 : "Budget must be positive";
         ExpenseManager.budget = budget;
         ExpenseManager.totalExpense = 0;
-        categories.clear();
-        expenses.clear();
+        clearExpensesAndCategories();
     }
 
     public static double getBudget() {
@@ -134,6 +133,7 @@ public class ExpenseManager {
         for (Expense expense : expenses) {
             if (expense.getName().equalsIgnoreCase(expenseName)) {
                 expense.setCategory(category);
+                categories.add(category);
                 return;
             }
         }

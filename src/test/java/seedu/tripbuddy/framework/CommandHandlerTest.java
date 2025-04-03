@@ -33,8 +33,7 @@ class CommandHandlerTest {
     void setBudget_set135() throws InvalidArgumentException {
         ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
         String message = CommandHandler.handleSetBudget(135);
-        assertEquals("Your budget has been set to $135.00.",
-                message);
+        assertEquals("Your budget has been set to $135.00.", message);
     }
 
     @Test

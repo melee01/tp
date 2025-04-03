@@ -1,98 +1,61 @@
 package seedu.tripbuddy.command;
 
 import org.junit.jupiter.api.Test;
+import seedu.tripbuddy.exception.InvalidKeywordException;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertAll;
+import java.util.ArrayList;
 
-public class ParserTest {
+import static org.junit.jupiter.api.Assertions.*;
+
+class ParserTest {
+
     @Test
-    public void isQuitCommandTest_setBudget_expectFalse() {
-        String userInput = "set-budget 135";
-        boolean result = Parser.isQuitCommand(userInput);
-        assertFalse(result);
+    void parseCommandTest_invalidKeyword_expectInvalidKeywordException() {
+        assertThrows(InvalidKeywordException.class, () -> Parser.parseCommand("lol"));
     }
 
     @Test
-    public void isQuitCommandTest_quit_expectTrue() {
-        String userInput = "quit";
-        boolean result = Parser.isQuitCommand(userInput);
-        assertTrue(result);
+    void parseCommandTest_keywordOnly() throws InvalidKeywordException {
+        Command cmd = Parser.parseCommand("add-expense");
+        assertEquals(Keyword.ADD_EXPENSE, cmd.getKeyword(), "keyword");
+        assertEquals(0, cmd.getOptList().size(), "optList");
     }
 
     @Test
-    public void isQuitCommandTest_quitWithExtra_expectTrue() {
-        String userInput = "quit 123";
-        boolean result = Parser.isQuitCommand(userInput);
-        assertTrue(result);
+    void parseCommandTest_keywordWithExtraSpace() throws InvalidKeywordException {
+        Command cmd = Parser.parseCommand(" add-expense  ");
+        assertEquals(Keyword.ADD_EXPENSE, cmd.getKeyword(), "keyword");
+        assertEquals(0, cmd.getOptList().size(), "optList");
     }
 
     @Test
-    public void isQuitCommandTest_mixedCaseQuit_expectFalse() {
-        String userInput = "QuIt";
-        boolean result = Parser.isQuitCommand(userInput);
-        assertFalse(result);
+    void parseCommandTest_noOpt() throws InvalidKeywordException {
+        Command cmd = Parser.parseCommand("add-expense  bb ccc d");
+        ArrayList<Option> optList = cmd.getOptList();
+        assertEquals(Keyword.ADD_EXPENSE, cmd.getKeyword(), "keyword");
+        assertEquals(1, optList.size(), "optList");
+        assertTrue(optList.get(0).opt().isEmpty(), "opt");
+        assertEquals("bb ccc d", optList.get(0).val(), "val");
     }
 
     @Test
-    public void isQuitCommandTest_extraSpaces_expectFalse() {
-        String userInput = "  quit   ";
-        boolean result = Parser.isQuitCommand(userInput);
-        assertFalse(result);
+    void parseCommandTest_noTokensBeforeFirstOpt() throws InvalidKeywordException {
+        Command cmd = Parser.parseCommand("add-expense -b bb");
+        assertEquals(Keyword.ADD_EXPENSE, cmd.getKeyword(), "keyword");
+        assertEquals(1, cmd.getOptList().size(), "optList");
     }
 
     @Test
-    public void handleUserInputTest_validInputs() {
-        assertAll(
-                () -> Parser.handleUserInput("tutorial"),
-                () -> Parser.handleUserInput("set-budget 400"),
-                () -> Parser.handleUserInput("view-budget"),
-                () -> Parser.handleUserInput("create-category Accommodation"),
-                () -> Parser.handleUserInput("add-expense greek_meal 10"),
-                () -> Parser.handleUserInput("set-category greek_meal meals"),
-                () -> Parser.handleUserInput("delete-expense greek_meal"),
-                () -> Parser.handleUserInput("adjust-budget 500")
-        );
+    void parseCommandTest_extraTokensBeforeFirstOpt() throws InvalidKeywordException {
+        Command cmd = Parser.parseCommand("add-expense aa -b bb -c cc");
+        assertEquals(Keyword.ADD_EXPENSE, cmd.getKeyword(), "keyword");
+        assertEquals(3, cmd.getOptList().size(), "optList");
     }
 
     @Test
-    public void handleUserInputWithInvalidInputsTest() {
-        // TODO: extract to other tests
-        assertAll(
-                () -> Parser.handleUserInput("set-budget "),
-                () -> Parser.handleUserInput("create-category "),
-                () -> Parser.handleUserInput("add-expense greek_meal twenty-one"),
-                () -> Parser.handleUserInput("set-category greek_meal"),
-                () -> Parser.handleUserInput("delete-expense greek_meal")
-        );
+    void parseCommandTest_hasOptWithoutVal() throws InvalidKeywordException {
+        Command cmd = Parser.parseCommand("add-expense aa -d2 -b bb -d1 -c cc");
+        assertEquals(Keyword.ADD_EXPENSE, cmd.getKeyword(), "keyword");
+        assertEquals(5, cmd.getOptList().size(), "optList");
     }
-
-    @Test
-    public void handleUserInputTest_edgeCases() {
-        assertAll(
-                () -> Parser.handleUserInput("set-budget 0"),
-                () -> Parser.handleUserInput("set-budget -100"),
-                () -> Parser.handleUserInput("add-expense item 0"),
-                () -> Parser.handleUserInput("add-expense item -5"),
-                () -> Parser.handleUserInput("create-category Meals"),
-                () -> Parser.handleUserInput("create-category "),
-                () -> Parser.handleUserInput("add-expense Lunch 15 with extra text"),
-                () -> Parser.handleUserInput("delete-expense "),
-                () -> Parser.handleUserInput("view-expenses"),
-                () -> Parser.handleUserInput("      view-expenses")
-        );
-    }
-
-    /* TODO: update after parser rework
-        @Test
-        public void handlerUserInput_tuutorial_expectInvalidKeywordException() {
-            assertThrows(InvalidKeywordException.class, () -> Parser.handleUserInput("tuutorial"));
-        }
-
-        @Test
-        public void handlerUserInput_tuutorial_expectInvalidKeywordException() {
-            assertThrows(InvalidKeywordException.class, () -> Parser.handleUserInput("add-expense greek-meal twenty"));
-        }
-    */
 }
