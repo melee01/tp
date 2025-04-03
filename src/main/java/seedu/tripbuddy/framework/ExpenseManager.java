@@ -5,6 +5,7 @@ import seedu.tripbuddy.exception.InvalidArgumentException;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -132,5 +133,43 @@ public class ExpenseManager {
             }
         }
         throw new InvalidArgumentException(expenseName);
+    }
+
+    public static Expense getMaxExpense() throws InvalidArgumentException {
+        if (expenses.isEmpty()) {
+            throw new InvalidArgumentException("No expenses available");
+        }
+        Expense maxExpense = expenses.get(0);
+        for (Expense expense : expenses) {
+            if (expense.getAmount() > maxExpense.getAmount()) {
+                maxExpense = expense;
+            }
+        }
+        return maxExpense;
+    }
+
+    public static Expense getMinExpense() throws InvalidArgumentException {
+        if (expenses.isEmpty()) {
+            throw new InvalidArgumentException("No expenses available");
+        }
+        Expense minExpense = expenses.get(0);
+        for (Expense expense : expenses) {
+            if (expense.getAmount() < minExpense.getAmount()) {
+                minExpense = expense;
+            }
+        }
+        return minExpense;
+    }
+
+    public static List<Expense> getExpensesByDateRange(LocalDateTime start, LocalDateTime end) {
+        ArrayList<Expense> filteredExpenses = new ArrayList<>();
+        for (Expense expense : expenses) {
+            LocalDateTime expenseDateTime = expense.getDateTime();
+            if ((expenseDateTime.isEqual(start) || expenseDateTime.isAfter(start))
+                    && (expenseDateTime.isEqual(end) || expenseDateTime.isBefore(end))) {
+                filteredExpenses.add(expense);
+            }
+        }
+        return filteredExpenses;
     }
 }

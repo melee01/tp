@@ -4,6 +4,10 @@ import seedu.tripbuddy.dataclass.Currency;
 import seedu.tripbuddy.dataclass.Expense;
 import seedu.tripbuddy.exception.InvalidArgumentException;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+
 import java.util.List;
 
 
@@ -31,6 +35,11 @@ public class CommandHandler {
                         7. list-expense [CATEGORY] - Calculate sum of recorded expenses.
                         8. view-history - See a history of all expenses made.
                         9. adjust-budget AMOUNT - Modify the budget amount.
+                        10. max-expense - Display the expense with the highest amount.
+                        11. min-expense - Display the expense with the lowest amount.
+                        12. filter-date yyyy-MM-dd HH:mm:ss yyyy-MM-dd HH:mm:ss
+                        - Filter expenses between two date/time ranges START_DATE START_TIME END_DATE END_TIME.
+                        13. view-currency - Displays the actual rates of currencies.
                         
                         Enjoy tracking your expenses with TripBuddy!""";
     }
@@ -124,10 +133,14 @@ public class CommandHandler {
         List<Expense> expenses = (category == null? ExpenseManager.getExpenses() :
                 ExpenseManager.getExpensesByCategory(category));
         StringBuilder expensesString = new StringBuilder();
+        double totalAmount = 0;
         for (Expense expense : expenses) {
             expensesString.append("\n - ").append(expense.toString());
+            totalAmount += expense.getAmount();
         }
-        return expenses.isEmpty()? "There are no expenses." : "Expense list is: " + expensesString;
+        expensesString.append("\nTotal amount spent: $" + String.format("%.2f", totalAmount) + ".");
+        return expenses.isEmpty()? "There are no expenses." : "Expense list is: "
+                + expensesString;
     }
 
     public static String handleViewHistory() {
@@ -137,5 +150,47 @@ public class CommandHandler {
 
         }
         return expensesString.toString();
+    }
+
+    public static String handleMaxExpense() throws InvalidArgumentException {
+        Expense maxExpense = ExpenseManager.getMaxExpense();
+        return "Maximum expense: " + maxExpense.toString();
+    }
+
+    public static String handleMinExpense() throws InvalidArgumentException {
+        Expense minExpense = ExpenseManager.getMinExpense();
+        return "Minimum expense: " + minExpense.toString();
+    }
+
+    public static String handleFilterExpenseByDateRange(String startStr, String endStr)
+            throws DateTimeParseException, InvalidArgumentException {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        LocalDateTime start = LocalDateTime.parse(startStr, formatter);
+        LocalDateTime end = LocalDateTime.parse(endStr, formatter);
+
+        List<Expense> filteredExpenses = ExpenseManager.getExpensesByDateRange(start, end);
+        if (filteredExpenses.isEmpty()) {
+            return "No expenses found between " + startStr + " and " + endStr + ".";
+        } else {
+            StringBuilder sb = new StringBuilder("Expenses between " + startStr + " and " + endStr + ":");
+            for (Expense expense : filteredExpenses) {
+                sb.append("\n - ").append(expense.toString());
+            }
+            return sb.toString();
+        }
+    }
+
+    public static String handlerViewCurrency() {
+        StringBuilder message = new StringBuilder("The current exchange rate is: \n");
+        for (Currency currency : Currency.values()) {
+            message.append("Rate of base currency and ")
+                    .append(currency.toString())
+                    .append(" is ")
+                    .append(currency.getRate())
+                    .append(" \n");
+        }
+
+        return message.toString();
     }
 }

@@ -1,6 +1,7 @@
 package seedu.tripbuddy.exception;
 
 import seedu.tripbuddy.framework.Ui;
+import java.time.format.DateTimeParseException;
 
 public class ExceptionHandler {
 
@@ -27,5 +28,8 @@ public class ExceptionHandler {
     public static void handleMissingOptionException(MissingOptionException e) {
         String missingOpt = e.getMissingOpt();
         Ui.printMessage("Oh no. Cannot not find option label: -" + missingOpt);
+
+    public static void handleDateTimeParseException(DateTimeParseException e) {
+        Ui.printMessage("Invalid date/time format! Please use yyyy-MM-dd HH:mm:ss");
     }
 }
