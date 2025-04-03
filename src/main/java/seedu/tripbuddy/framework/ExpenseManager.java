@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Has CRUD access to all user data.
@@ -171,5 +172,19 @@ public class ExpenseManager {
             }
         }
         return filteredExpenses;
+    }
+
+    public static void setExpenses(List<Expense> loadedExpenses) {
+        expenses.clear();
+        expenses.addAll(loadedExpenses);
+        totalExpense = 0;
+        for (Expense expense : expenses) {
+            totalExpense += expense.getAmount();
+        }
+    }
+
+    public static void setCategories(Set<String> loadedCategories) {
+        categories.clear();
+        categories.addAll(loadedCategories);
     }
 }
