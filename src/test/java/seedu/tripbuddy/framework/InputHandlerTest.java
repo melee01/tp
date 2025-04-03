@@ -43,9 +43,9 @@ public class InputHandlerTest {
     }
 
     @Test
-    public void handleUserInputWithInvalidInputsTest() {
-        // TODO: extract to other tests
+    public void handleUserInputTest_invalidInputs() {
         assertAll(
+                () -> InputHandler.handleUserInput("tuutorial"),
                 () -> InputHandler.handleUserInput("set-budget"),
                 () -> InputHandler.handleUserInput("create-category"),
                 () -> InputHandler.handleUserInput("add-expense greek-meal twenty"),
@@ -53,16 +53,4 @@ public class InputHandlerTest {
                 () -> InputHandler.handleUserInput("delete-expense greek-meal")
         );
     }
-
-/* TODO: update after parser rework
-    @Test
-    public void handlerUserInput_tuutorial_expectInvalidKeywordException() {
-        assertThrows(InvalidKeywordException.class, () -> Parser.handleUserInput("tuutorial"));
-    }
-
-    @Test
-    public void handlerUserInput_tuutorial_expectInvalidKeywordException() {
-        assertThrows(InvalidKeywordException.class, () -> Parser.handleUserInput("add-expense greek-meal twenty"));
-    }
-*/
 }

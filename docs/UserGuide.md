@@ -75,7 +75,7 @@ Format: `add-expense NAME_EXPENSE -a AMOUNT [CURRENCY] -c [CATEGORY]`
 - Base currency is SGD. Everything will be converted to the base currency. 
 
 Examples of usage:
-- `add-expense mcdonalds 5`
+- `add-expense mcdonalds -a 5`
 - `add-expense the plaza hotel -a 300 -c Accommodation`
 - `add-expense lunch -a 100 USD`
 - `add-expense capibara museum -a 10000 IDR -c Activities `

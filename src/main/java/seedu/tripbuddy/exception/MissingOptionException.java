@@ -8,4 +8,8 @@ public class MissingOptionException extends InvalidCommandException {
         super();
         this.missingOpt = missingOpt;
     }
+
+    public String getMissingOpt() {
+        return missingOpt;
+    }
 }
