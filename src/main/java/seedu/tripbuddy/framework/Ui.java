@@ -38,6 +38,10 @@ public class Ui {
      * @return The command entered by the user, whitespace stripped.
      */
     public static String getUserInput() {
+        // Force quit if text-ui-testing does not end with a "quit" line input
+        if (!scanner.hasNextLine()) {
+            return "quit";
+        }
         return scanner.nextLine().strip();
     }
 

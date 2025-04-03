@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 class CommandHandlerTest {
 
-    final int DEFAULT_BUDGET = 2333;
+    static final int DEFAULT_BUDGET = 2333;
 
     @Test
     void addExpense_a1() throws InvalidArgumentException {

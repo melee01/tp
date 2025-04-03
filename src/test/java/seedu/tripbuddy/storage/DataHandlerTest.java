@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 class DataHandlerTest {
 
-    private final int DEFAULT_BUDGET = 2333;
+    private static final int DEFAULT_BUDGET = 2333;
     private final PrintStream originalOut = System.out;
     private ByteArrayOutputStream outContent;
 
