@@ -1,6 +1,5 @@
 package seedu.tripbuddy.command;
 
-import seedu.tripbuddy.framework.CommandHandler;
 
 public enum Keyword {
 

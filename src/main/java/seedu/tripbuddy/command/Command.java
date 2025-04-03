@@ -1,6 +1,5 @@
 package seedu.tripbuddy.command;
 
-import seedu.tripbuddy.exception.InvalidArgumentException;
 import seedu.tripbuddy.exception.MissingOptionException;
 
 import java.util.ArrayList;
