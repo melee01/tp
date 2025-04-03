@@ -37,9 +37,9 @@ public class CommandHandler {
                         9. adjust-budget AMOUNT - Modify the budget amount.
                         10. max-expense - Display the expense with the highest amount.
                         11. min-expense - Display the expense with the lowest amount.
-                        12. filter-date yyyy-MM-dd HH:mm:ss yyyy-MM-dd HH:mm:ss 
+                        12. filter-date yyyy-MM-dd HH:mm:ss yyyy-MM-dd HH:mm:ss
                         - Filter expenses between two date/time ranges START_DATE START_TIME END_DATE END_TIME.
-                        13. view-currency - Displays the actual rates of currencies. 
+                        13. view-currency - Displays the actual rates of currencies.
                         
                         Enjoy tracking your expenses with TripBuddy!""";
     }
