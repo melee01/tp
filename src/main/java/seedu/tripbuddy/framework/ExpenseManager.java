@@ -130,7 +130,7 @@ public class ExpenseManager {
 
     public static Expense getExpense(int id) throws InvalidArgumentException {
         if (id < 0 || id >= expenses.size()) {
-            throw new InvalidArgumentException(Integer.toString(id));
+            throw new InvalidArgumentException(Integer.toString(id), "id index out of bound");
         }
         return expenses.get(id);
     }
@@ -149,7 +149,7 @@ public class ExpenseManager {
 
     public static List<Expense> getExpensesByCategory(String category) throws InvalidArgumentException {
         if (!categories.contains(category)) {
-            throw new InvalidArgumentException(category);
+            throw new InvalidArgumentException(category, "Category name not found.");
         }
 
         ArrayList<Expense> ret = new ArrayList<>();
@@ -169,7 +169,7 @@ public class ExpenseManager {
                 return;
             }
         }
-        throw new InvalidArgumentException(expenseName);
+        throw new InvalidArgumentException(expenseName, "Expense name not found.");
     }
 
     public static Expense getMaxExpense() throws InvalidArgumentException {
