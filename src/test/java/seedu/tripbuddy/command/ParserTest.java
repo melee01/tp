@@ -60,4 +60,11 @@ class ParserTest {
         assertEquals(Keyword.ADD_EXPENSE, cmd.getKeyword(), "keyword");
         assertEquals(5, cmd.getOptList().size(), "optList");
     }
+
+    @Test
+    void parseCommandTest_hasSingleMinus() throws InvalidKeywordException {
+        Command cmd = Parser.parseCommand("add-expense aa -d2 -");
+        assertEquals(Keyword.ADD_EXPENSE, cmd.getKeyword(), "keyword");
+        assertEquals(2, cmd.getOptList().size(), "optList");
+    }
 }
