@@ -54,16 +54,11 @@ public class DataHandler {
         Ui.printMessage("Saved data to file:\n\t" + absPath);
     }
 
-    public static void loadData(String path) throws FileNotFoundException {
+    public static void loadData(String path) throws FileNotFoundException, JSONException {
         JSONObject root = FileHandler.readJsonObject(path);
-
-        try {
-            double budget = root.getDouble("budget");
-            ExpenseManager.initExpenseManager(budget);
-            LOGGER.log(Level.INFO, "budget loaded: " + budget);
-        } catch (JSONException e) {
-            ExceptionHandler.handleException(e);
-        }
+        double budget = root.getDouble("budget");
+        ExpenseManager.initExpenseManager(budget);
+        LOGGER.log(Level.INFO, "budget loaded: " + budget);
 
         JSONArray categoriesArr = root.getJSONArray("categories");
         Set<String> categories = new HashSet<>();
