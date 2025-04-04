@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 
 public class DataHandler {
 
-    private static final Logger LOGGER = Logger.getLogger(DataHandler.class.getName());
+    private static final Logger LOGGER = Logger.getLogger("TripBuddy");
 
     public static void saveData(String path) throws IOException {
         JSONObject root = new JSONObject();

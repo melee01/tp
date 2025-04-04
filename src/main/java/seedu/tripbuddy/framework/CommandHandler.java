@@ -28,7 +28,7 @@ public class CommandHandler {
                 Here are the commands you can use:
                 1. set-budget AMOUNT
                         - Set your total trip budget. Default budget is $1000.
-                2. add-expense EXPENSE_NAME -a AMOUNT [CURRENCY] -c [CATEGORY]
+                2. add-expense EXPENSE_NAME -a AMOUNT -c [CATEGORY]
                         - Add a new expense.
                 3. delete-expense EXPENSE_NAME
                         - Remove an expense by name.
@@ -61,7 +61,7 @@ public class CommandHandler {
                 16. clear
                         - Clears all past expenses and categories.
                 17. set-base-currency CURRENCY
-                        - It sets the new currency. 
+                        - It sets the new currency.
                         - By default, the base currency is SGD. 
                 
                 Enjoy tracking your expenses with TripBuddy!""";

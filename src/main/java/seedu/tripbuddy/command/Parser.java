@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 
 public class Parser {
 
-    private static final Logger LOGGER = Logger.getLogger(Parser.class.getName());
+    private static final Logger LOGGER = Logger.getLogger("TripBuddy");
 
     /**
      * Checks if a {@code String} is an option expression.

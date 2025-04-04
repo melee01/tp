@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 
 public class FileHandler {
 
-    private static final Logger LOGGER = Logger.getLogger(FileHandler.class.getName());
+    private static final Logger LOGGER = Logger.getLogger("TripBuddy");
 
     public static JSONObject readJsonObject(String path) throws FileNotFoundException {
         File file = new File(path);
