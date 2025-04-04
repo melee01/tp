@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import seedu.tripbuddy.dataclass.Expense;
 import seedu.tripbuddy.exception.ExceptionHandler;
+import seedu.tripbuddy.exception.InvalidArgumentException;
 import seedu.tripbuddy.framework.ExpenseManager;
 import seedu.tripbuddy.framework.Ui;
 
@@ -54,16 +55,11 @@ public class DataHandler {
         Ui.printMessage("Saved data to file:\n\t" + absPath);
     }
 
-    public static void loadData(String path) throws FileNotFoundException {
+    public static void loadData(String path) throws FileNotFoundException, JSONException {
         JSONObject root = FileHandler.readJsonObject(path);
-
-        try {
-            double budget = root.getDouble("budget");
-            ExpenseManager.initExpenseManager(budget);
-            LOGGER.log(Level.INFO, "budget loaded: " + budget);
-        } catch (JSONException e) {
-            ExceptionHandler.handleException(e);
-        }
+        double budget = root.getDouble("budget");
+        ExpenseManager.initExpenseManager(budget);
+        LOGGER.log(Level.INFO, "budget loaded: " + budget);
 
         JSONArray categoriesArr = root.getJSONArray("categories");
         Set<String> categories = new HashSet<>();
@@ -82,12 +78,13 @@ public class DataHandler {
             JSONObject expObj = expensesArr.getJSONObject(i);
             try {
                 Expense expense = Expense.fromJSON(expObj);
-                expenses.add(expense);
+                ExpenseManager.addExpense(expense);
             } catch (JSONException e) {
                 ExceptionHandler.handleException(e);
+            } catch (InvalidArgumentException e) {
+                ExceptionHandler.handleInvalidArgumentException(e);
             }
         }
-        ExpenseManager.setExpenses(expenses);
         Ui.printMessage("Loaded data from file: " + path);
     }
 }

@@ -1,5 +1,6 @@
 package seedu.tripbuddy.storage;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -14,7 +15,7 @@ public class FileHandler {
 
     private static final Logger LOGGER = Logger.getLogger("TripBuddy");
 
-    public static JSONObject readJsonObject(String path) throws FileNotFoundException {
+    public static JSONObject readJsonObject(String path) throws FileNotFoundException, JSONException {
         File file = new File(path);
         StringBuilder content = new StringBuilder();
         try (Scanner scanner = new Scanner(file)) {

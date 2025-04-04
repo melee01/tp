@@ -11,10 +11,9 @@ public class Parser {
 
     /**
      * Checks if a {@code String} is an option expression.
-     * <p>Returns {@code true} if the string starts with {@code '-'}.
      */
     private static boolean isOpt(String s) {
-        return s.startsWith("-");
+        return s.length() > 1 && s.startsWith("-");
     }
 
     /**

@@ -1,5 +1,6 @@
 package seedu.tripbuddy;
 
+import org.json.JSONException;
 import seedu.tripbuddy.exception.ExceptionHandler;
 import seedu.tripbuddy.framework.InputHandler;
 import seedu.tripbuddy.framework.ExpenseManager;
@@ -42,8 +43,10 @@ public class TripBuddy {
         ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
         try {
             DataHandler.loadData(FILE_PATH);
+        } catch (JSONException e) {
+            ExceptionHandler.handleJSONException(e);
         } catch (FileNotFoundException e) {
-            ExceptionHandler.handleException(e);
+            ExceptionHandler.handleFileNotFoundException(e);
         }
 
         Ui.printStartMessage();

@@ -28,13 +28,13 @@ public class InputHandler {
             int optCount = cmd.getOptCount();
             String message = switch (keyword) {
             case TUTORIAL -> CommandHandler.handleTutorial();
-            case SET_BUDGET -> CommandHandler.handleSetBudget(Double.parseDouble(cmd.getOpt("")));
-            case ADJUST_BUDGET -> CommandHandler.handleAdjustBudget(Double.parseDouble(cmd.getOpt("")));
+            case SET_BUDGET -> CommandHandler.handleSetBudget(cmd.parseDouble(""));
+            case ADJUST_BUDGET -> CommandHandler.handleAdjustBudget(cmd.parseDouble(""));
             case VIEW_BUDGET -> CommandHandler.handleViewBudget();
             case CREATE_CATEGORY -> CommandHandler.handleCreateCategory(cmd.getOpt(""));
             case SET_CATEGORY -> CommandHandler.handleSetCategory(cmd.getOpt(""), cmd.getOpt("c"));
             case ADD_EXPENSE -> {
-                double amount = Double.parseDouble(cmd.getOpt("a"));
+                double amount = cmd.parseDouble("a");
                 if (cmd.hasOpt("c")) {
                     yield CommandHandler.handleAddExpense(cmd.getOpt(""), amount, cmd.getOpt("c"));
                 }

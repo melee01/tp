@@ -71,7 +71,9 @@ public class InputHandlerTest {
                 () -> InputHandler.handleUserInput("create-category"),
                 () -> InputHandler.handleUserInput("add-expense greek-meal -a twenty"),
                 () -> InputHandler.handleUserInput("set-category greek-meal"),
-                () -> InputHandler.handleUserInput("delete-expense greek-meal")
+                () -> InputHandler.handleUserInput("delete-expense greek-meal"),
+                () -> InputHandler.handleUserInput("set-budget 100000000"),
+                () -> InputHandler.handleUserInput("set-budget -1234")
         );
     }
 

@@ -1,5 +1,6 @@
 package seedu.tripbuddy.command;
 
+import seedu.tripbuddy.exception.InvalidArgumentException;
 import seedu.tripbuddy.exception.MissingOptionException;
 
 import java.util.ArrayList;
@@ -9,6 +10,11 @@ import java.util.HashMap;
  * Stores a command line. Contains a {@link Keyword} and a list of {@link Option}.
  */
 public class Command {
+
+    /**
+     * Values larger than this should be invalid.
+     */
+    public static final double MAX_INPUT_VAL = 1e5;
 
     private final Keyword keyword;
     private final ArrayList<Option> optList;
@@ -65,5 +71,24 @@ public class Command {
 
     public int getOptCount() {
         return optList.size();
+    }
+
+    /**
+     *  Parses the corresponding value of an option to a double.
+     */
+    public Double parseDouble(String opt) throws MissingOptionException, InvalidArgumentException {
+        String val = getOpt(opt);
+        try {
+            double ret = Double.parseDouble(val);
+            if (ret <= 0) {
+                throw new InvalidArgumentException(val, "Value should be more than 0.");
+            }
+            if (ret > MAX_INPUT_VAL) {
+                throw new InvalidArgumentException(val, "Value should be no more than " + MAX_INPUT_VAL);
+            }
+            return ret;
+        } catch (NumberFormatException e) {
+            throw new InvalidArgumentException(val, "Not a number.");
+        }
     }
 }

@@ -9,6 +9,11 @@ public class InvalidArgumentException extends InvalidCommandException {
         this.argument = argument;
     }
 
+    public InvalidArgumentException(String argument, String message) {
+        super(message);
+        this.argument = argument;
+    }
+
     public String getArgument() {
         return argument;
     }

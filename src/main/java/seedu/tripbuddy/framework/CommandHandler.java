@@ -62,7 +62,7 @@ public class CommandHandler {
                         - Clears all past expenses and categories.
                 17. set-base-currency CURRENCY
                         - It sets the new currency.
-                        - By default, the base currency is SGD. 
+                        - By default, the base currency is SGD.
                 
                 Enjoy tracking your expenses with TripBuddy!""";
     }
@@ -84,17 +84,13 @@ public class CommandHandler {
     }
 
     public static String handleSetBudget(double budget) throws InvalidArgumentException {
-        if (budget <= 0) {
-            throw new InvalidArgumentException(Double.toString(budget));
-        }
+        assert budget > 0;
         ExpenseManager.setBudget(budget);
         return "Your budget has been set to $" + String.format("%.2f", budget) + ".";
     }
 
     public static String handleAdjustBudget(double budget) throws InvalidArgumentException {
-        if (budget <= 0) {
-            throw new InvalidArgumentException(Double.toString(budget));
-        }
+        assert budget > 0;
         ExpenseManager.setBudget(budget);
         return "Your budget has been updated to $" + budget + ".\nYou have $" +
                 String.format("%.2f", ExpenseManager.getRemainingBudget()) + " remaining to spend!";
@@ -118,10 +114,7 @@ public class CommandHandler {
 
     public static String handleAddExpense(String expenseName, double amount, String category)
             throws InvalidArgumentException {
-        if (amount <= 0) {
-            throw new InvalidArgumentException(Double.toString(amount));
-        }
-
+        assert amount > 0;
         try {
             /* the value entered is a currency */
             Currency currency = Currency.valueOf(category);
@@ -146,9 +139,7 @@ public class CommandHandler {
 
     public static String handleAddExpense(String expenseName, double amount, String category, String currencyStr)
             throws InvalidArgumentException {
-        if (amount <= 0) {
-            throw new InvalidArgumentException(Double.toString(amount));
-        }
+        assert amount > 0;
         try {
             Currency currency = Currency.valueOf(currencyStr);
             ExpenseManager.addExpense(expenseName, currency.convert(amount), category);
@@ -169,9 +160,7 @@ public class CommandHandler {
     }
 
     public static String handleAddExpense(String expenseName, double amount) throws InvalidArgumentException {
-        if (amount <= 0) {
-            throw new InvalidArgumentException(Double.toString(amount));
-        }
+        assert amount > 0;
         ExpenseManager.addExpense(expenseName, amount);
         double remainingBudget = ExpenseManager.getRemainingBudget();
         if (remainingBudget >= 0) {
