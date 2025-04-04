@@ -16,6 +16,12 @@ public class ExceptionHandler {
 
     public static void handleInvalidArgumentException(InvalidArgumentException e) {
         String argument = e.getArgument();
+        String message = e.getMessage();
+        if (message != null) {
+            Ui.printMessage("Invalid command argument: \"" + argument +
+                    "\": " + message);
+            return;
+        }
         Ui.printMessage("Invalid command argument: \"" + argument +
                 "\". Please review the user guide for more information.");
     }
