@@ -15,6 +15,30 @@ e.g. in `set-budget AMOUNT`, AMOUNT is a parameter which can be used as `set-bud
 - Extraneous parameters for commands that do not take in parameters (such as `view-budget` and `quit`) will be ignored.
 e.g. if the command specifies quit 123, it will be interpreted as quit.
 
+## Supported Currencies
+
+- `IDR`
+- `LAK`
+- `MYR`
+- `PHP`
+- `SGD`
+- `THB`
+- `VND`
+- `USD`
+- `EUR`
+- `JPY`
+- `AUD`
+- `CAD`
+- `CNY`
+- `HKD`
+- `INR`
+- `KRW`
+- `NZD`
+- `CHF`
+- `TWD`
+- `ZAR`
+- `GBP`
+
 ## Features 
 
 ### View tutorial : `tutorial`
@@ -60,9 +84,9 @@ Examples of usage:
 Adds an expense to the trip and automatically updates the remaining budget, taking into account 
 the new expenditure.
 
-Format: `add-expense NAME_EXPENSE -a AMOUNT [CURRENCY] -c [CATEGORY]`
+Format: `add-expense NAME_EXPENSE -a AMOUNT -c [CATEGORY]`
 
-- Base currency is SGD. Everything will be converted to the base currency. 
+- Base currency is SGD.
 
 Examples of usage:
 - `add-expense mcdonalds -a 5`
