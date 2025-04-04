@@ -32,6 +32,10 @@ public class ExceptionHandler {
 
     public static void handleMissingOptionException(MissingOptionException e) {
         String missingOpt = e.getMissingOpt();
+        if (e.getMissingOpt().isEmpty()) {
+            Ui.printMessage("Oh no. Cannot not find the main argument.");
+            return;
+        }
         Ui.printMessage("Oh no. Cannot not find option label: -" + missingOpt);
     }
 

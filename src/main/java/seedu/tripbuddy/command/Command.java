@@ -81,14 +81,15 @@ public class Command {
         try {
             double ret = Double.parseDouble(val);
             if (ret <= 0) {
-                throw new InvalidArgumentException(val, "Value should be more than 0.");
+                throw new InvalidArgumentException("-" + opt + " " + val, "Value should be more than 0.");
             }
             if (ret > MAX_INPUT_VAL) {
-                throw new InvalidArgumentException(val, "Value should be no more than " + MAX_INPUT_VAL);
+                throw new InvalidArgumentException("-" + opt + " " + val,
+                        "Value should be no more than " + MAX_INPUT_VAL);
             }
             return ret;
         } catch (NumberFormatException e) {
-            throw new InvalidArgumentException(val, "Not a number.");
+            throw new InvalidArgumentException("-" + opt + " " + val, "Not a number.");
         }
     }
 }

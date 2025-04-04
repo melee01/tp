@@ -144,7 +144,7 @@ public class CommandHandler {
             Currency currency = Currency.valueOf(currencyStr);
             ExpenseManager.addExpense(expenseName, currency.convert(amount), category);
         } catch (IllegalArgumentException e) {
-            throw new InvalidArgumentException(currencyStr);
+            throw new InvalidArgumentException(currencyStr, "Invalid currency.");
         }
         double remainingBudget = ExpenseManager.getRemainingBudget();
         if (remainingBudget >= 0) {
@@ -275,7 +275,7 @@ public class CommandHandler {
         try {
             newBase = Currency.valueOf(baseCurrency.toUpperCase());
         } catch (IllegalArgumentException e) {
-            throw new InvalidArgumentException("Base currency is not a valid currency.");
+            throw new InvalidArgumentException(baseCurrency, "Base currency is not a valid currency.");
         }
         // new base currency
         double newBaseRate = newBase.getRate();
