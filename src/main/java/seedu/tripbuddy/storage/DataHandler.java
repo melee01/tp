@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import seedu.tripbuddy.dataclass.Expense;
 import seedu.tripbuddy.exception.ExceptionHandler;
+import seedu.tripbuddy.exception.InvalidArgumentException;
 import seedu.tripbuddy.framework.ExpenseManager;
 import seedu.tripbuddy.framework.Ui;
 
@@ -77,12 +78,13 @@ public class DataHandler {
             JSONObject expObj = expensesArr.getJSONObject(i);
             try {
                 Expense expense = Expense.fromJSON(expObj);
-                expenses.add(expense);
+                ExpenseManager.addExpense(expense);
             } catch (JSONException e) {
                 ExceptionHandler.handleException(e);
+            } catch (InvalidArgumentException e) {
+                ExceptionHandler.handleInvalidArgumentException(e);
             }
         }
-        ExpenseManager.setExpenses(expenses);
         Ui.printMessage("Loaded data from file: " + path);
     }
 }

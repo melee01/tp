@@ -36,7 +36,7 @@ class ExpenseManagerTest {
         ExpenseManager.initExpenseManager(2333);
         ExpenseManager.addExpense("a", 1);
         ExpenseManager.addExpense("b", 2);
-        ExpenseManager.deleteExpense(1);
+        ExpenseManager.deleteExpense("a");
         ExpenseManager.addExpense("c", 3);
 
         List<Expense> expenses = ExpenseManager.getExpenses();
@@ -47,15 +47,7 @@ class ExpenseManagerTest {
     }
 
     @Test
-    void addDeleteTest_invalidDeleteID_expectInvalidArgumentException() {
-        ExpenseManager.initExpenseManager(2333);
-        ExpenseManager.addExpense("a", 1);
-        ExpenseManager.addExpense("b", 2);
-        assertThrows(InvalidArgumentException.class, () -> ExpenseManager.deleteExpense(3));
-    }
-
-    @Test
-    void addExpenseTest_categoryNotExists() {
+    void addExpenseTest_categoryNotExists() throws InvalidArgumentException {
         ExpenseManager.initExpenseManager(2333);
         assertArrayEquals(new String[]{}, ExpenseManager.getCategories().toArray());
 

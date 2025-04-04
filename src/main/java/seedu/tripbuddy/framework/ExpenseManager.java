@@ -1,5 +1,6 @@
 package seedu.tripbuddy.framework;
 
+import seedu.tripbuddy.command.Command;
 import seedu.tripbuddy.dataclass.Expense;
 import seedu.tripbuddy.exception.InvalidArgumentException;
 
@@ -18,6 +19,7 @@ public class ExpenseManager {
     private static double totalExpense = 0;
     private static final HashSet<String> categories = new HashSet<>();
     private static final ArrayList<Expense> expenses = new ArrayList<>();
+    private static final HashSet<String> expenseNames = new HashSet<>();
 
     /**
      * Clears all existing data and initializes budget value.
@@ -55,6 +57,7 @@ public class ExpenseManager {
     public static void clearExpensesAndCategories() {
         expenses.clear();
         categories.clear();
+        expenseNames.clear();
         totalExpense = 0;
     }
 
@@ -66,31 +69,62 @@ public class ExpenseManager {
     /**
      * Adds a new category name into {@code categories} if not exists.
      */
-    public static void createCategory(String categoryName) {
+    public static void createCategory(String categoryName) throws InvalidArgumentException {
+        if (categories.contains(categoryName)) {
+            throw new InvalidArgumentException(categoryName, "Category name already exists.");
+        }
         categories.add(categoryName);
     }
 
     /**
      * Adds a new {@link Expense} without category.
      */
-    public static void addExpense(String name, double amount) {
+    public static void addExpense(String name, double amount) throws InvalidArgumentException {
         assert amount > 0 : "Amount must be positive";
+        if (expenseNames.contains(name)) {
+            throw new InvalidArgumentException(name, "Expense name already exists.");
+        }
         Expense expense = new Expense(name, amount);
         expenses.add(expense);
         totalExpense += amount;
     }
 
     /**
-     * Adds a new{@link Expense} with a specific category.
+     * Adds a new {@link Expense} with a specific category.
      * <ul>
      *     <li>A new category will be created if not exists.
      * </ul>
      */
-    public static void addExpense(String name, double amount, String categoryName) {
+    public static void addExpense(String name, double amount, String categoryName) throws InvalidArgumentException {
         assert amount > 0 : "Amount must be positive";
-        createCategory(categoryName);
+        if (expenseNames.contains(name)) {
+            throw new InvalidArgumentException(name, "Expense name already exists.");
+        }
+        if (!categories.contains(categoryName)) {
+            createCategory(categoryName);
+        }
         Expense expense = new Expense(name, amount, categoryName);
         expenses.add(expense);
+        totalExpense += amount;
+    }
+
+    public static void addExpense(Expense expense) throws InvalidArgumentException {
+        String name = expense.getName();
+        if (expenseNames.contains(name)) {
+            throw new InvalidArgumentException(name, "Expense name already exists.");
+        }
+
+        double amount = expense.getAmount();
+        if (amount <= 0) {
+            throw new InvalidArgumentException(String.valueOf(amount), "Value should be more than 0.");
+        }
+        if (amount > Command.MAX_INPUT_VAL) {
+            throw new InvalidArgumentException(String.valueOf(amount),
+                    "Value should be no more than " + Command.MAX_INPUT_VAL);
+        }
+
+        expenses.add(expense);
+        expenseNames.add(name);
         totalExpense += amount;
     }
 
@@ -101,23 +135,16 @@ public class ExpenseManager {
         return expenses.get(id);
     }
 
-    public static void deleteExpense(int id) throws InvalidArgumentException {
-        if (id < 0 || id >= expenses.size()) {
-            throw new InvalidArgumentException(Integer.toString(id));
-        }
-        totalExpense -= expenses.get(id).getAmount();
-        expenses.remove(id);
-    }
-
     public static void deleteExpense(String expenseName) throws InvalidArgumentException {
         for (Expense expense : expenses) {
             if (expense.getName().equalsIgnoreCase(expenseName)) {
                 expenses.remove(expense);
+                expenseNames.remove(expenseName);
                 totalExpense -= expense.getAmount();
                 return;
             }
         }
-        throw new InvalidArgumentException(expenseName);
+        throw new InvalidArgumentException(expenseName, "Expense name not found.");
     }
 
     public static List<Expense> getExpensesByCategory(String category) throws InvalidArgumentException {
@@ -181,15 +208,6 @@ public class ExpenseManager {
             }
         }
         return filteredExpenses;
-    }
-
-    public static void setExpenses(List<Expense> loadedExpenses) {
-        expenses.clear();
-        expenses.addAll(loadedExpenses);
-        totalExpense = 0;
-        for (Expense expense : expenses) {
-            totalExpense += expense.getAmount();
-        }
     }
 
     public static void setCategories(Set<String> loadedCategories) {

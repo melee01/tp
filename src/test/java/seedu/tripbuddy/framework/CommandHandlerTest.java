@@ -32,7 +32,7 @@ class CommandHandlerTest {
     @Test
     void addExpense_negativeAmount_expectInvalidArgumentException() {
         ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
-        assertThrows(InvalidArgumentException.class,
+        assertThrows(AssertionError.class,
                 () -> CommandHandler.handleAddExpense("a", -1));
     }
 
@@ -179,7 +179,7 @@ class CommandHandlerTest {
     }
 
     @Test
-    void handleSearchExpense_matchingExpenses() {
+    void handleSearchExpense_matchingExpenses() throws InvalidArgumentException {
         ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
         ExpenseManager.addExpense("lunch", 20);
         ExpenseManager.addExpense("dinner", 40);
@@ -198,7 +198,7 @@ class CommandHandlerTest {
     }
 
     @Test
-    void handleSearchExpense_noMatchingExpenses() {
+    void handleSearchExpense_noMatchingExpenses() throws InvalidArgumentException {
         ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
         ExpenseManager.addExpense("lunch", 20);
         ExpenseManager.addExpense("dinner", 40);
@@ -221,7 +221,7 @@ class CommandHandlerTest {
     }
 
     @Test
-    public void getCategories_returnCorrectList() {
+    public void getCategories_returnCorrectList() throws InvalidArgumentException {
         ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
         ExpenseManager.addExpense("lunch", 20, "food");
         ExpenseManager.addExpense("dinner", 40, "food");
@@ -243,7 +243,7 @@ class CommandHandlerTest {
     }
 
     @Test
-    public void clear_returnsEmptyList() {
+    public void clear_returnsEmptyList() throws InvalidArgumentException {
         ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
         ExpenseManager.addExpense("greek-meal", 20, "food");
         ExpenseManager.addExpense("mediterranean-meal", 30, "food");

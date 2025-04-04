@@ -14,7 +14,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -36,7 +35,6 @@ class DataHandlerTest {
         // Reset ExpenseManager state before each test.
         ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
         ExpenseManager.setCategories(new HashSet<>());
-        ExpenseManager.setExpenses(new ArrayList<>());
     }
 
     @AfterEach
@@ -51,7 +49,6 @@ class DataHandlerTest {
         double budget = 1000.0;
         ExpenseManager.initExpenseManager(budget);
         // For testing, assume no expenses and no categories.
-        ExpenseManager.setExpenses(new ArrayList<>());
         ExpenseManager.setCategories(new HashSet<>());
         // ExpenseManager.getTotalExpense() should be 0 in this state.
 
@@ -119,7 +116,6 @@ class DataHandlerTest {
         // Clear the ExpenseManager state before loading.
         ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
         ExpenseManager.setCategories(new HashSet<>());
-        ExpenseManager.setExpenses(new ArrayList<>());
         outContent.reset();
 
         // Call DataHandler.loadData.
