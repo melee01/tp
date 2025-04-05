@@ -102,6 +102,7 @@ public class ExpenseManager {
         }
         Expense expense = new Expense(name, amount);
         expenses.add(expense);
+        expenseNames.add(name);
         totalExpense += amount;
     }
 
@@ -121,6 +122,7 @@ public class ExpenseManager {
         }
         Expense expense = new Expense(name, amount, categoryName);
         expenses.add(expense);
+        expenseNames.add(name);
         totalExpense += amount;
     }
 

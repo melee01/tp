@@ -12,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -29,6 +30,40 @@ class ExpenseManagerTest {
         ExpenseManager.initExpenseManager(2333);
         ExpenseManager.setBudget(233);
         assertEquals(233, ExpenseManager.getBudget());
+    }
+
+    @Test
+    void createCategoryTest_sameName_expectInvalidArgumentException() {
+        ExpenseManager.initExpenseManager(2333);
+        assertAll(
+            () -> ExpenseManager.createCategory("a"),
+            () ->ExpenseManager.createCategory("b")
+        );
+        assertThrows(InvalidArgumentException.class, () -> ExpenseManager.createCategory("a"));
+    }
+
+    @Test
+    void addExpenseTest_sameNameNoCategory_expectInvalidArgumentException() {
+        ExpenseManager.initExpenseManager(2333);
+        assertAll(
+            () -> ExpenseManager.addExpense("a", 1),
+            () ->ExpenseManager.addExpense("b", 1)
+        );
+        assertThrows(InvalidArgumentException.class, () -> ExpenseManager.addExpense("a", 1));
+        assertThrows(InvalidArgumentException.class,
+                () -> ExpenseManager.addExpense("a", 1, "b"));
+    }
+
+    @Test
+    void addExpenseTest_sameNameHasCategory_expectInvalidArgumentException() {
+        ExpenseManager.initExpenseManager(2333);
+        assertAll(
+                () -> ExpenseManager.addExpense("a", 1, "test"),
+                () ->ExpenseManager.addExpense("b", 1)
+        );
+        assertThrows(InvalidArgumentException.class, () -> ExpenseManager.addExpense("a", 1));
+        assertThrows(InvalidArgumentException.class,
+                () -> ExpenseManager.addExpense("a", 1, "b"));
     }
 
     @Test
