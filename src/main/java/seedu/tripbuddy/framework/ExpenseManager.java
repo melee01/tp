@@ -1,6 +1,7 @@
 package seedu.tripbuddy.framework;
 
 import seedu.tripbuddy.command.Command;
+import seedu.tripbuddy.dataclass.Currency;
 import seedu.tripbuddy.dataclass.Expense;
 import seedu.tripbuddy.exception.InvalidArgumentException;
 
@@ -15,6 +16,7 @@ import java.util.Set;
  */
 public class ExpenseManager {
 
+    private static String baseCurrency = Currency.SGD.getFullName();
     private static double budget;
     private static double totalExpense = 0;
     private static final HashSet<String> categories = new HashSet<>();
@@ -22,12 +24,22 @@ public class ExpenseManager {
     private static final HashSet<String> expenseNames = new HashSet<>();
 
     /**
-     * Clears all existing data and initializes budget value.
+     * Clears all existing data and initializes budget value. Uses {@code SGD} for default currency.
      */
     public static void initExpenseManager(double budget) {
         assert budget > 0 : "Budget must be positive";
         ExpenseManager.budget = budget;
+        baseCurrency = Currency.SGD.getFullName();
         clearExpensesAndCategories();
+    }
+
+    public static String getBaseCurrency() {
+        return baseCurrency;
+    }
+
+    public static void setBaseCurrency(Currency baseCurrency) {
+        ExpenseManager.baseCurrency = baseCurrency.getFullName();
+        Currency.setBaseCurrency(baseCurrency);
     }
 
     public static double getBudget() {

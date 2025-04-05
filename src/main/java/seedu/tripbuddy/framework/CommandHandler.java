@@ -277,8 +277,6 @@ public class CommandHandler {
         } catch (IllegalArgumentException e) {
             throw new InvalidArgumentException(baseCurrency, "Base currency is not a valid currency.");
         }
-        // new base currency
-        double newBaseRate = newBase.getRate();
 
         // change budget
         double currentBudget = ExpenseManager.getBudget();
@@ -293,11 +291,8 @@ public class CommandHandler {
             expense.setAmount(newBase.convert(expense.getAmount()));
         }
 
-        // set new rates
-        for (Currency c : Currency.values()) {
-            c.setRate(c.getRate() / newBaseRate);
-        }
+        ExpenseManager.setBaseCurrency(newBase);
 
-        return "Current base is: " + newBase.toString();
+        return "Current base is: " + newBase;
     }
 }

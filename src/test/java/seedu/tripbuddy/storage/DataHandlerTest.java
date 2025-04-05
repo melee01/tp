@@ -10,7 +10,6 @@ import seedu.tripbuddy.framework.ExpenseManager;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.Files;
@@ -81,7 +80,7 @@ class DataHandlerTest {
     }
 
     @Test
-    void testLoadData() throws IOException, FileNotFoundException {
+    void testLoadData() throws IOException {
         // Create a JSON object that mimics the saved data structure.
         JSONObject root = new JSONObject();
         double budget = 2000.0;

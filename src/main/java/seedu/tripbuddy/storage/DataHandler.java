@@ -3,6 +3,7 @@ package seedu.tripbuddy.storage;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import seedu.tripbuddy.dataclass.Currency;
 import seedu.tripbuddy.dataclass.Expense;
 import seedu.tripbuddy.exception.ExceptionHandler;
 import seedu.tripbuddy.exception.InvalidArgumentException;
@@ -24,6 +25,7 @@ public class DataHandler {
 
     public static void saveData(String path) throws IOException {
         JSONObject root = new JSONObject();
+        root.put("currency", ExpenseManager.getBaseCurrency());
         root.put("budget", ExpenseManager.getBudget());
         root.put("totalExpense", ExpenseManager.getTotalExpense());
 
@@ -57,9 +59,26 @@ public class DataHandler {
 
     public static void loadData(String path) throws FileNotFoundException, JSONException {
         JSONObject root = FileHandler.readJsonObject(path);
-        double budget = root.getDouble("budget");
-        ExpenseManager.initExpenseManager(budget);
-        LOGGER.log(Level.INFO, "budget loaded: " + budget);
+
+        try {
+            double budget = root.getDouble("budget");
+            ExpenseManager.initExpenseManager(budget);
+            LOGGER.log(Level.INFO, "budget loaded: " + budget);
+        } catch (JSONException e) {
+            ExceptionHandler.handleJSONException(e);
+        }
+
+        String currencyName = null;
+        try {
+            currencyName = root.getString("currency");
+            Currency currency = Currency.valueOf(currencyName);
+            ExpenseManager.setBaseCurrency(currency);
+        } catch (JSONException e) {
+            ExceptionHandler.handleJSONException(e);
+        } catch (IllegalArgumentException e) {
+            assert currencyName != null;
+            Ui.printMessage("Unrecognized currency: " + currencyName + ". Using SGD instead.");
+        }
 
         JSONArray categoriesArr = root.getJSONArray("categories");
         Set<String> categories = new HashSet<>();

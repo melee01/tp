@@ -30,6 +30,9 @@ public enum Currency {
         return name;
     }
 
+    /**
+     * Convert an amount of base currency to this currency.
+     */
     public double convert(double amount) {
         return amount * rate;
     }
@@ -40,5 +43,15 @@ public enum Currency {
 
     public void setRate(double rate) {
         this.rate = rate;
+    }
+
+    /**
+     * Calculates new exchanges rates to the give new base currency.
+     */
+    public static void setBaseCurrency(Currency newBase) {
+        double newBaseRate = newBase.rate;
+        for (Currency c : Currency.values()) {
+            c.rate /= newBaseRate;
+        }
     }
 }
