@@ -44,7 +44,7 @@ public class ExceptionHandler {
     }
 
     public static void handleJSONException(JSONException e) {
-        Ui.printMessage("Uh oh! Skipping corrupt data found in your save file:\n\t" + e.getMessage());
+        Ui.printMessage("Uh oh! Missing or corrupt data found in your save file:\n\t" + e.getMessage());
     }
 
     public static void handleFileNotFoundException(FileNotFoundException e) {

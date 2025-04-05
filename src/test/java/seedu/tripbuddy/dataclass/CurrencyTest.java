@@ -1,10 +1,23 @@
 package seedu.tripbuddy.dataclass;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CurrencyTest {
+
+    private static final Logger LOGGER = Logger.getLogger(CurrencyTest.class.getName());
+
+    @BeforeEach
+    void setBaseCurrencySGD() {
+        Currency.setBaseCurrency(Currency.SGD);
+        LOGGER.log(Level.INFO, "set base currency: " + Currency.SGD.getRate());
+    }
 
     @Test
     void testGetFullName() {
@@ -15,11 +28,15 @@ class CurrencyTest {
     }
 
     @Test
-    void testConvert() {
+    void testConvert_sgd() {
         // For SGD, with a rate of 1, converting 100 should return 100.
         assertEquals(100.0, Currency.SGD.convert(100.0), 0.0001);
-        // For USD, conversion should multiply the amount by 1.342.
-        assertEquals(134.2, Currency.USD.convert(100.0), 0.0001);
+    }
+
+    @Test
+    void testConvert_usd() {
+        // For USD, conversion should be divided the amount by 1.342.
+        assertEquals(74, Currency.USD.convert(100.0), 0.0001);
     }
 
     @Test

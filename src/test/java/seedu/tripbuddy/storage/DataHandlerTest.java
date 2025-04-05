@@ -10,7 +10,6 @@ import seedu.tripbuddy.framework.ExpenseManager;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.Files;
@@ -44,6 +43,17 @@ class DataHandlerTest {
     }
 
     @Test
+    void round2DigitsTest_floor() {
+        assertEquals(11.11, DataHandler.round2Digits(11.111), 1e-6);
+        assertEquals(11.11, DataHandler.round2Digits(11.1119), 1e-6);
+    }
+
+    @Test
+    void round2DigitsTest_ceil() {
+        assertEquals(11.12, DataHandler.round2Digits(11.118), 1e-6);
+    }
+
+    @Test
     void testSaveData() throws IOException {
         // Set up ExpenseManager state.
         double budget = 1000.0;
@@ -70,8 +80,6 @@ class DataHandlerTest {
 
         // Check that the JSON contains the correct budget.
         assertEquals(budget, root.getDouble("budget"), 0.0001);
-        // Check that totalExpense matches ExpenseManager.getTotalExpense() (which is 0).
-        assertEquals(ExpenseManager.getTotalExpense(), root.getDouble("totalExpense"), 0.0001);
         // Categories array should be empty.
         JSONArray categoriesArr = root.getJSONArray("categories");
         assertEquals(0, categoriesArr.length());
@@ -81,7 +89,7 @@ class DataHandlerTest {
     }
 
     @Test
-    void testLoadData() throws IOException, FileNotFoundException {
+    void testLoadData() throws IOException {
         // Create a JSON object that mimics the saved data structure.
         JSONObject root = new JSONObject();
         double budget = 2000.0;

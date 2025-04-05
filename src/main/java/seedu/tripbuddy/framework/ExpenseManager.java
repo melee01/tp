@@ -1,6 +1,9 @@
 package seedu.tripbuddy.framework;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import seedu.tripbuddy.command.Command;
+import seedu.tripbuddy.dataclass.Currency;
 import seedu.tripbuddy.dataclass.Expense;
 import seedu.tripbuddy.exception.InvalidArgumentException;
 
@@ -15,6 +18,7 @@ import java.util.Set;
  */
 public class ExpenseManager {
 
+    private static Currency baseCurrency = Currency.SGD;
     private static double budget;
     private static double totalExpense = 0;
     private static final HashSet<String> categories = new HashSet<>();
@@ -22,12 +26,22 @@ public class ExpenseManager {
     private static final HashSet<String> expenseNames = new HashSet<>();
 
     /**
-     * Clears all existing data and initializes budget value.
+     * Clears all existing data and initializes budget value. Uses {@code SGD} for default currency.
      */
     public static void initExpenseManager(double budget) {
         assert budget > 0 : "Budget must be positive";
         ExpenseManager.budget = budget;
+        baseCurrency = Currency.SGD;
         clearExpensesAndCategories();
+    }
+
+    public static Currency getBaseCurrency() {
+        return baseCurrency;
+    }
+
+    public static void setBaseCurrency(Currency baseCurrency) {
+        ExpenseManager.baseCurrency = baseCurrency;
+        Currency.setBaseCurrency(baseCurrency);
     }
 
     public static double getBudget() {
@@ -52,6 +66,10 @@ public class ExpenseManager {
 
     public static List<Expense> getExpenses() {
         return List.copyOf(expenses);
+    }
+
+    public static String getFormattedAmount(double amount) {
+        return baseCurrency.getFormattedAmount(amount);
     }
 
     public static void clearExpensesAndCategories() {
@@ -86,6 +104,7 @@ public class ExpenseManager {
         }
         Expense expense = new Expense(name, amount);
         expenses.add(expense);
+        expenseNames.add(name);
         totalExpense += amount;
     }
 
@@ -105,22 +124,24 @@ public class ExpenseManager {
         }
         Expense expense = new Expense(name, amount, categoryName);
         expenses.add(expense);
+        expenseNames.add(name);
         totalExpense += amount;
     }
 
-    public static void addExpense(Expense expense) throws InvalidArgumentException {
+    public static void addExpense(JSONObject expObj) throws JSONException {
+        Expense expense = Expense.fromJSON(expObj);
         String name = expense.getName();
         if (expenseNames.contains(name)) {
-            throw new InvalidArgumentException(name, "Expense name already exists.");
+            throw new JSONException("Expense \"" + name + "\" already exists. Skipping");
         }
 
         double amount = expense.getAmount();
         if (amount <= 0) {
-            throw new InvalidArgumentException(String.valueOf(amount), "Value should be more than 0.");
+            throw new JSONException('"' + name + "\": Expense amount should be more than 0.");
         }
         if (amount > Command.MAX_INPUT_VAL) {
-            throw new InvalidArgumentException(String.valueOf(amount),
-                    "Value should be no more than " + Command.MAX_INPUT_VAL);
+            throw new JSONException('"' + name + "\": Expense amount should be no more than " +
+                    Command.MAX_INPUT_VAL);
         }
 
         expenses.add(expense);
