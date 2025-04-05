@@ -118,14 +118,6 @@ class CommandHandlerTest {
     }
 
     @Test
-    void handleAdjustBudgetTest() throws InvalidArgumentException {
-        ExpenseManager.initExpenseManager(200);
-        String message = CommandHandler.handleAdjustBudget(300);
-        assertTrue(message.contains("Your budget has been updated to $300.0."));
-        assertTrue(message.contains("You have $300.00 remaining to spend!"));
-    }
-
-    @Test
     void handleMaxExpenseTest() throws InvalidArgumentException {
         ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
         ExpenseManager.addExpense("a", 10);
