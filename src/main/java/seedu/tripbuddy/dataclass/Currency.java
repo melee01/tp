@@ -1,12 +1,9 @@
 package seedu.tripbuddy.dataclass;
 public enum Currency {
-    IDR("IDR", 0.00008101),
-    LAK("LAK", 0.00006194),
     MYR("MYR", 0.3025),
     PHP("PHP", 0.02338),
     SGD("SGD", 1),
     THB("THB", 0.03951),
-    VND("VND", 0.00005245),
     USD("USD", 1.342 ),
     EUR("EUR", 1.453 ),
     JPY("JPY", 0.008953),
@@ -15,7 +12,6 @@ public enum Currency {
     CNY("CNY", 1.009),
     HKD("HKD", 1.232),
     INR("INR", 0.0161),
-    KRW("KRW", 0.001),
     NZD("NZD", 0.815),
     CHF("CHF", 1.502),
     TWD("TWD", 0.0425),
