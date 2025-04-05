@@ -17,27 +17,25 @@ e.g. if the command specifies quit 123, it will be interpreted as quit.
 
 ## Supported Currencies
 
-- `IDR`
-- `LAK`
-- `MYR`
-- `PHP`
-- `SGD`
-- `THB`
-- `VND`
-- `USD`
-- `EUR`
-- `JPY`
-- `AUD`
-- `CAD`
-- `CNY`
-- `HKD`
-- `INR`
-- `KRW`
-- `NZD`
-- `CHF`
-- `TWD`
-- `ZAR`
-- `GBP`
+Note that exchange rates are hard-coded to comply with CS2113 tP restrictions.
+
+- MYR
+- PHP
+- SGD
+- THB
+- USD
+- EUR
+- JPY
+- AUD
+- CAD
+- CNY
+- HKD
+- INR
+- NZD
+- CHF
+- TWD
+- ZAR
+- GBP
 
 ## Features 
 
@@ -139,7 +137,7 @@ Format: `filter-date -f yyyy-MM-dd HH:mm:ss -t yyyy-MM-dd HH:mm:ss`
 
 ### View Currency: `view-currency`
     
-Displays the actual rates of currencies.
+Displays the exchange rates of currencies.
 - default base currency: SGD
 
 Format: `view-currency`
