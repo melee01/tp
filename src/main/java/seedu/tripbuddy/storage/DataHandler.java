@@ -3,6 +3,7 @@ package seedu.tripbuddy.storage;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import seedu.tripbuddy.command.Command;
 import seedu.tripbuddy.dataclass.Currency;
 import seedu.tripbuddy.dataclass.Expense;
 import seedu.tripbuddy.exception.ExceptionHandler;
@@ -12,10 +13,6 @@ import seedu.tripbuddy.framework.Ui;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,11 +20,15 @@ public class DataHandler {
 
     private static final Logger LOGGER = Logger.getLogger("TripBuddy");
 
+    public static double round2Digits(double x) {
+        assert x > 0 && x <= Command.MAX_INPUT_VAL;
+        return (int)(x * 100 + .5) / 100.;
+    }
+
     public static void saveData(String path) throws IOException {
         JSONObject root = new JSONObject();
         root.put("currency", ExpenseManager.getBaseCurrency().toString());
-        root.put("budget", ExpenseManager.getBudget());
-        root.put("totalExpense", ExpenseManager.getTotalExpense());
+        root.put("budget", round2Digits(ExpenseManager.getBudget()));
 
         LOGGER.log(Level.INFO, "budget converted");
 
@@ -41,11 +42,7 @@ public class DataHandler {
 
         JSONArray expensesArr = new JSONArray();
         for (Expense expense : ExpenseManager.getExpenses()) {
-            JSONObject expObj = new JSONObject();
-            expObj.put("name", expense.getName());
-            expObj.put("amount", expense.getAmount());
-            expObj.put("category", expense.getCategory());
-            expObj.put("dateTime", expense.getDateTimeString());
+            JSONObject expObj = expense.toJSON();
             expensesArr.put(expObj);
             LOGGER.log(Level.INFO, "expense converted: " + expObj);
         }
@@ -62,6 +59,13 @@ public class DataHandler {
 
         try {
             double budget = root.getDouble("budget");
+            if (budget <= 0) {
+                throw new JSONException("Budget value should be more than 0. Using default budget instead.");
+            }
+            if (budget > Command.MAX_INPUT_VAL) {
+                throw new JSONException("Budget value should be no more than " + Command.MAX_INPUT_VAL +
+                        ". Using default budget instead.");
+            }
             ExpenseManager.initExpenseManager(budget);
             LOGGER.log(Level.INFO, "budget loaded: " + budget);
         } catch (JSONException e) {
@@ -81,27 +85,26 @@ public class DataHandler {
         }
 
         JSONArray categoriesArr = root.getJSONArray("categories");
-        Set<String> categories = new HashSet<>();
         for (int i = 0; i < categoriesArr.length(); i++) {
+            String category = null;
             try {
-                categories.add(categoriesArr.getString(i));
+                category = categoriesArr.getString(i);
+                ExpenseManager.createCategory(category);
+            } catch (InvalidArgumentException e) {
+                ExceptionHandler.handleJSONException(new JSONException(
+                        "Category \"" + category + "\" already exists. Skipping."));
             } catch (JSONException e) {
-                ExceptionHandler.handleException(e);
+                ExceptionHandler.handleJSONException(e);
             }
         }
-        ExpenseManager.setCategories(categories);
 
         JSONArray expensesArr = root.getJSONArray("expenses");
-        List<Expense> expenses = new ArrayList<>();
         for (int i = 0; i < expensesArr.length(); i++) {
-            JSONObject expObj = expensesArr.getJSONObject(i);
             try {
-                Expense expense = Expense.fromJSON(expObj);
-                ExpenseManager.addExpense(expense);
+                JSONObject expObj = expensesArr.getJSONObject(i);
+                ExpenseManager.addExpense(expObj);
             } catch (JSONException e) {
-                ExceptionHandler.handleException(e);
-            } catch (InvalidArgumentException e) {
-                ExceptionHandler.handleInvalidArgumentException(e);
+                ExceptionHandler.handleJSONException(e);
             }
         }
         Ui.printMessage("Loaded data from file: " + path);

@@ -1,5 +1,7 @@
 package seedu.tripbuddy.framework;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import seedu.tripbuddy.command.Command;
 import seedu.tripbuddy.dataclass.Currency;
 import seedu.tripbuddy.dataclass.Expense;
@@ -126,19 +128,20 @@ public class ExpenseManager {
         totalExpense += amount;
     }
 
-    public static void addExpense(Expense expense) throws InvalidArgumentException {
+    public static void addExpense(JSONObject expObj) throws JSONException {
+        Expense expense = Expense.fromJSON(expObj);
         String name = expense.getName();
         if (expenseNames.contains(name)) {
-            throw new InvalidArgumentException(name, "Expense name already exists.");
+            throw new JSONException("Expense \"" + name + "\" already exists. Skipping");
         }
 
         double amount = expense.getAmount();
         if (amount <= 0) {
-            throw new InvalidArgumentException(String.valueOf(amount), "Value should be more than 0.");
+            throw new JSONException('"' + name + "\": Expense amount should be more than 0.");
         }
         if (amount > Command.MAX_INPUT_VAL) {
-            throw new InvalidArgumentException(String.valueOf(amount),
-                    "Value should be no more than " + Command.MAX_INPUT_VAL);
+            throw new JSONException('"' + name + "\": Expense amount should be no more than " +
+                    Command.MAX_INPUT_VAL);
         }
 
         expenses.add(expense);
