@@ -11,7 +11,6 @@ public enum Keyword {
     ADD_EXPENSE,
     DELETE_EXPENSE,
     LIST_EXPENSE,
-    VIEW_HISTORY,
     MAX_EXPENSE,
     MIN_EXPENSE,
     FILTER_DATE,
@@ -32,7 +31,6 @@ public enum Keyword {
         case ADD_EXPENSE -> "add-expense";
         case DELETE_EXPENSE -> "delete-expense";
         case LIST_EXPENSE -> "list-expense";
-        case VIEW_HISTORY -> "view-history";
         case MAX_EXPENSE -> "max-expense";
         case MIN_EXPENSE -> "min-expense";
         case FILTER_DATE -> "filter-date";

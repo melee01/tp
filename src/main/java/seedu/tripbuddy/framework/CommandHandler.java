@@ -40,8 +40,6 @@ public class CommandHandler {
                         - Check your remaining budget.
                 list-expense [CATEGORY]
                         - Calculate sum of recorded expenses.
-                view-history
-                        - See a history of all expenses made.
                 max-expense
                         - Display the expense with the highest amount.
                 min-expense
@@ -179,15 +177,6 @@ public class CommandHandler {
                 .append(ExpenseManager.getFormattedAmount(totalAmount)).append(".");
         return expenses.isEmpty() ? "There are no expenses." : "Here is a list of your past expenses: "
                 + expensesString;
-    }
-
-    public static String handleViewHistory() {
-        StringBuilder expensesString = new StringBuilder("Here is a history of your past expenses: ");
-        for (Expense expense : ExpenseManager.getExpenses()) {
-            expensesString.append("\n - ").append(expense.toString());
-
-        }
-        return expensesString.toString();
     }
 
     public static String handleMaxExpense() throws InvalidArgumentException {
