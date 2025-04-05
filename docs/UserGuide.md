@@ -6,14 +6,23 @@ TripBuddy is a simple expense-tracking application designed to help users manage
 travelers to log expenses, categorize them, and view a summary of their spendings in one place. TripBuddy ensures 
 budgeting is easy and hassle-free, so travelers can focus on enjoying their trip.
 
+## Setup Guide
+
+- Make sure Java 17 is installed on your device.
+- Download `[CS2113-W11-4][tripbuddy].jar` from the [release site](https://github.com/AY2425S2-CS2113-W11-4/tp/releases)
+- Run the program with command:
+```
+java -jar [CS2113-W11-4][tripbuddy].jar
+```
+
 ## Notes about the command format
 
 - Words in UPPER_CASE are the parameters to be supplied by the user.
 e.g. in `set-budget AMOUNT`, AMOUNT is a parameter which can be used as `set-budget 1000`.
-- Items in square brackets are optional.
-- Parameters must be in the specified order.
-- Extraneous parameters for commands that do not take in parameters (such as `view-budget` and `quit`) will be ignored.
-e.g. if the command specifies quit 123, it will be interpreted as quit.
+- Square brackets `[]` indicate optional elements that can be omitted.
+- Extraneous parameters will be ignored and have no effects.
+(e.g. if the command specifies quit 123, it will be interpreted as quit.)
+- **Avoid using excessively larger/small values or overlength names**.
 
 ## Supported Currencies
 
@@ -45,9 +54,23 @@ Displays a message explaining full features.
 
 Format: `tutorial`
 
+### Set Base Currency: `set-base-currency`
+
+Set the new currency.
+- By default, the base currency is SGD.
+
+Format: `set-base-currency CURRENCY`
+
+### View Currency: `view-currency`
+    
+Displays the actual rates between currencies with the base currency.
+
+Format: `view-currency`
+
 ### Setting budget : `set-budget`
 
 Sets a total budget for this trip.
+- Default budget is 1000 in base currency.
 
 Format: `set-budget BUDGET_NUMBER`
 
@@ -55,16 +78,60 @@ Examples of usage:
 - `set-budget 750`
 - `set-budget 1000`
 
-### Adjust budget : `adjust-budget`
+### View Budget: `view-budget`
 
-Modifies the initial budget set.
+Check your remaining budget.
 
-Format: `adjust-budget 1200`
+Format: `view-budget`
 
-- Previous expenses are not overridden, and remaining budget is still calculated using prior expenses.
+### Add Expense: `add-expense`
+
+Adds an expense to the trip and automatically updates the remaining budget, taking into account 
+the new expenditure.
+
+- `AMOUNT` is in base currency.
+
+Format: `add-expense NAME_EXPENSE -a AMOUNT [-c CATEGORY]`
 
 Examples of usage:
-- `adjust-budget 750`
+- `add-expense mcdonalds -a 5`
+- `add-expense capybara museum -a 10000 -c Activities`
+
+### Delete Expense: `delete-expense`
+
+Removes an expense from the trip.
+
+Format: `delete-expense NAME_EXPENSE`
+
+Examples of usage:
+- delete-expense the-plaza-hotel
+
+### List Expense: `list-expense`
+
+Show all expenses, or expenses under a category if CATEGORY is given, and the sum of recorded expenses.
+
+Format: `list-expense [CATEGORY]`
+
+### Search Expense: `search`
+
+Displays expenses that include the given search word.
+
+Format: `search SEARCHWORD`
+
+Examples of usage:
+- `search shopping`
+
+### Max/min Expense: `max-expense`/`min-expense`
+
+Display an expense with the highest/lowest amount.
+
+Format: `max-expense`/`min-expense`
+
+### Filter Date: `filter-date`
+
+Get all expenses within date range, inclusive.
+
+Format: `filter-date -f yyyy-MM-dd HH:mm:ss -t yyyy-MM-dd HH:mm:ss` 
 
 ### Create Category: `create-category`
 
@@ -75,22 +142,6 @@ Format:  `create-category NAME`
 Examples of usage:
 - `create-category Accommodation`
 - `create-category food and drink`
-
-
-### Add Expense: `add-expense`
-
-Adds an expense to the trip and automatically updates the remaining budget, taking into account 
-the new expenditure.
-
-Format: `add-expense NAME_EXPENSE -a AMOUNT -c [CATEGORY]`
-
-- Base currency is SGD.
-
-Examples of usage:
-- `add-expense mcdonalds -a 5`
-- `add-expense the plaza hotel -a 300 -c Accommodation`
-- `add-expense lunch -a 100 USD`
-- `add-expense capybara museum -a 10000 IDR -c Activities `
 
 ### Set Category: `set-cateogry`
 
@@ -105,64 +156,21 @@ the specified name.
 Examples:
 - `set-category mcdonalds -c food`
 
-### Delete Expense: `delete-expense`
-
-Removes an expense from the trip.
-
-Format: `delete-expense NAME_EXPENSE`
-
-Examples of usage:
-- delete-expense the-plaza-hotel
-
-### Search Expense: `search`
-
-Search the expense list by search word.
-
-Format: `search SEARCHWORD`
-
-Examples of usage:
-- search shopping
-
-### Max/min Expense: `max-expense`/`min-expense`
-
-Display the expense with the highest/lowest amount.
-
-Format: `max-expense`
- 
-### Filter Date: `filter-date`
-
-Get all expenses within date range.
-
-Format: `filter-date -f yyyy-MM-dd HH:mm:ss -t yyyy-MM-dd HH:mm:ss`
-
-### View Currency: `view-currency`
-    
-Displays the exchange rates of currencies.
-- default base currency: SGD
-
-Format: `view-currency`
-
 ### View Categories: `view-categories`
 
-Displays all categories.
+Display all categories.
 
 Format: `view-categories`
 
 ### Clear: `clear`
     
-Clears all past expenses and categories.
+Clear all past expenses and categories.
+- Still keeps the budget.
 
 Format: `clear`
 
-### Set Base Currency: `set-base-currency`
-
-Sets the new currency.
-- By default, the base currency is SGD.
-
-Format: `set-base-currency CURRENCY`
-
 ### Exit the program: `quit`
 
-Exits the program.
+Exit the program.
 
 Format: `quit`
