@@ -82,16 +82,6 @@ class CommandHandlerTest {
     }
 
     @Test
-    void handleViewHistoryTest() throws InvalidArgumentException {
-        ExpenseManager.initExpenseManager(200);
-        ExpenseManager.addExpense("expense1", 20);
-        ExpenseManager.addExpense("expense2", 30);
-        String history = CommandHandler.handleViewHistory();
-        assertTrue(history.contains("expense1"));
-        assertTrue(history.contains("expense2"));
-    }
-
-    @Test
     void handleCreateCategoryTest() throws InvalidArgumentException {
         ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
         String message = CommandHandler.handleCreateCategory("food");

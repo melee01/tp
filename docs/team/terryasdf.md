@@ -27,7 +27,7 @@ project; created packages for all classes.
 * Guided team members to strictly adhere to the developing guidelines.
 * Fixed styling inconsistencies and resolved failing checks in PRs submitted by team
 members.
-* Monitoring code from team members to ensure a correctly implemented framework.
-* Coordinated task distribution among team members for the v1.0 release to ensure efficient workflow.
+* Monitored code from team members to ensure a correctly implemented framework.
+* Allocated tasks among team members for the v2.1 release to ensure efficient workflow.
 * Maintained active communication with the group, providing timely reminders and updates to keep the team
 aligned.

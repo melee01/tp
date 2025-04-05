@@ -26,41 +26,43 @@ public class CommandHandler {
                 
                 Here are the commands you can use:
                 
+                tutorial
+                        - Displays a message explaining features.
+                set-base-currency CURRENCY
+                        - It sets the new currency.
+                        - By default, the base currency is SGD.
+                view-currency
+                        - Displays the actual rates between currencies with the base currency.
                 set-budget AMOUNT
-                        - Set your total trip budget. Default budget is $1000.
+                        - Set your total trip budget.
+                        - Default budget is 1000 in base currency.
+                view-budget
+                        - Check your remaining budget.
                 add-expense EXPENSE_NAME -a AMOUNT [-c CATEGORY]
                         - Add a new expense.
                 delete-expense EXPENSE_NAME
                         - Remove an expense by name.
+                list-expense [CATEGORY]
+                        - Show all expenses, or expenses under a category if CATEGORY is given.
+                        - Calculate sum of recorded expenses.
+                search SEARCHWORD
+                        - Displays expenses that include the given search word.
+                max-expense
+                        - Display an expense with the highest amount.
+                min-expense
+                        - Display an expense with the lowest amount.
+                filter-date -f yyyy-MM-dd HH:mm:ss -t yyyy-MM-dd HH:mm:ss
+                        - Get all expenses within date range, inclusive.
                 create-category CATEGORY
                         - Create a new expense category.
                 set-category EXPENSE_NAME -c CATEGORY
                         - Assign an expense to a category.
-                view-budget
-                        - Check your remaining budget.
-                list-expense [CATEGORY]
-                        - Calculate sum of recorded expenses.
-                view-history
-                        - See a history of all expenses made.
-                max-expense
-                        - Display the expense with the highest amount.
-                min-expense
-                        - Display the expense with the lowest amount.
-                filter-date -f yyyy-MM-dd HH:mm:ss -t yyyy-MM-dd HH:mm:ss
-                        - Get all expenses within date range.
-                        - Filter expenses between two date/time ranges.
-                view-currency
-                        - Displays the actual rates of currencies.
-                        - default base currency: SGD
-                search SEARCHWORD
-                        - Displays expenses that include the given search word.
                 view-categories
                         - Displays all categories.
                 clear
                         - Clears all past expenses and categories.
-                set-base-currency CURRENCY
-                        - It sets the new currency.
-                        - By default, the base currency is SGD.
+                quit
+                        - Exits the program.
                 
                 Enjoy tracking your expenses with TripBuddy!""";
     }
@@ -179,15 +181,6 @@ public class CommandHandler {
                 .append(ExpenseManager.getFormattedAmount(totalAmount)).append(".");
         return expenses.isEmpty() ? "There are no expenses." : "Here is a list of your past expenses: "
                 + expensesString;
-    }
-
-    public static String handleViewHistory() {
-        StringBuilder expensesString = new StringBuilder("Here is a history of your past expenses: ");
-        for (Expense expense : ExpenseManager.getExpenses()) {
-            expensesString.append("\n - ").append(expense.toString());
-
-        }
-        return expensesString.toString();
     }
 
     public static String handleMaxExpense() throws InvalidArgumentException {
