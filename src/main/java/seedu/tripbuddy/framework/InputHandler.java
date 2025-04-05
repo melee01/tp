@@ -29,7 +29,6 @@ public class InputHandler {
             String message = switch (keyword) {
             case TUTORIAL -> CommandHandler.handleTutorial();
             case SET_BUDGET -> CommandHandler.handleSetBudget(cmd.parseDouble(""));
-            case ADJUST_BUDGET -> CommandHandler.handleAdjustBudget(cmd.parseDouble(""));
             case VIEW_BUDGET -> CommandHandler.handleViewBudget();
             case CREATE_CATEGORY -> CommandHandler.handleCreateCategory(cmd.getOpt(""));
             case SET_CATEGORY -> CommandHandler.handleSetCategory(cmd.getOpt(""), cmd.getOpt("c"));

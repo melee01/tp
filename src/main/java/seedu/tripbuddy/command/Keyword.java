@@ -5,7 +5,6 @@ public enum Keyword {
 
     TUTORIAL,
     SET_BUDGET,
-    ADJUST_BUDGET,
     VIEW_BUDGET,
     CREATE_CATEGORY,
     SET_CATEGORY,
@@ -27,7 +26,6 @@ public enum Keyword {
         return switch (this) {
         case TUTORIAL -> "tutorial";
         case SET_BUDGET -> "set-budget";
-        case ADJUST_BUDGET -> "adjust-budget";
         case VIEW_BUDGET -> "view-budget";
         case CREATE_CATEGORY -> "create-category";
         case SET_CATEGORY -> "set-category";
