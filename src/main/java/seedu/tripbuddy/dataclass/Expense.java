@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import seedu.tripbuddy.framework.ExpenseManager;
 
 /**
  * Stores info of a travel expense.
@@ -77,9 +78,10 @@ public class Expense {
     public String toString() {
         String dateTimeStr = dateTime.format(FORMATTER);
         if (category == null) {
-            return "name: " + name + ", amount: " + String.format("%.2f", amount) + ", date: " + dateTimeStr;
+            return "name: " + name + ", amount: " + ExpenseManager.getFormattedAmount(amount) +
+                    ", date: " + dateTimeStr;
         }
-        return "name: " + name + ", amount: " + String.format("%.2f", amount)
+        return "name: " + name + ", amount: " + ExpenseManager.getFormattedAmount(amount)
                 + ", category: " + category + ", date: " + dateTimeStr;
     }
 

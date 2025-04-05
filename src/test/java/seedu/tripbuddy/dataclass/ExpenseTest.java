@@ -65,7 +65,8 @@ class ExpenseTest {
         LocalDateTime dateTime = LocalDateTime.parse(testDateTime, Expense.FORMATTER);
         expense.setDateTime(dateTime);
 
-        String expected = "name: " + name + ", amount: " + String.format("%.2f", amount) + ", date: " + testDateTime;
+        String expected = "name: " + name + ", amount: " + String.format("%.2f", amount) +
+                " SGD, date: " + testDateTime;
         assertEquals(expected, expense.toString());
     }
 
@@ -81,7 +82,7 @@ class ExpenseTest {
         expense.setDateTime(dateTime);
 
         String expected = "name: " + name + ", amount: " + String.format("%.2f", amount)
-                + ", category: " + category + ", date: " + testDateTime;
+                + " SGD, category: " + category + ", date: " + testDateTime;
         assertEquals(expected, expense.toString());
     }
 

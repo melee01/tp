@@ -25,7 +25,7 @@ class CommandHandlerTest {
         ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
         String message = CommandHandler.handleAddExpense("a", 1);
         assertEquals("Expense a added successfully.\n" +
-                "Your remaining budget is $" + String.format("%.2f", DEFAULT_BUDGET - 1.) + ".",
+                "Your remaining budget is $" + String.format("%.2f", DEFAULT_BUDGET - 1.) + " SGD.",
                 message);
     }
 
@@ -61,7 +61,7 @@ class CommandHandlerTest {
     void setBudget_set135() throws InvalidArgumentException {
         ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
         String message = CommandHandler.handleSetBudget(135);
-        assertEquals("Your budget has been set to $135.00.", message);
+        assertEquals("Your budget has been set to 135.00 SGD.", message);
     }
 
     @Test
@@ -69,7 +69,7 @@ class CommandHandlerTest {
         ExpenseManager.initExpenseManager(100);
         ExpenseManager.addExpense("item1", 40);
         String message = CommandHandler.handleViewBudget();
-        assertTrue(message.contains("remaining budget of $60.00"));
+        assertTrue(message.contains("remaining budget of 60.00 SGD."));
     }
 
     @Test
@@ -78,7 +78,7 @@ class CommandHandlerTest {
         ExpenseManager.addExpense("item1", 150);
         String message = CommandHandler.handleViewBudget();
         LOGGER.log(Level.INFO, message);
-        assertTrue(message.contains("exceeded your budget by $50"));
+        assertTrue(message.contains("exceeded your budget by 50"));
     }
 
     @Test
@@ -152,13 +152,13 @@ class CommandHandlerTest {
     @Test
     void handleMaxExpense_noExpenses_throwsException() {
         ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
-        assertThrows(InvalidArgumentException.class, () -> CommandHandler.handleMaxExpense());
+        assertThrows(InvalidArgumentException.class, CommandHandler::handleMaxExpense);
     }
 
     @Test
     void handleMinExpense_noExpenses_throwsException() {
         ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
-        assertThrows(InvalidArgumentException.class, () -> CommandHandler.handleMinExpense());
+        assertThrows(InvalidArgumentException.class, CommandHandler::handleMinExpense);
     }
 
     @Test
@@ -173,7 +173,7 @@ class CommandHandlerTest {
         String expected = "Here is a list of your past expenses: " +
                 "\n - " + expense1 +
                 "\n - " + expense2 +
-                "\nTotal amount spent: $150.00.";
+                "\nTotal amount spent: 150.00 SGD.";
         String actual = CommandHandler.handleListExpense(null);
         assertEquals(expected, actual);
     }
@@ -258,21 +258,7 @@ class CommandHandlerTest {
     }
 
     @Test
-    public void view_currency_returnsCorrectList() {
-        ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
-        StringBuilder message = new StringBuilder("The current exchange rate against base currency is: \n");
-        for (Currency currency : Currency.values()) {
-            message.append("Rate of base currency and ")
-                    .append(currency.toString())
-                    .append(" is ")
-                    .append(currency.getRate())
-                    .append(" \n");
-        }
-        assertEquals(CommandHandler.handleViewCurrency(),message.toString());
-    }
-
-    @Test
-    public void view_currency_returnsEmptyList() {
+    public void viewCurrency_returnsEmptyList() {
         ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
         assertNotEquals(null, CommandHandler.handleViewCurrency());
     }

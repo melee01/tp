@@ -16,7 +16,7 @@ import java.util.Set;
  */
 public class ExpenseManager {
 
-    private static String baseCurrency = Currency.SGD.getFullName();
+    private static Currency baseCurrency = Currency.SGD;
     private static double budget;
     private static double totalExpense = 0;
     private static final HashSet<String> categories = new HashSet<>();
@@ -29,16 +29,16 @@ public class ExpenseManager {
     public static void initExpenseManager(double budget) {
         assert budget > 0 : "Budget must be positive";
         ExpenseManager.budget = budget;
-        baseCurrency = Currency.SGD.getFullName();
+        baseCurrency = Currency.SGD;
         clearExpensesAndCategories();
     }
 
-    public static String getBaseCurrency() {
+    public static Currency getBaseCurrency() {
         return baseCurrency;
     }
 
     public static void setBaseCurrency(Currency baseCurrency) {
-        ExpenseManager.baseCurrency = baseCurrency.getFullName();
+        ExpenseManager.baseCurrency = baseCurrency;
         Currency.setBaseCurrency(baseCurrency);
     }
 
@@ -64,6 +64,10 @@ public class ExpenseManager {
 
     public static List<Expense> getExpenses() {
         return List.copyOf(expenses);
+    }
+
+    public static String getFormattedAmount(double amount) {
+        return baseCurrency.getFormattedAmount(amount);
     }
 
     public static void clearExpensesAndCategories() {

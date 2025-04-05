@@ -54,4 +54,8 @@ public enum Currency {
             c.rate /= newBaseRate;
         }
     }
+
+    public String getFormattedAmount(double amount) {
+        return String.format("%.2f", amount) + " " + name;
+    }
 }

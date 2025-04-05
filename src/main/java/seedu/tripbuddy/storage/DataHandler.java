@@ -25,7 +25,7 @@ public class DataHandler {
 
     public static void saveData(String path) throws IOException {
         JSONObject root = new JSONObject();
-        root.put("currency", ExpenseManager.getBaseCurrency());
+        root.put("currency", ExpenseManager.getBaseCurrency().toString());
         root.put("budget", ExpenseManager.getBudget());
         root.put("totalExpense", ExpenseManager.getTotalExpense());
 
