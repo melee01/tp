@@ -9,6 +9,7 @@ import seedu.tripbuddy.dataclass.Expense;
 import seedu.tripbuddy.exception.DataLoadingException;
 import seedu.tripbuddy.exception.InvalidArgumentException;
 import seedu.tripbuddy.framework.ExpenseManager;
+import seedu.tripbuddy.framework.Ui;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -21,7 +22,7 @@ public class DataHandler {
 
     public static double round2Digits(double x) {
         assert x > 0 && x <= Command.MAX_INPUT_VAL;
-        return (int)(x * 100 + .5) / 100.;
+        return (int) (x * 100 + .5) / 100.;
     }
 
     public static String saveData(String path, ExpenseManager expenseManager) throws IOException {
@@ -53,8 +54,18 @@ public class DataHandler {
         return "Saved data to file:\n\t" + absPath;
     }
 
-    public static ExpenseManager loadData(String path)
-            throws FileNotFoundException, JSONException, DataLoadingException {
+    /**
+     * Loads the ExpenseManager data from a file and shows progress messages via the provided UI.
+     *
+     * @param path The path to the JSON file.
+     * @param ui   The UI instance to show messages.
+     * @return A new ExpenseManager instance populated with the data.
+     * @throws FileNotFoundException If the file cannot be found.
+     * @throws JSONException         If there is an error parsing the JSON.
+     * @throws DataLoadingException  If required fields are missing or invalid.
+     */
+    public static ExpenseManager loadData(String path, Ui ui)
+            throws FileNotFoundException, DataLoadingException {
 
         JSONObject root = FileHandler.readJsonObject(path);
         ExpenseManager expenseManager;
@@ -66,7 +77,7 @@ public class DataHandler {
                         "Budget value invalid or out of range. Using default budget instead.");
             }
             expenseManager = new ExpenseManager(budget);
-            LOGGER.log(Level.INFO, "budget loaded: " + budget);
+
         } catch (JSONException e) {
             throw new DataLoadingException("Missing or invalid budget information.");
         }
@@ -76,11 +87,12 @@ public class DataHandler {
             currencyName = root.getString("currency");
             Currency currency = Currency.valueOf(currencyName);
             expenseManager.setBaseCurrency(currency);
+
         } catch (JSONException e) {
-            throw new DataLoadingException("Currency information missing.");
+            ui.printMessage("Currency information missing.");
         } catch (IllegalArgumentException e) {
             currencyName = root.optString("currency", "UNKNOWN");
-            throw new DataLoadingException("Unrecognized currency: " + currencyName + ". Using SGD instead.");
+            ui.printMessage("Unrecognized currency: " + currencyName + ". Using SGD instead.");
         }
 
         JSONArray categoriesArr = root.getJSONArray("categories");
@@ -92,7 +104,7 @@ public class DataHandler {
             try {
                 expenseManager.createCategory(category);
             } catch (InvalidArgumentException e) {
-                LOGGER.log(Level.WARNING, "Category \"" + category + "\" already exists. Skipping.");
+                ui.printMessage("Category \"" + category + "\" already exists. Skipping.");
             }
         }
 
@@ -102,11 +114,10 @@ public class DataHandler {
                 JSONObject expObj = expensesArr.getJSONObject(i);
                 expenseManager.addExpense(expObj);
             } catch (JSONException e) {
-                LOGGER.log(Level.WARNING, "Failed to parse expense at index " + i);
+                ui.printMessage("Failed to parse expense at index " + i);
             }
         }
 
         return expenseManager;
     }
-
 }

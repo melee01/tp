@@ -46,10 +46,8 @@ public class TripBuddy {
         ExpenseManager expenseManager;
 
         try {
-            expenseManager = DataHandler.loadData(FILE_PATH);
-        } catch (JSONException e) {
-            ui.printMessage(ExceptionHandler.handleJSONException(e));
-            expenseManager = new ExpenseManager();
+            expenseManager = DataHandler.loadData(FILE_PATH, ui);
+            ui.printMessage("Loading expense data from " + FILE_PATH);
         } catch (FileNotFoundException e) {
             ui.printMessage(ExceptionHandler.handleFileNotFoundException(e));
             expenseManager = new ExpenseManager();
