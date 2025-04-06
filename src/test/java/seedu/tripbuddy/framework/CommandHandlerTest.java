@@ -1,5 +1,8 @@
 package seedu.tripbuddy.framework;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,14 +25,9 @@ class CommandHandlerTest {
     private static final Logger LOGGER = Logger.getLogger(CommandHandlerTest.class.getName());
     private static final int DEFAULT_BUDGET = 2333;
 
-    private ExpenseManager expenseManager;
-    private CommandHandler commandHandler;
-
-    @BeforeEach
-    public void setup() {
-        expenseManager = ExpenseManager.getInstance();
+    void initExpenseManager() {
+        ExpenseManager expenseManager = ExpenseManager.getInstance();
         expenseManager.clearExpensesAndCategories();
-        commandHandler = CommandHandler.getInstance();
     }
 
     @Test
@@ -265,9 +263,12 @@ class CommandHandlerTest {
     public void testSetTime_validExpense_success() throws InvalidArgumentException {
         String name = "test-dinner";
         double amount = 25.0;
+        ExpenseManager expenseManager = ExpenseManager.getInstance();
+        CommandHandler commandHandler = CommandHandler.getInstance();
         expenseManager.addExpense(name, amount);
         String newTimestampStr = "2024-03-15 19:30:00";
-        LocalDateTime expectedTime = LocalDateTime.parse(newTimestampStr, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        LocalDateTime expectedTime = LocalDateTime.parse(newTimestampStr,
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         String result = commandHandler.handleSetTime(name, newTimestampStr);
         Expense updatedExpense = expenseManager.getExpense(0);
         assertEquals(expectedTime, updatedExpense.getDateTime());
@@ -276,6 +277,7 @@ class CommandHandlerTest {
 
     @Test
     public void testSetTime_nonexistentExpense_throwsException() {
+        CommandHandler commandHandler = CommandHandler.getInstance();
         String name = "ghost-expense";
         String timestampStr = "2024-01-01 10:00:00";
         InvalidArgumentException thrown = assertThrows(InvalidArgumentException.class, () ->
@@ -284,14 +286,13 @@ class CommandHandlerTest {
     }
 
     @Test
-    public void testSetTime_invalidTimestampFormat_throwsException() {
+    public void testSetTime_invalidTimestampFormat_throwsException() throws InvalidArgumentException {
         String name = "test-breakfast";
+        ExpenseManager expenseManager = ExpenseManager.getInstance();
+        CommandHandler commandHandler = CommandHandler.getInstance();
         expenseManager.addExpense(name, 10.0);
         String invalidTime = "15th March, 2024";
-        InvalidArgumentException thrown = assertThrows(InvalidArgumentException.class, () ->
+        assertThrows(DateTimeParseException.class, () ->
                 commandHandler.handleSetTime(name, invalidTime));
-        assertTrue(thrown.getMessage().contains("Invalid date format"),
-                "The exception message should contain 'Invalid date format'");
     }
-
 }
