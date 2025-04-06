@@ -22,7 +22,8 @@ e.g. in `set-budget AMOUNT`, AMOUNT is a parameter which can be used as `set-bud
 - Square brackets `[]` indicate optional elements that can be omitted.
 - Extraneous parameters will be ignored and have no effects.
 (e.g. if the command specifies quit 123, it will be interpreted as quit.)
-- **Avoid using excessively larger/small values or overlength names**.
+- **Avoid using excessively larger/small values or overlength names.**
+- **Avoid exit with `Ctrl+C` or force killing the process to prevent data loss.**
 
 ## Supported Currencies
 
