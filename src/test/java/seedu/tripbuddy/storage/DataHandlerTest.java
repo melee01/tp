@@ -55,7 +55,7 @@ class DataHandlerTest {
         Files.write(tempFile.toPath(), root.toString().getBytes());
 
         // Load the data.
-        ExpenseManager expenseManager = DataHandler.loadData(tempFile.getAbsolutePath());
+        ExpenseManager expenseManager = DataHandler.getInstance().loadData(tempFile.getAbsolutePath());
 
         // Verify the loaded state.
         assertEquals(budget, expenseManager.getBudget(), 0.0001);
@@ -87,7 +87,7 @@ class DataHandlerTest {
         Files.write(tempFile.toPath(), root.toString().getBytes());
 
         // Expect a DataLoadingException due to an invalid budget.
-        assertThrows(DataLoadingException.class, () -> DataHandler.loadData(tempFile.getAbsolutePath()));
+        assertThrows(DataLoadingException.class, () -> DataHandler.getInstance().loadData(tempFile.getAbsolutePath()));
     }
 
     @Test
@@ -104,6 +104,6 @@ class DataHandlerTest {
         Files.write(tempFile.toPath(), root.toString().getBytes());
 
         // Expect handled exception due to missing currency information.
-        assertAll(() -> DataHandler.loadData(tempFile.getAbsolutePath()));
+        assertAll(() -> DataHandler.getInstance().loadData(tempFile.getAbsolutePath()));
     }
 }

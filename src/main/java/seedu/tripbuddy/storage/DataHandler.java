@@ -18,14 +18,32 @@ import java.util.logging.Logger;
 
 public class DataHandler {
 
+    private static DataHandler instance = null;
+
     private static final Logger LOGGER = Logger.getLogger("TripBuddy");
+
+    private final FileHandler fileHandler;
+
+    private DataHandler() {
+        fileHandler = FileHandler.getInstance();
+    }
 
     private static double round2Digits(double x) {
         assert x > 0 && x <= Command.MAX_INPUT_VAL;
         return (int) (x * 100 + .5) / 100.;
     }
 
-    public static String saveData(String path, ExpenseManager expenseManager) throws IOException {
+    /**
+     * Gets a singleton instance of {@link DataHandler}.
+     */
+    public static DataHandler getInstance() {
+        if (instance == null) {
+            instance = new DataHandler();
+        }
+        return instance;
+    }
+
+    public String saveData(String path, ExpenseManager expenseManager) throws IOException {
         JSONObject root = new JSONObject();
         root.put("currency", expenseManager.getBaseCurrency().toString());
         root.put("budget", round2Digits(expenseManager.getBudget()));
@@ -50,7 +68,7 @@ public class DataHandler {
 
         LOGGER.log(Level.INFO, "expenses converted");
 
-        String absPath = FileHandler.writeJsonObject(path, root);
+        String absPath = fileHandler.writeJsonObject(path, root);
         return "Saved data to file:\n\t" + absPath;
     }
 
@@ -63,12 +81,12 @@ public class DataHandler {
      * @throws JSONException         If there is an error parsing the JSON.
      * @throws DataLoadingException  If required fields are missing or invalid.
      */
-    public static ExpenseManager loadData(String path)
+    public ExpenseManager loadData(String path)
             throws FileNotFoundException, DataLoadingException {
 
         JSONObject root;
         try {
-            root = FileHandler.readJsonObject(path);
+            root = fileHandler.readJsonObject(path);
         } catch (JSONException e) {
             throw new DataLoadingException("Failed to load your json save due syntax errors:\n\t" + e.getMessage());
         }
