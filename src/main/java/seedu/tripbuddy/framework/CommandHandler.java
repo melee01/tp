@@ -74,6 +74,8 @@ public class CommandHandler {
                         - Assign an expense to a category.
                 view-categories
                         - Displays all categories.
+                set-time EXPENSE_NAME -t yyyy-MM-dd HH:mm:ss
+                        - Updates the timestamp for an existing expense.
                 clear
                         - Clears all past expenses and categories.
                 quit
@@ -282,5 +284,16 @@ public class CommandHandler {
         expenseManager.setBaseCurrency(newBase);
 
         return "Current base is: " + newBase;
+    }
+
+    public String handleSetTime(String expenseName, String timestampStr) throws InvalidArgumentException {
+        LocalDateTime timestamp = LocalDateTime.parse(timestampStr, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        for (Expense expense : expenseManager.getExpenses()) {
+            if (expense.getName().equalsIgnoreCase(expenseName)) {
+                expense.setDateTime(timestamp);
+                return "Updated timestamp for \"" + expenseName + "\" to " + timestampStr + ".";
+            }
+        }
+        throw new InvalidArgumentException(expenseName, "Expense name not found.");
     }
 }

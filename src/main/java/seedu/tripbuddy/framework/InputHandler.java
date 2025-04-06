@@ -66,6 +66,7 @@ public class InputHandler {
             case SEARCH -> commandHandler.handleSearch(cmd.getOpt(""));
             case VIEW_CATEGORIES -> commandHandler.handleViewCategories();
             case SET_BASE_CURRENCY -> commandHandler.handleSetBaseCurrency(cmd.getOpt(""));
+            case SET_TIME -> commandHandler.handleSetTime(cmd.getOpt(""), cmd.getOpt("t"));
             case CLEAR -> commandHandler.handleClearAll();
             };
         } catch (DateTimeParseException e) {
