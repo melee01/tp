@@ -74,8 +74,6 @@ public class InputHandler {
             return ExceptionHandler.handleInvalidKeywordException(e);
         } catch (MissingOptionException e) {
             return ExceptionHandler.handleMissingOptionException(e);
-        } catch (NumberFormatException e) {
-            return ExceptionHandler.handleNumberFormatException();
         } catch (InvalidArgumentException e) {
             return ExceptionHandler.handleInvalidArgumentException(e);
         }

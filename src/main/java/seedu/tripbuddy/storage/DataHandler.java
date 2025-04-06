@@ -20,7 +20,7 @@ public class DataHandler {
 
     private static final Logger LOGGER = Logger.getLogger("TripBuddy");
 
-    public static double round2Digits(double x) {
+    private static double round2Digits(double x) {
         assert x > 0 && x <= Command.MAX_INPUT_VAL;
         return (int) (x * 100 + .5) / 100.;
     }
@@ -66,7 +66,12 @@ public class DataHandler {
     public static ExpenseManager loadData(String path)
             throws FileNotFoundException, DataLoadingException {
 
-        JSONObject root = FileHandler.readJsonObject(path);
+        JSONObject root;
+        try {
+            root = FileHandler.readJsonObject(path);
+        } catch (JSONException e) {
+            throw new DataLoadingException("Failed to load your json save due syntax errors:\n\t" + e.getMessage());
+        }
         ExpenseManager expenseManager = ExpenseManager.getInstance();
         Ui ui = Ui.getInstance();
 
@@ -86,9 +91,8 @@ public class DataHandler {
             currencyName = root.getString("currency");
             Currency currency = Currency.valueOf(currencyName);
             expenseManager.setBaseCurrency(currency);
-
         } catch (JSONException e) {
-            ui.printMessage("Currency information missing.");
+            ui.printMessage("Currency information missing. Using SGD instead.");
         } catch (IllegalArgumentException e) {
             currencyName = root.optString("currency", "UNKNOWN");
             ui.printMessage("Unrecognized currency: " + currencyName + ". Using SGD instead.");
@@ -103,7 +107,8 @@ public class DataHandler {
             try {
                 expenseManager.createCategory(category);
             } catch (InvalidArgumentException e) {
-                ui.printMessage("Category \"" + category + "\" already exists. Skipping.");
+                String message = e.getMessage();
+                ui.printMessage("Category \"" + category + "\": " + message);
             }
         }
 
@@ -113,7 +118,8 @@ public class DataHandler {
                 JSONObject expObj = expensesArr.getJSONObject(i);
                 expenseManager.addExpense(expObj);
             } catch (JSONException e) {
-                ui.printMessage("Failed to parse expense at index " + i);
+                String message = e.getMessage();
+                ui.printMessage("Failed to parse expense at index " + i + "\n\t" + message);
             }
         }
 

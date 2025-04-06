@@ -1,6 +1,5 @@
 package seedu.tripbuddy;
 
-import org.json.JSONException;
 import seedu.tripbuddy.exception.DataLoadingException;
 import seedu.tripbuddy.exception.ExceptionHandler;
 import seedu.tripbuddy.framework.InputHandler;
@@ -24,7 +23,7 @@ public class TripBuddy {
     /**
      * Directs logging to a file
      */
-    private static void initLogging() {
+    private static void initLogging(Ui ui) {
         logger = Logger.getLogger("TripBuddy");
         logger.setUseParentHandlers(false);
         try {
@@ -33,7 +32,7 @@ public class TripBuddy {
             SimpleFormatter formatter = new SimpleFormatter();
             fh.setFormatter(formatter);
         } catch (IOException e) {
-            ExceptionHandler.handleException(e);
+            ui.printMessage(ExceptionHandler.handleException(e));
         }
     }
 
@@ -41,18 +40,18 @@ public class TripBuddy {
      * Runs the main program loop, loads all data, and handles user input.
      */
     public static void run() {
-        initLogging();
         Ui ui = Ui.getInstance();
+        initLogging(ui);
         ExpenseManager expenseManager;
 
         try {
             expenseManager = DataHandler.loadData(FILE_PATH);
-            ui.printMessage("Loading expense data from " + FILE_PATH);
+            ui.printMessage("Loaded expense data from " + FILE_PATH);
         } catch (FileNotFoundException e) {
             ui.printMessage(ExceptionHandler.handleFileNotFoundException(e));
             expenseManager = ExpenseManager.getInstance();
         } catch (DataLoadingException e) {
-            ui.printMessage(e.getMessage());
+            ui.printMessage(ExceptionHandler.handleException(e));
             expenseManager = ExpenseManager.getInstance();
         }
         InputHandler inputHandler = InputHandler.getInstance(logger);
@@ -68,7 +67,7 @@ public class TripBuddy {
                     DataHandler.saveData(FILE_PATH, expenseManager);
                     ui.printMessage("Saved data to " + FILE_PATH);
                 } catch (IOException e) {
-                    ExceptionHandler.handleException(e);
+                    ui.printMessage(ExceptionHandler.handleException(e));
                 }
                 ui.printEndMessage();
                 return;

@@ -2,6 +2,7 @@ package seedu.tripbuddy.storage;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import seedu.tripbuddy.dataclass.Currency;
 import seedu.tripbuddy.dataclass.Expense;
@@ -19,6 +20,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 class DataHandlerTest {
+
+    @BeforeEach
+    void initExpenseManager() {
+        ExpenseManager expenseManager = ExpenseManager.getInstance();
+        expenseManager.clearExpensesAndCategories();
+    }
 
     @Test
     void testLoadDataValid() throws IOException, DataLoadingException {

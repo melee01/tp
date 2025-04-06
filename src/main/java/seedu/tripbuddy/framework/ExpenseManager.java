@@ -112,6 +112,9 @@ public class ExpenseManager {
      * Adds a new category name into {@code categories} if not exists.
      */
     public void createCategory(String categoryName) throws InvalidArgumentException {
+        if (categoryName.isEmpty()) {
+            throw new InvalidArgumentException("", "Category name should not be empty.");
+        }
         if (categories.contains(categoryName)) {
             throw new InvalidArgumentException(categoryName, "Category name already exists.");
         }
@@ -123,6 +126,9 @@ public class ExpenseManager {
      */
     public void addExpense(String name, double amount) throws InvalidArgumentException {
         assert amount > 0 : "Amount must be positive";
+        if (name.isEmpty()) {
+            throw new InvalidArgumentException("", "Expense name should not be empty.");
+        }
         if (expenseNames.contains(name)) {
             throw new InvalidArgumentException(name, "Expense name already exists.");
         }
@@ -140,6 +146,9 @@ public class ExpenseManager {
      */
     public void addExpense(String name, double amount, String categoryName) throws InvalidArgumentException {
         assert amount > 0 : "Amount must be positive";
+        if (name.isEmpty()) {
+            throw new InvalidArgumentException("", "Expense name should not be empty.");
+        }
         if (expenseNames.contains(name)) {
             throw new InvalidArgumentException(name, "Expense name already exists.");
         }
@@ -155,6 +164,9 @@ public class ExpenseManager {
     public void addExpense(JSONObject expObj) throws JSONException {
         Expense expense = Expense.fromJSON(expObj);
         String name = expense.getName();
+        if (name.isEmpty()) {
+            throw new JSONException("Expense name should not be empty.");
+        }
         if (expenseNames.contains(name)) {
             throw new JSONException("Expense \"" + name + "\" already exists. Skipping");
         }
@@ -207,6 +219,9 @@ public class ExpenseManager {
     }
 
     public void setExpenseCategory(String expenseName, String category) throws InvalidArgumentException {
+        if (expenseName.isEmpty()) {
+            throw new JSONException("Expense name should not be empty.");
+        }
         for (Expense expense : expenses) {
             if (expense.getName().equalsIgnoreCase(expenseName)) {
                 expense.setCategory(category);

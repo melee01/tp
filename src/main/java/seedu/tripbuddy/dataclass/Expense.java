@@ -2,6 +2,7 @@ package seedu.tripbuddy.dataclass;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,7 +32,7 @@ public class Expense {
         this.dateTime = LocalDateTime.now();
     }
 
-    public Expense(String name, double amount, String category, String dateTimeStr) {
+    public Expense(String name, double amount, String category, String dateTimeStr) throws DateTimeParseException {
         this.name = name;
         this.amount = amount;
         this.category = category;
@@ -109,6 +110,16 @@ public class Expense {
         double amount = json.getDouble("amount");
         String category = json.optString("category", null); // returns null if not present
         String dateTimeStr = json.getString("dateTime");
-        return new Expense(name, amount, category, dateTimeStr);
+
+        // Disallow empty names, remove invalid category if exists
+        if (category != null && category.isEmpty()) {
+            category = null;
+        }
+        try {
+            return new Expense(name, amount, category, dateTimeStr);
+        } catch (DateTimeParseException e) {
+            throw new JSONException(e.getParsedString() +
+                    ": Invalid date/time format! Please use yyyy-MM-dd HH:mm:ss");
+        }
     }
 }
