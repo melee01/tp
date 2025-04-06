@@ -157,6 +157,15 @@ the specified name.
 Examples:
 - `set-category mcdonalds -c food`
 
+### Set Time: `set-time`
+
+Updates the timestamp for an existing expense to a custom date and time.
+
+Format: `set-time NAME_EXPENSE -t yyyy-MM-dd HH:mm:ss`
+
+Examples:
+- `set-time dinner -t 2024-03-20 18:45:00`
+
 ### View Categories: `view-categories`
 
 Display all categories.
