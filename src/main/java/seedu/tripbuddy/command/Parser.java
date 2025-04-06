@@ -7,22 +7,39 @@ import java.util.logging.Logger;
 
 public class Parser {
 
-    private static final Logger LOGGER = Logger.getLogger("TripBuddy");
+    private static Parser instance = null;
+
+    private final Logger logger;
+
+    private Parser(Logger logger) {
+        this.logger = logger;
+    }
+
+    /**
+     * Gets a singleton instance of Parser and sets an initial {@link Logger}
+     * if no instance was created before.
+     */
+    public static Parser getInstance(Logger logger) {
+        if (instance == null) {
+            instance = new Parser(logger);
+        }
+        return instance;
+    }
 
     /**
      * Checks if a {@code String} is an option expression.
      */
-    private static boolean isOpt(String s) {
+    private boolean isOpt(String s) {
         return s.length() > 1 && s.startsWith("-");
     }
 
     /**
      * Parses an input line into {@link Command}.
      */
-    public static Command parseCommand(String cmdInput) throws InvalidKeywordException {
-        LOGGER.log(Level.INFO, "Start parsing: \"" + cmdInput + '"');
+    public Command parseCommand(String cmdInput) throws InvalidKeywordException {
+        logger.log(Level.INFO, "Start parsing: \"" + cmdInput + '"');
 
-        String[] tokens = cmdInput.strip().split(" ");
+        String[] tokens = cmdInput.strip().replace("\t", " ").split(" ");
         Command cmd = null;
 
         String keywordString = tokens[0];
@@ -54,7 +71,7 @@ public class Parser {
             if (i > 1) {
                 Option newOpt = new Option(opt, val.toString().strip());
                 cmd.addOption(newOpt);
-                LOGGER.log(Level.INFO, "New option: \"" + newOpt + '"');
+                logger.log(Level.INFO, "New option: \"" + newOpt + '"');
             }
             opt = tokens[i].substring(1);
             val = new StringBuilder();
@@ -62,9 +79,9 @@ public class Parser {
 
         Option newOpt = new Option(opt, val.toString().strip());
         cmd.addOption(newOpt);
-        LOGGER.log(Level.INFO, "New option: \"" + newOpt + '"');
+        logger.log(Level.INFO, "New option: \"" + newOpt + '"');
 
-        LOGGER.log(Level.INFO, "End parsing: \"" + cmd + '"');
+        logger.log(Level.INFO, "End parsing: \"" + cmd + '"');
         return cmd;
     }
 }

@@ -6,10 +6,9 @@ import org.json.JSONObject;
 import seedu.tripbuddy.command.Command;
 import seedu.tripbuddy.dataclass.Currency;
 import seedu.tripbuddy.dataclass.Expense;
-import seedu.tripbuddy.exception.ExceptionHandler;
+import seedu.tripbuddy.exception.DataLoadingException;
 import seedu.tripbuddy.exception.InvalidArgumentException;
 import seedu.tripbuddy.framework.ExpenseManager;
-import seedu.tripbuddy.framework.Ui;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -18,22 +17,42 @@ import java.util.logging.Logger;
 
 public class DataHandler {
 
+    private static DataHandler instance = null;
     private static final Logger LOGGER = Logger.getLogger("TripBuddy");
+    private final FileHandler fileHandler;
 
-    public static double round2Digits(double x) {
-        assert x > 0 && x <= Command.MAX_INPUT_VAL;
-        return (int)(x * 100 + .5) / 100.;
+    private DataHandler() {
+        fileHandler = FileHandler.getInstance();
     }
 
-    public static void saveData(String path) throws IOException {
+    private static double round2Digits(double x) {
+        assert x > 0 && x <= Command.MAX_INPUT_VAL;
+        return (int) (x * 100 + .5) / 100.;
+    }
+
+    /**
+     * Gets a singleton instance of {@link DataHandler}.
+     */
+    public static DataHandler getInstance() {
+        if (instance == null) {
+            instance = new DataHandler();
+        }
+        return instance;
+    }
+
+    /**
+     * Saves the current {@link ExpenseManager} info into a json file.
+     * @return The message for display
+     */
+    public String saveData(String path, ExpenseManager expenseManager) throws IOException {
         JSONObject root = new JSONObject();
-        root.put("currency", ExpenseManager.getBaseCurrency().toString());
-        root.put("budget", round2Digits(ExpenseManager.getBudget()));
+        root.put("currency", expenseManager.getBaseCurrency().toString());
+        root.put("budget", round2Digits(expenseManager.getBudget()));
 
         LOGGER.log(Level.INFO, "budget converted");
 
         JSONArray categoriesArr = new JSONArray();
-        for (String category : ExpenseManager.getCategories()) {
+        for (String category : expenseManager.getCategories()) {
             categoriesArr.put(category);
         }
         root.put("categories", categoriesArr);
@@ -41,7 +60,7 @@ public class DataHandler {
         LOGGER.log(Level.INFO, "categories converted");
 
         JSONArray expensesArr = new JSONArray();
-        for (Expense expense : ExpenseManager.getExpenses()) {
+        for (Expense expense : expenseManager.getExpenses()) {
             JSONObject expObj = expense.toJSON();
             expensesArr.put(expObj);
             LOGGER.log(Level.INFO, "expense converted: " + expObj);
@@ -50,63 +69,92 @@ public class DataHandler {
 
         LOGGER.log(Level.INFO, "expenses converted");
 
-        String absPath = FileHandler.writeJsonObject(path, root);
-        Ui.printMessage("Saved data to file:\n\t" + absPath);
+        String absPath = fileHandler.writeJsonObject(path, root);
+        return "Saved data to file:\n\t" + absPath;
     }
 
-    public static void loadData(String path) throws FileNotFoundException, JSONException {
-        JSONObject root = FileHandler.readJsonObject(path);
+    /**
+     * Loads the ExpenseManager data from a file and returns a status message for display.
+     *
+     * @param path The path to the JSON file.
+     * @return A message including all error info.
+     * @throws FileNotFoundException If the file cannot be found.
+     * @throws JSONException         If there is an error parsing the JSON.
+     * @throws DataLoadingException  If required fields are missing or invalid.
+     */
+    public String loadData(String path)
+            throws FileNotFoundException, DataLoadingException {
+
+        JSONObject root;
+        try {
+            root = fileHandler.readJsonObject(path);
+        } catch (JSONException e) {
+            throw new DataLoadingException("Failed to load your json save due syntax errors:\n\t" + e.getMessage());
+        }
+        ExpenseManager expenseManager = ExpenseManager.getInstance();
+
+        // Save all messages to be displayed
+        StringBuilder invalidJsonMessage = new StringBuilder();
 
         try {
             double budget = root.getDouble("budget");
-            if (budget <= 0) {
-                throw new JSONException("Budget value should be more than 0. Using default budget instead.");
+            if (budget <= 0 || budget > Command.MAX_INPUT_VAL) {
+                throw new DataLoadingException(
+                        "Budget value invalid or out of range. Using default budget instead.");
             }
-            if (budget > Command.MAX_INPUT_VAL) {
-                throw new JSONException("Budget value should be no more than " + Command.MAX_INPUT_VAL +
-                        ". Using default budget instead.");
-            }
-            ExpenseManager.initExpenseManager(budget);
-            LOGGER.log(Level.INFO, "budget loaded: " + budget);
+            expenseManager.setBudget(budget);
         } catch (JSONException e) {
-            ExceptionHandler.handleJSONException(e);
+            invalidJsonMessage.append("Budget information missing. Using default budget instead.\n");
         }
 
-        String currencyName = null;
+        String currencyName;
         try {
             currencyName = root.getString("currency");
             Currency currency = Currency.valueOf(currencyName);
-            ExpenseManager.setBaseCurrency(currency);
+            expenseManager.setBaseCurrency(currency);
         } catch (JSONException e) {
-            ExceptionHandler.handleJSONException(e);
+            invalidJsonMessage.append("Currency information missing. Using SGD instead.\n");
         } catch (IllegalArgumentException e) {
-            assert currencyName != null;
-            Ui.printMessage("Unrecognized currency: " + currencyName + ". Using SGD instead.");
+            currencyName = root.optString("currency", "UNKNOWN");
+            invalidJsonMessage.append("Unrecognized currency: ")
+                    .append(currencyName).append(". Using SGD instead.\n");
         }
 
-        JSONArray categoriesArr = root.getJSONArray("categories");
-        for (int i = 0; i < categoriesArr.length(); i++) {
-            String category = null;
-            try {
-                category = categoriesArr.getString(i);
-                ExpenseManager.createCategory(category);
-            } catch (InvalidArgumentException e) {
-                ExceptionHandler.handleJSONException(new JSONException(
-                        "Category \"" + category + "\" already exists. Skipping."));
-            } catch (JSONException e) {
-                ExceptionHandler.handleJSONException(e);
+        try {
+            JSONArray categoriesArr = root.getJSONArray("categories");
+            for (int i = 0; i < categoriesArr.length(); i++) {
+                String category = categoriesArr.optString(i, null);
+                if (category == null) {
+                    continue;
+                }
+                try {
+                    expenseManager.createCategory(category);
+                } catch (InvalidArgumentException e) {
+                    String message = e.getMessage();
+                    invalidJsonMessage.append("Category \"").append(category).append("\": ")
+                            .append(message).append("\n");
+                }
             }
+        } catch (JSONException e) {
+            invalidJsonMessage.append("Categories information missing. Will create categories along with expenses.\n");
         }
 
-        JSONArray expensesArr = root.getJSONArray("expenses");
-        for (int i = 0; i < expensesArr.length(); i++) {
-            try {
-                JSONObject expObj = expensesArr.getJSONObject(i);
-                ExpenseManager.addExpense(expObj);
-            } catch (JSONException e) {
-                ExceptionHandler.handleJSONException(e);
+        try {
+            JSONArray expensesArr = root.getJSONArray("expenses");
+            for (int i = 0; i < expensesArr.length(); i++) {
+                try {
+                    JSONObject expObj = expensesArr.getJSONObject(i);
+                    expenseManager.addExpense(expObj);
+                } catch (JSONException e) {
+                    String message = e.getMessage();
+                    invalidJsonMessage.append("Failed to parse expense at index ").append(i).append(". Skipping:\n\t")
+                            .append(message).append("\n");
+                }
             }
+        } catch (JSONException e) {
+            invalidJsonMessage.append("Expenses information missing.\n");
         }
-        Ui.printMessage("Loaded data from file: " + path);
+
+        return invalidJsonMessage.toString();
     }
 }

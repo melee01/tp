@@ -8,25 +8,36 @@ import java.util.Scanner;
  */
 public class Ui {
 
+    private static Ui instance = null;
+
     private static final String LINE =
             "____________________________________________________________";
     private static final String START_MESSAGE =
             "Welcome to TripBuddy! Type `tutorial` for a list of available commands.";
     private static final String END_MESSAGE = "Your TripBuddy session has ended. Bye!";
 
-    private static final Scanner scanner = new Scanner(System.in);
+    private final Scanner scanner = new Scanner(System.in);
+
+    private Ui() {}
+
+    public static Ui getInstance() {
+        if (instance == null) {
+            instance = new Ui();
+        }
+        return instance;
+    }
 
     /**
      * Prints a line separator for better readability.
      */
-    public static void printLineSeparator() {
+    public void printLineSeparator() {
         System.out.println(LINE);
     }
 
     /**
      * Prints a start message when the program begins.
      */
-    public static void printStartMessage() {
+    public void printStartMessage() {
         printLineSeparator();
         System.out.println(START_MESSAGE);
         printLineSeparator();
@@ -37,7 +48,7 @@ public class Ui {
      *
      * @return The command entered by the user, whitespace stripped.
      */
-    public static String getUserInput() {
+    public String getUserInput() {
         // Force quit if text-ui-testing does not end with a "quit" line input
         if (!scanner.hasNextLine()) {
             return "quit";
@@ -48,13 +59,13 @@ public class Ui {
     /**
      * Prints a message indicating that the program is exiting.
      */
-    public static void printEndMessage() {
+    public void printEndMessage() {
         printLineSeparator();
         System.out.println(END_MESSAGE);
         printLineSeparator();
     }
 
-    public static void printMessage(String message) {
+    public void printMessage(String message) {
         printLineSeparator();
         System.out.println(message);
         printLineSeparator();

@@ -10,18 +10,20 @@ import java.io.PrintStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-
 class UiTest {
 
     private final PrintStream originalOut = System.out;
     private final InputStream originalIn = System.in;
     private ByteArrayOutputStream outContent;
+    private Ui ui; // Instance of Ui
 
     @BeforeEach
     void setUp() {
         // Redirect System.out to capture output.
         outContent = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outContent));
+        // Instantiate Ui
+        ui = Ui.getInstance();
     }
 
     @AfterEach
@@ -34,7 +36,7 @@ class UiTest {
     @Test
     void testPrintLineSeparator() {
         outContent.reset();
-        Ui.printLineSeparator();
+        ui.printLineSeparator();
         String expected = "____________________________________________________________" + System.lineSeparator();
         assertEquals(expected, outContent.toString());
     }
@@ -42,7 +44,7 @@ class UiTest {
     @Test
     void testPrintStartMessage() {
         outContent.reset();
-        Ui.printStartMessage();
+        ui.printStartMessage();
         String expected = "____________________________________________________________" + System.lineSeparator() +
                 "Welcome to TripBuddy! Type `tutorial` for a list of available commands." + System.lineSeparator() +
                 "____________________________________________________________" + System.lineSeparator();
@@ -52,7 +54,7 @@ class UiTest {
     @Test
     void testPrintEndMessage() {
         outContent.reset();
-        Ui.printEndMessage();
+        ui.printEndMessage();
         String expected = "____________________________________________________________" + System.lineSeparator() +
                 "Your TripBuddy session has ended. Bye!" + System.lineSeparator() +
                 "____________________________________________________________" + System.lineSeparator();
@@ -63,11 +65,10 @@ class UiTest {
     void testPrintMessage() {
         outContent.reset();
         String message = "Test message";
-        Ui.printMessage(message);
+        ui.printMessage(message);
         String expected = "____________________________________________________________" + System.lineSeparator() +
                 message + System.lineSeparator() +
                 "____________________________________________________________" + System.lineSeparator();
         assertEquals(expected, outContent.toString());
     }
-
 }

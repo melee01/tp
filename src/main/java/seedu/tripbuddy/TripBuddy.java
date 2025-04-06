@@ -1,6 +1,6 @@
 package seedu.tripbuddy;
 
-import org.json.JSONException;
+import seedu.tripbuddy.exception.DataLoadingException;
 import seedu.tripbuddy.exception.ExceptionHandler;
 import seedu.tripbuddy.framework.InputHandler;
 import seedu.tripbuddy.framework.ExpenseManager;
@@ -17,13 +17,15 @@ public class TripBuddy {
 
     private static final String LOG_PATH = "log.txt";
     private static final String FILE_PATH = "tripbuddy_data.json";
-    private static final int DEFAULT_BUDGET = 1000;
+
+    private static Logger logger;
+    private static final Ui ui = Ui.getInstance();
 
     /**
      * Directs logging to a file
      */
     private static void initLogging() {
-        Logger logger = Logger.getLogger("TripBuddy");
+        logger = Logger.getLogger("TripBuddy");
         logger.setUseParentHandlers(false);
         try {
             FileHandler fh = new FileHandler(LOG_PATH);
@@ -31,7 +33,7 @@ public class TripBuddy {
             SimpleFormatter formatter = new SimpleFormatter();
             fh.setFormatter(formatter);
         } catch (IOException e) {
-            ExceptionHandler.handleException(e);
+            ui.printMessage(ExceptionHandler.handleException(e));
         }
     }
 
@@ -40,34 +42,35 @@ public class TripBuddy {
      */
     public static void run() {
         initLogging();
-        ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
+        DataHandler dataHandler = DataHandler.getInstance();
         try {
-            DataHandler.loadData(FILE_PATH);
-        } catch (JSONException e) {
-            ExceptionHandler.handleJSONException(e);
+            String message = dataHandler.loadData(FILE_PATH);
+            ui.printMessage(message + "Loaded expense data from " + FILE_PATH);
         } catch (FileNotFoundException e) {
-            ExceptionHandler.handleFileNotFoundException(e);
+            ui.printMessage(ExceptionHandler.handleFileNotFoundException(e));
+        } catch (DataLoadingException e) {
+            ui.printMessage(ExceptionHandler.handleException(e));
         }
-
-        Ui.printStartMessage();
+        ExpenseManager expenseManager = ExpenseManager.getInstance();
+        InputHandler inputHandler = InputHandler.getInstance(logger);
+        ui.printStartMessage();
         while (true) {
-            String userInput = Ui.getUserInput();
-
+            String userInput = ui.getUserInput();
             if (userInput.isEmpty()) {
                 continue;
             }
 
-            if (InputHandler.isQuitCommand(userInput)) {
+            if (inputHandler.isQuitCommand(userInput)) {
                 try {
-                    DataHandler.saveData(FILE_PATH);
+                    String message = dataHandler.saveData(FILE_PATH, expenseManager);
+                    ui.printMessage(message);
                 } catch (IOException e) {
-                    ExceptionHandler.handleException(e);
+                    ui.printMessage(ExceptionHandler.handleException(e));
                 }
-                Ui.printEndMessage();
+                ui.printEndMessage();
                 return;
             }
-
-            InputHandler.handleUserInput(userInput);
+            ui.printMessage(inputHandler.handleUserInput(userInput));
         }
     }
 

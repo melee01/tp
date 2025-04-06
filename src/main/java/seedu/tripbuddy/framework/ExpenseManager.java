@@ -18,76 +18,103 @@ import java.util.Set;
  */
 public class ExpenseManager {
 
-    private static Currency baseCurrency = Currency.SGD;
-    private static double budget;
-    private static double totalExpense = 0;
-    private static final HashSet<String> categories = new HashSet<>();
-    private static final ArrayList<Expense> expenses = new ArrayList<>();
-    private static final HashSet<String> expenseNames = new HashSet<>();
+    public static final int DEFAULT_BUDGET = 1000;
 
-    /**
-     * Clears all existing data and initializes budget value. Uses {@code SGD} for default currency.
-     */
-    public static void initExpenseManager(double budget) {
+    private static ExpenseManager instance = null;
+
+    private Currency baseCurrency;
+    private double budget;
+    private double totalExpense;
+    private final HashSet<String> categories = new HashSet<>();
+    private final ArrayList<Expense> expenses = new ArrayList<>();
+    private final HashSet<String> expenseNames = new HashSet<>();
+
+    private ExpenseManager(double budget) {
         assert budget > 0 : "Budget must be positive";
-        ExpenseManager.budget = budget;
-        baseCurrency = Currency.SGD;
+        this.budget = budget;
+        this.totalExpense = 0;
+        this.baseCurrency = Currency.SGD;
         clearExpensesAndCategories();
     }
 
-    public static Currency getBaseCurrency() {
+    /**
+     * Gets a singleton instance and sets the budget to {@code DEFAULT_BUDGET}.
+     */
+    public static ExpenseManager getInstance() {
+        if (instance == null) {
+            instance = new ExpenseManager(DEFAULT_BUDGET);
+        }
+        return instance;
+    }
+
+    /**
+     * Gets a singleton instance and sets the budget to the given value.
+     */
+    public static ExpenseManager getInstance(double budget) {
+        if (instance == null) {
+            instance = new ExpenseManager(budget);
+        }
+        instance.setBudget(budget);
+        return instance;
+    }
+
+    public Currency getBaseCurrency() {
         return baseCurrency;
     }
 
-    public static void setBaseCurrency(Currency baseCurrency) {
-        ExpenseManager.baseCurrency = baseCurrency;
+    public void setBaseCurrency(Currency newBaseCurrency) {
+        baseCurrency = newBaseCurrency;
         Currency.setBaseCurrency(baseCurrency);
     }
 
-    public static double getBudget() {
+    public double getBudget() {
         return budget;
     }
 
-    public static double getTotalExpense() {
+    public double getTotalExpense() {
         return totalExpense;
     }
 
-    public static void setTotalExpense(double totalExpense) {
-        ExpenseManager.totalExpense = totalExpense;
+    public void setTotalExpense(double totalExpense) {
+        this.totalExpense = totalExpense;
     }
 
-    public static double getRemainingBudget() {
+    public double getRemainingBudget() {
         return budget - totalExpense;
     }
 
-    public static List<String> getCategories() {
+    public List<String> getCategories() {
         return categories.stream().toList();
     }
 
-    public static List<Expense> getExpenses() {
+    public List<Expense> getExpenses() {
         return List.copyOf(expenses);
     }
 
-    public static String getFormattedAmount(double amount) {
-        return baseCurrency.getFormattedAmount(amount);
-    }
 
-    public static void clearExpensesAndCategories() {
+    /**
+     * Truncates all existing expenses and categories without modifying budget
+     * and base currency.
+     */
+    public void clearExpensesAndCategories() {
         expenses.clear();
         categories.clear();
         expenseNames.clear();
         totalExpense = 0;
     }
 
-    public static void setBudget(double budget) {
+    public void setBudget(double budget) {
         assert budget > 0 : "Budget must be positive";
-        ExpenseManager.budget = budget;
+        this.budget = budget;
     }
 
     /**
      * Adds a new category name into {@code categories} if not exists.
      */
-    public static void createCategory(String categoryName) throws InvalidArgumentException {
+    public void createCategory(String categoryName) throws InvalidArgumentException {
+        if (categoryName.isEmpty()) {
+            throw new InvalidArgumentException("", "Category name should not be empty.");
+        }
         if (categories.contains(categoryName)) {
             throw new InvalidArgumentException(categoryName, "Category name already exists.");
         }
@@ -97,8 +124,11 @@ public class ExpenseManager {
     /**
      * Adds a new {@link Expense} without category.
      */
-    public static void addExpense(String name, double amount) throws InvalidArgumentException {
+    public void addExpense(String name, double amount) throws InvalidArgumentException {
         assert amount > 0 : "Amount must be positive";
+        if (name.isEmpty()) {
+            throw new InvalidArgumentException("", "Expense name should not be empty.");
+        }
         if (expenseNames.contains(name)) {
             throw new InvalidArgumentException(name, "Expense name already exists.");
         }
@@ -114,8 +144,11 @@ public class ExpenseManager {
      *     <li>A new category will be created if not exists.
      * </ul>
      */
-    public static void addExpense(String name, double amount, String categoryName) throws InvalidArgumentException {
+    public void addExpense(String name, double amount, String categoryName) throws InvalidArgumentException {
         assert amount > 0 : "Amount must be positive";
+        if (name.isEmpty()) {
+            throw new InvalidArgumentException("", "Expense name should not be empty.");
+        }
         if (expenseNames.contains(name)) {
             throw new InvalidArgumentException(name, "Expense name already exists.");
         }
@@ -128,9 +161,12 @@ public class ExpenseManager {
         totalExpense += amount;
     }
 
-    public static void addExpense(JSONObject expObj) throws JSONException {
+    public void addExpense(JSONObject expObj) throws JSONException {
         Expense expense = Expense.fromJSON(expObj);
         String name = expense.getName();
+        if (name.isEmpty()) {
+            throw new JSONException("Expense name should not be empty.");
+        }
         if (expenseNames.contains(name)) {
             throw new JSONException("Expense \"" + name + "\" already exists. Skipping");
         }
@@ -144,19 +180,24 @@ public class ExpenseManager {
                     Command.MAX_INPUT_VAL);
         }
 
+        String categoryName = expense.getCategory();
+        if (categoryName != null) {
+            categories.add(categoryName);
+        }
+
         expenses.add(expense);
         expenseNames.add(name);
         totalExpense += amount;
     }
 
-    public static Expense getExpense(int id) throws InvalidArgumentException {
+    public Expense getExpense(int id) throws InvalidArgumentException {
         if (id < 0 || id >= expenses.size()) {
             throw new InvalidArgumentException(Integer.toString(id), "id index out of bound");
         }
         return expenses.get(id);
     }
 
-    public static void deleteExpense(String expenseName) throws InvalidArgumentException {
+    public void deleteExpense(String expenseName) throws InvalidArgumentException {
         for (Expense expense : expenses) {
             if (expense.getName().equalsIgnoreCase(expenseName)) {
                 expenses.remove(expense);
@@ -168,7 +209,7 @@ public class ExpenseManager {
         throw new InvalidArgumentException(expenseName, "Expense name not found.");
     }
 
-    public static List<Expense> getExpensesByCategory(String category) throws InvalidArgumentException {
+    public List<Expense> getExpensesByCategory(String category) throws InvalidArgumentException {
         if (!categories.contains(category)) {
             throw new InvalidArgumentException(category, "Category name not found.");
         }
@@ -182,7 +223,10 @@ public class ExpenseManager {
         return ret;
     }
 
-    public static void setExpenseCategory(String expenseName, String category) throws InvalidArgumentException {
+    public void setExpenseCategory(String expenseName, String category) throws InvalidArgumentException {
+        if (expenseName.isEmpty()) {
+            throw new JSONException("Expense name should not be empty.");
+        }
         for (Expense expense : expenses) {
             if (expense.getName().equalsIgnoreCase(expenseName)) {
                 expense.setCategory(category);
@@ -193,7 +237,7 @@ public class ExpenseManager {
         throw new InvalidArgumentException(expenseName, "Expense name not found.");
     }
 
-    public static Expense getMaxExpense() throws InvalidArgumentException {
+    public Expense getMaxExpense() throws InvalidArgumentException {
         if (expenses.isEmpty()) {
             throw new InvalidArgumentException("No expenses available");
         }
@@ -206,7 +250,7 @@ public class ExpenseManager {
         return maxExpense;
     }
 
-    public static Expense getMinExpense() throws InvalidArgumentException {
+    public Expense getMinExpense() throws InvalidArgumentException {
         if (expenses.isEmpty()) {
             throw new InvalidArgumentException("No expenses available");
         }
@@ -219,7 +263,7 @@ public class ExpenseManager {
         return minExpense;
     }
 
-    public static List<Expense> getExpensesByDateRange(LocalDateTime start, LocalDateTime end) {
+    public List<Expense> getExpensesByDateRange(LocalDateTime start, LocalDateTime end) {
         ArrayList<Expense> filteredExpenses = new ArrayList<>();
         for (Expense expense : expenses) {
             LocalDateTime expenseDateTime = expense.getDateTime();
@@ -231,12 +275,12 @@ public class ExpenseManager {
         return filteredExpenses;
     }
 
-    public static void setCategories(Set<String> loadedCategories) {
+    public void setCategories(Set<String> loadedCategories) {
         categories.clear();
         categories.addAll(loadedCategories);
     }
   
-    public static List<Expense> getExpensesBySearchword(String searchword) {
+    public List<Expense> getExpensesBySearchword(String searchword) {
         ArrayList<Expense> matchingExpenses = new ArrayList<>();
         for (Expense expense : expenses) {
             if (expense.getName().toLowerCase().contains(searchword.toLowerCase())) {
