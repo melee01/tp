@@ -85,7 +85,7 @@ public class InputHandlerTest {
                 () -> inputHandler.handleUserInput("set-category greek-meal"),
                 () -> inputHandler.handleUserInput("delete-expense greek-meal"),
                 () -> inputHandler.handleUserInput("set-budget 100000000"),
-                () -> inputHandler.handleUserInput("set-budget -1234")
+                () -> inputHandler.handleUserInput("set-budget -1234"),
                 () -> inputHandler.handleUserInput("set-time"),
                 () -> inputHandler.handleUserInput("set-time onlyexpense"),
                 () -> inputHandler.handleUserInput("set-time onlyexpense -t"),
