@@ -271,7 +271,8 @@ class CommandHandlerTest {
         String result = commandHandler.handleSetTime(name, newTimestampStr);
         Expense updatedExpense = expenseManager.getExpense(0);
         assertEquals(expectedTime, updatedExpense.getDateTime());
-        assertTrue(result.contains("Updated timestamp for"));
+        assertTrue(result.contains("Updated timestamp for"),
+                "The result message should contain 'Updated timestamp for'");
     }
 
     @Test
@@ -281,7 +282,8 @@ class CommandHandlerTest {
         String timestampStr = "2024-01-01 10:00:00";
         InvalidArgumentException thrown = assertThrows(InvalidArgumentException.class, () ->
                 commandHandler.handleSetTime(name, timestampStr));
-        assertEquals("Expense name not found.", thrown.getMessage());
+        assertEquals("Expense name not found.", thrown.getMessage(),
+                "The exception message should be 'Expense name not found.'");
     }
 
     @Test

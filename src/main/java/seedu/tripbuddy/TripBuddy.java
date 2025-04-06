@@ -13,6 +13,10 @@ import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
+/**
+ * The main entry point of the TripBuddy application.
+ * Handles application startup, data loading, logging setup, and user input loop.
+ */
 public class TripBuddy {
 
     private static final String LOG_PATH = "log.txt";
@@ -22,7 +26,8 @@ public class TripBuddy {
     private static final Ui ui = Ui.getInstance();
 
     /**
-     * Directs logging to a file
+     * Initializes logging to a file called log.txt.
+     * Logs are written using a simple formatter.
      */
     private static void initLogging() {
         logger = Logger.getLogger("TripBuddy");
@@ -38,7 +43,8 @@ public class TripBuddy {
     }
 
     /**
-     * Runs the main program loop, loads all data, and handles user input.
+     * Starts the TripBuddy application.
+     * Loads data, prints the welcome message, and processes user commands until quit is entered.
      */
     public static void run() {
         initLogging();
@@ -74,6 +80,9 @@ public class TripBuddy {
         }
     }
 
+    /**
+     * The main method that launches the application.
+     */
     public static void main(String[] args) {
         TripBuddy.run();
     }
