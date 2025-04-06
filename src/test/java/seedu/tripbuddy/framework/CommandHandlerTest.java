@@ -23,7 +23,7 @@ class CommandHandlerTest {
     @BeforeEach
     public void setup() {
         expenseManager = ExpenseManager.getInstance();
-        expenseManager.clearExpensesAndCategories(); // Ensure clean state
+        expenseManager.clearExpensesAndCategories();
         commandHandler = CommandHandler.getInstance();
     }
 
@@ -266,7 +266,7 @@ class CommandHandlerTest {
         String result = commandHandler.handleSetTime(name, newTimestampStr);
         Expense updatedExpense = expenseManager.getExpense(0);
         assertEquals(expectedTime, updatedExpense.getDateTime());
-        assertTrue(result.contains("Updated timestamp for"));
+        assertTrue(result.contains("Updated timestamp for"), "The result message should contain 'Updated timestamp for'");
     }
 
     @Test
@@ -275,7 +275,7 @@ class CommandHandlerTest {
         String timestampStr = "2024-01-01 10:00:00";
         InvalidArgumentException thrown = assertThrows(InvalidArgumentException.class, () ->
                 commandHandler.handleSetTime(name, timestampStr));
-        assertEquals("Expense name not found.", thrown.getMessage());
+        assertEquals("Expense name not found.", thrown.getMessage(), "The exception message should be 'Expense name not found.'");
     }
 
     @Test
@@ -285,6 +285,7 @@ class CommandHandlerTest {
         String invalidTime = "15th March, 2024";
         InvalidArgumentException thrown = assertThrows(InvalidArgumentException.class, () ->
                 commandHandler.handleSetTime(name, invalidTime));
-        assertTrue(thrown.getMessage().contains("Invalid date format"));
+        assertTrue(thrown.getMessage().contains("Invalid date format"),
+                "The exception message should contain 'Invalid date format'");
     }
 }
