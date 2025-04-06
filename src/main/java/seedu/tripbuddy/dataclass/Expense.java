@@ -74,14 +74,18 @@ public class Expense {
         this.dateTime = dateTime;
     }
 
+    public String getFormattedAmount(double amount, Currency currency) {
+        return currency.getFormattedAmount(amount);
+    }
+
     @Override
     public String toString() {
         String dateTimeStr = dateTime.format(FORMATTER);
         if (category == null) {
-            return "name: " + name + ", amount: " + ExpenseManager.getFormattedAmount(amount) +
+            return "name: " + name + ", amount: " + getFormattedAmount(amount, ExpenseManager.baseCurrency) +
                     ", date: " + dateTimeStr;
         }
-        return "name: " + name + ", amount: " + ExpenseManager.getFormattedAmount(amount)
+        return "name: " + name + ", amount: " + getFormattedAmount(amount, ExpenseManager.baseCurrency)
                 + ", category: " + category + ", date: " + dateTimeStr;
     }
 

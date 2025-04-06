@@ -6,10 +6,9 @@ import org.json.JSONObject;
 import seedu.tripbuddy.command.Command;
 import seedu.tripbuddy.dataclass.Currency;
 import seedu.tripbuddy.dataclass.Expense;
-import seedu.tripbuddy.exception.ExceptionHandler;
+import seedu.tripbuddy.exception.DataLoadingException;
 import seedu.tripbuddy.exception.InvalidArgumentException;
 import seedu.tripbuddy.framework.ExpenseManager;
-import seedu.tripbuddy.framework.Ui;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -25,15 +24,15 @@ public class DataHandler {
         return (int)(x * 100 + .5) / 100.;
     }
 
-    public static void saveData(String path) throws IOException {
+    public static String saveData(String path, ExpenseManager expenseManager) throws IOException {
         JSONObject root = new JSONObject();
-        root.put("currency", ExpenseManager.getBaseCurrency().toString());
-        root.put("budget", round2Digits(ExpenseManager.getBudget()));
+        root.put("currency", expenseManager.getBaseCurrency().toString());
+        root.put("budget", round2Digits(expenseManager.getBudget()));
 
         LOGGER.log(Level.INFO, "budget converted");
 
         JSONArray categoriesArr = new JSONArray();
-        for (String category : ExpenseManager.getCategories()) {
+        for (String category : expenseManager.getCategories()) {
             categoriesArr.put(category);
         }
         root.put("categories", categoriesArr);
@@ -41,7 +40,7 @@ public class DataHandler {
         LOGGER.log(Level.INFO, "categories converted");
 
         JSONArray expensesArr = new JSONArray();
-        for (Expense expense : ExpenseManager.getExpenses()) {
+        for (Expense expense : expenseManager.getExpenses()) {
             JSONObject expObj = expense.toJSON();
             expensesArr.put(expObj);
             LOGGER.log(Level.INFO, "expense converted: " + expObj);
@@ -51,50 +50,47 @@ public class DataHandler {
         LOGGER.log(Level.INFO, "expenses converted");
 
         String absPath = FileHandler.writeJsonObject(path, root);
-        Ui.printMessage("Saved data to file:\n\t" + absPath);
+        return "Saved data to file:\n\t" + absPath;
     }
 
-    public static void loadData(String path) throws FileNotFoundException, JSONException {
+    public static ExpenseManager loadData(String path)
+            throws FileNotFoundException, JSONException, DataLoadingException {
+
         JSONObject root = FileHandler.readJsonObject(path);
+        ExpenseManager expenseManager;
 
         try {
             double budget = root.getDouble("budget");
-            if (budget <= 0) {
-                throw new JSONException("Budget value should be more than 0. Using default budget instead.");
+            if (budget <= 0 || budget > Command.MAX_INPUT_VAL) {
+                throw new DataLoadingException(
+                        "Budget value invalid or out of range. Using default budget instead.");
             }
-            if (budget > Command.MAX_INPUT_VAL) {
-                throw new JSONException("Budget value should be no more than " + Command.MAX_INPUT_VAL +
-                        ". Using default budget instead.");
-            }
-            ExpenseManager.initExpenseManager(budget);
+            expenseManager = new ExpenseManager(budget);
             LOGGER.log(Level.INFO, "budget loaded: " + budget);
         } catch (JSONException e) {
-            ExceptionHandler.handleJSONException(e);
+            throw new DataLoadingException("Missing or invalid budget information.");
         }
 
-        String currencyName = null;
+        String currencyName;
         try {
             currencyName = root.getString("currency");
             Currency currency = Currency.valueOf(currencyName);
-            ExpenseManager.setBaseCurrency(currency);
+            expenseManager.setBaseCurrency(currency);
         } catch (JSONException e) {
-            ExceptionHandler.handleJSONException(e);
+            throw new DataLoadingException("Currency information missing.");
         } catch (IllegalArgumentException e) {
-            assert currencyName != null;
-            Ui.printMessage("Unrecognized currency: " + currencyName + ". Using SGD instead.");
+            currencyName = root.optString("currency", "UNKNOWN");
+            throw new DataLoadingException("Unrecognized currency: " + currencyName + ". Using SGD instead.");
         }
 
         JSONArray categoriesArr = root.getJSONArray("categories");
         for (int i = 0; i < categoriesArr.length(); i++) {
-            String category = null;
+            String category = categoriesArr.optString(i, null);
+            if (category == null) continue;
             try {
-                category = categoriesArr.getString(i);
-                ExpenseManager.createCategory(category);
+                expenseManager.createCategory(category);
             } catch (InvalidArgumentException e) {
-                ExceptionHandler.handleJSONException(new JSONException(
-                        "Category \"" + category + "\" already exists. Skipping."));
-            } catch (JSONException e) {
-                ExceptionHandler.handleJSONException(e);
+                LOGGER.log(Level.WARNING, "Category \"" + category + "\" already exists. Skipping.");
             }
         }
 
@@ -102,11 +98,13 @@ public class DataHandler {
         for (int i = 0; i < expensesArr.length(); i++) {
             try {
                 JSONObject expObj = expensesArr.getJSONObject(i);
-                ExpenseManager.addExpense(expObj);
+                expenseManager.addExpense(expObj);
             } catch (JSONException e) {
-                ExceptionHandler.handleJSONException(e);
+                LOGGER.log(Level.WARNING, "Failed to parse expense at index " + i);
             }
         }
-        Ui.printMessage("Loaded data from file: " + path);
+
+        return expenseManager;
     }
+
 }

@@ -1,7 +1,9 @@
 package seedu.tripbuddy;
 
 import org.json.JSONException;
+import seedu.tripbuddy.exception.DataLoadingException;
 import seedu.tripbuddy.exception.ExceptionHandler;
+import seedu.tripbuddy.framework.CommandHandler;
 import seedu.tripbuddy.framework.InputHandler;
 import seedu.tripbuddy.framework.ExpenseManager;
 import seedu.tripbuddy.framework.Ui;
@@ -17,13 +19,15 @@ public class TripBuddy {
 
     private static final String LOG_PATH = "log.txt";
     private static final String FILE_PATH = "tripbuddy_data.json";
-    private static final int DEFAULT_BUDGET = 1000;
+
+
+    private static Logger logger;
 
     /**
      * Directs logging to a file
      */
     private static void initLogging() {
-        Logger logger = Logger.getLogger("TripBuddy");
+        logger = Logger.getLogger("TripBuddy");
         logger.setUseParentHandlers(false);
         try {
             FileHandler fh = new FileHandler(LOG_PATH);
@@ -40,34 +44,41 @@ public class TripBuddy {
      */
     public static void run() {
         initLogging();
-        ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
+        Ui ui = new Ui();
+        ExpenseManager expenseManager;
+
         try {
-            DataHandler.loadData(FILE_PATH);
+            expenseManager = DataHandler.loadData(FILE_PATH);
         } catch (JSONException e) {
-            ExceptionHandler.handleJSONException(e);
+            ui.printMessage(ExceptionHandler.handleJSONException(e));
+            expenseManager = new ExpenseManager();
         } catch (FileNotFoundException e) {
-            ExceptionHandler.handleFileNotFoundException(e);
+            ui.printMessage(ExceptionHandler.handleFileNotFoundException(e));
+            expenseManager = new ExpenseManager();
+        } catch (DataLoadingException e) {
+            ui.printMessage(e.getMessage());
+            expenseManager = new ExpenseManager();
         }
-
-        Ui.printStartMessage();
+        InputHandler inputHandler = new InputHandler(logger, expenseManager);
+        ui.printStartMessage();
         while (true) {
-            String userInput = Ui.getUserInput();
-
+            String userInput = ui.getUserInput();
             if (userInput.isEmpty()) {
                 continue;
             }
 
-            if (InputHandler.isQuitCommand(userInput)) {
+            if (inputHandler.isQuitCommand(userInput)) {
                 try {
-                    DataHandler.saveData(FILE_PATH);
+                    DataHandler.saveData(FILE_PATH, expenseManager);
+                    ui.printMessage("Saved data to " + FILE_PATH);
                 } catch (IOException e) {
                     ExceptionHandler.handleException(e);
                 }
-                Ui.printEndMessage();
+                ui.printEndMessage();
                 return;
             }
+            ui.printMessage(inputHandler.handleUserInput(userInput));
 
-            InputHandler.handleUserInput(userInput);
         }
     }
 
