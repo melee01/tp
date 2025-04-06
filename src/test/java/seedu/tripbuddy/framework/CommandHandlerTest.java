@@ -25,6 +25,7 @@ class CommandHandlerTest {
     private static final Logger LOGGER = Logger.getLogger(CommandHandlerTest.class.getName());
     private static final int DEFAULT_BUDGET = 2333;
 
+    @BeforeEach
     void initExpenseManager() {
         ExpenseManager expenseManager = ExpenseManager.getInstance();
         expenseManager.clearExpensesAndCategories();
