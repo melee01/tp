@@ -19,11 +19,12 @@ public class TripBuddy {
     private static final String FILE_PATH = "tripbuddy_data.json";
 
     private static Logger logger;
+    private static final Ui ui = Ui.getInstance();
 
     /**
      * Directs logging to a file
      */
-    private static void initLogging(Ui ui) {
+    private static void initLogging() {
         logger = Logger.getLogger("TripBuddy");
         logger.setUseParentHandlers(false);
         try {
@@ -40,8 +41,7 @@ public class TripBuddy {
      * Runs the main program loop, loads all data, and handles user input.
      */
     public static void run() {
-        Ui ui = Ui.getInstance();
-        initLogging(ui);
+        initLogging();
         DataHandler dataHandler = DataHandler.getInstance();
         ExpenseManager expenseManager;
         try {
