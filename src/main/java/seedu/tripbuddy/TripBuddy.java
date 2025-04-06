@@ -1,6 +1,5 @@
 package seedu.tripbuddy;
 
-import org.json.JSONException;
 import seedu.tripbuddy.exception.DataLoadingException;
 import seedu.tripbuddy.exception.ExceptionHandler;
 import seedu.tripbuddy.framework.InputHandler;
@@ -20,6 +19,7 @@ public class TripBuddy {
     private static final String FILE_PATH = "tripbuddy_data.json";
 
     private static Logger logger;
+    private static final Ui ui = Ui.getInstance();
 
     /**
      * Directs logging to a file
@@ -33,7 +33,7 @@ public class TripBuddy {
             SimpleFormatter formatter = new SimpleFormatter();
             fh.setFormatter(formatter);
         } catch (IOException e) {
-            ExceptionHandler.handleException(e);
+            ui.printMessage(ExceptionHandler.handleException(e));
         }
     }
 
@@ -42,20 +42,17 @@ public class TripBuddy {
      */
     public static void run() {
         initLogging();
-        Ui ui = new Ui();
-        ExpenseManager expenseManager;
-
+        DataHandler dataHandler = DataHandler.getInstance();
         try {
-            expenseManager = DataHandler.loadData(FILE_PATH, ui);
-            ui.printMessage("Loading expense data from " + FILE_PATH);
+            String message = dataHandler.loadData(FILE_PATH);
+            ui.printMessage(message + "Loaded expense data from " + FILE_PATH);
         } catch (FileNotFoundException e) {
             ui.printMessage(ExceptionHandler.handleFileNotFoundException(e));
-            expenseManager = new ExpenseManager();
         } catch (DataLoadingException e) {
-            ui.printMessage(e.getMessage());
-            expenseManager = new ExpenseManager();
+            ui.printMessage(ExceptionHandler.handleException(e));
         }
-        InputHandler inputHandler = new InputHandler(logger, expenseManager);
+        ExpenseManager expenseManager = ExpenseManager.getInstance();
+        InputHandler inputHandler = InputHandler.getInstance(logger);
         ui.printStartMessage();
         while (true) {
             String userInput = ui.getUserInput();
@@ -65,16 +62,15 @@ public class TripBuddy {
 
             if (inputHandler.isQuitCommand(userInput)) {
                 try {
-                    DataHandler.saveData(FILE_PATH, expenseManager);
-                    ui.printMessage("Saved data to " + FILE_PATH);
+                    String message = dataHandler.saveData(FILE_PATH, expenseManager);
+                    ui.printMessage(message);
                 } catch (IOException e) {
-                    ExceptionHandler.handleException(e);
+                    ui.printMessage(ExceptionHandler.handleException(e));
                 }
                 ui.printEndMessage();
                 return;
             }
             ui.printMessage(inputHandler.handleUserInput(userInput));
-
         }
     }
 

@@ -12,17 +12,16 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 public class InputHandlerTest {
 
     private InputHandler inputHandler;
-    private Logger testLogger;
-    private ExpenseManager expenseManager;
 
     @BeforeEach
     void setUp() {
         // Create a test logger.
-        testLogger = Logger.getLogger("TestLogger");
+        Logger testLogger = Logger.getLogger("TestLogger");
         // Instantiate a test ExpenseManager with a sample budget.
-        expenseManager = new ExpenseManager(1000);
+        ExpenseManager expenseManager = ExpenseManager.getInstance(1000);
+        expenseManager.clearExpensesAndCategories();
         // Instantiate InputHandler with the injected logger and expenseManager.
-        inputHandler = new InputHandler(testLogger, expenseManager);
+        inputHandler = InputHandler.getInstance(testLogger);
     }
 
     @Test

@@ -16,10 +16,19 @@ import java.util.List;
  */
 public class CommandHandler {
 
-    private ExpenseManager expenseManager;
+    private static CommandHandler instance = null;
 
-    public CommandHandler(ExpenseManager expenseManager) {
-        this.expenseManager = expenseManager;
+    private final ExpenseManager expenseManager;
+
+    private CommandHandler() {
+        this.expenseManager = ExpenseManager.getInstance();
+    }
+
+    public static CommandHandler getInstance() {
+        if (instance == null) {
+            instance = new CommandHandler();
+        }
+        return instance;
     }
 
     public String handleTutorial() {
@@ -77,23 +86,25 @@ public class CommandHandler {
         double budget = expenseManager.getBudget();
         double totalExpense = expenseManager.getTotalExpense();
         double remainingBudget = budget - totalExpense;
+        Currency baseCurrency = expenseManager.getBaseCurrency();
         if (remainingBudget > 0) {
-            return "The original budget you set was " + ExpenseManager.baseCurrency.getFormattedAmount(budget) +
-                    ".\nSo far, you have spent " + ExpenseManager.baseCurrency.getFormattedAmount(totalExpense) +
+            return "The original budget you set was " + baseCurrency.getFormattedAmount(budget) +
+                    ".\nSo far, you have spent " + baseCurrency.getFormattedAmount(totalExpense) +
                     ".\nThis leaves you with a remaining budget of " +
-                    ExpenseManager.baseCurrency.getFormattedAmount(remainingBudget) + ".";
+                    baseCurrency.getFormattedAmount(remainingBudget) + ".";
         }
-        return "The original budget you set was " + ExpenseManager.baseCurrency.getFormattedAmount(budget) +
-                ".\nSo far, you have spent " + ExpenseManager.baseCurrency.getFormattedAmount(totalExpense) +
+        return "The original budget you set was " + baseCurrency.getFormattedAmount(budget) +
+                ".\nSo far, you have spent " + baseCurrency.getFormattedAmount(totalExpense) +
                 ".\nUh oh! You have exceeded your budget by " +
-                ExpenseManager.baseCurrency.getFormattedAmount(-remainingBudget) +
+                baseCurrency.getFormattedAmount(-remainingBudget) +
                 ".\nConsider adjusting your budget to get back on track.";
     }
 
     public String handleSetBudget(double budget) throws InvalidArgumentException {
         assert budget > 0;
         expenseManager.setBudget(budget);
-        return "Your budget has been set to " + ExpenseManager.baseCurrency.getFormattedAmount(budget) + ".";
+        Currency baseCurrency = expenseManager.getBaseCurrency();
+        return "Your budget has been set to " + baseCurrency.getFormattedAmount(budget) + ".";
     }
 
     public String handleCreateCategory(String category) throws InvalidArgumentException {
@@ -109,7 +120,7 @@ public class CommandHandler {
     public String handleDeleteExpense(String expenseName) throws InvalidArgumentException {
         expenseManager.deleteExpense(expenseName);
         return "Expense " + expenseName + " deleted successfully.\nYour remaining budget is " +
-                ExpenseManager.baseCurrency.getFormattedAmount(expenseManager.getRemainingBudget()) + ".";
+                expenseManager.getBaseCurrency().getFormattedAmount(expenseManager.getRemainingBudget()) + ".";
     }
 
     public String handleAddExpense(String expenseName, double amount, String category)
@@ -125,37 +136,16 @@ public class CommandHandler {
         }
 
         double remainingBudget = expenseManager.getRemainingBudget();
+        Currency baseCurrency = expenseManager.getBaseCurrency();
         if (remainingBudget >= 0) {
             return "Expense " + expenseName + " added successfully to category " + category + ".\n" +
-                    "Your remaining budget is " + ExpenseManager.baseCurrency.getFormattedAmount(remainingBudget) + ".";
+                    "Your remaining budget is " + baseCurrency.getFormattedAmount(remainingBudget) + ".";
         } else {
             double amountOfDebt = remainingBudget * -1;
             return "Expense " + expenseName + " added successfully to category " + category + ".\n" +
                     "Uh oh! You've exceeded your budget.\n" +
                     "You are now in debt by " +
-                    ExpenseManager.baseCurrency.getFormattedAmount(amountOfDebt) + ". Time to rein it in!\n" +
-                    "Consider adjusting your budget to get back on track!";
-        }
-    }
-
-    public String handleAddExpense(String expenseName, double amount, String category, String currencyStr)
-            throws InvalidArgumentException {
-        assert amount > 0;
-        try {
-            Currency currency = Currency.valueOf(currencyStr);
-            expenseManager.addExpense(expenseName, currency.convert(amount), category);
-        } catch (IllegalArgumentException e) {
-            throw new InvalidArgumentException(currencyStr, "Invalid currency.");
-        }
-        double remainingBudget = expenseManager.getRemainingBudget();
-        if (remainingBudget >= 0) {
-            return "Expense " + expenseName + " added successfully.\n" +
-                    "Your remaining budget is $" + String.format("%.2f", remainingBudget) + ".";
-        } else {
-            double amountOfDebt = remainingBudget * -1;
-            return "Expense " + expenseName + " added successfully.\n" +
-                    "Uh oh! You've exceeded your budget.\n" +
-                    "You are now in debt by $" + amountOfDebt + ". Time to rein it in!\n" +
+                    baseCurrency.getFormattedAmount(amountOfDebt) + ". Time to rein it in!\n" +
                     "Consider adjusting your budget to get back on track!";
         }
     }
@@ -164,14 +154,15 @@ public class CommandHandler {
         assert amount > 0;
         expenseManager.addExpense(expenseName, amount);
         double remainingBudget = expenseManager.getRemainingBudget();
+        Currency baseCurrency = expenseManager.getBaseCurrency();
         if (remainingBudget >= 0) {
             return "Expense " + expenseName + " added successfully.\n" +
                     "Your remaining budget is $" +
-                    ExpenseManager.baseCurrency.getFormattedAmount(remainingBudget) + ".";
+                    baseCurrency.getFormattedAmount(remainingBudget) + ".";
         }
         return "Expense " + expenseName + " added successfully.\n" +
                 "Uh oh! You've exceeded your budget.\n" +
-                "You are now in debt by $" + ExpenseManager.baseCurrency.getFormattedAmount(-remainingBudget) +
+                "You are now in debt by $" + baseCurrency.getFormattedAmount(-remainingBudget) +
                 ". Time to rein it in!\nConsider adjusting your budget to get back on track!";
     }
 
@@ -185,7 +176,7 @@ public class CommandHandler {
             totalAmount += expense.getAmount();
         }
         expensesString.append("\nTotal amount spent: ")
-                .append(ExpenseManager.baseCurrency.getFormattedAmount(totalAmount)).append(".");
+                .append(expenseManager.getBaseCurrency().getFormattedAmount(totalAmount)).append(".");
         return expenses.isEmpty() ? "There are no expenses." : "Here is a list of your past expenses: "
                 + expensesString;
     }
@@ -221,10 +212,11 @@ public class CommandHandler {
 
     public String handleViewCurrency() {
         StringBuilder message = new StringBuilder("The current exchange rate against base currency is: \n");
+        Currency baseCurrency = expenseManager.getBaseCurrency();
         for (Currency currency : Currency.values()) {
-            if (currency != ExpenseManager.baseCurrency) {
+            if (currency != baseCurrency) {
                 message.append("Rate of ")
-                        .append(ExpenseManager.baseCurrency.toString())
+                        .append(baseCurrency.toString())
                         .append(" and ")
                         .append(currency.toString())
                         .append(" is ")

@@ -1,7 +1,5 @@
 package seedu.tripbuddy.exception;
 
-import org.json.JSONException;
-
 import java.io.FileNotFoundException;
 import java.time.format.DateTimeParseException;
 
@@ -24,10 +22,6 @@ public class ExceptionHandler {
                 "\". Please review the user guide for more information.";
     }
 
-    public static String handleNumberFormatException() {
-        return "Uh oh! Invalid number format. Please enter a valid integer.";
-    }
-
     public static String handleMissingOptionException(MissingOptionException e) {
         String missingOpt = e.getMissingOpt();
         if (e.getMissingOpt().isEmpty()) {
@@ -39,10 +33,6 @@ public class ExceptionHandler {
 
     public static String handleDateTimeParseException(DateTimeParseException e) {
         return "Invalid date/time format! Please use yyyy-MM-dd HH:mm:ss\n\t" + e.getParsedString();
-    }
-
-    public static String handleJSONException(JSONException e) {
-        return "Uh oh! Missing or corrupt data found in your save file:\n\t" + e.getMessage();
     }
 
     public static String handleFileNotFoundException(FileNotFoundException e) {

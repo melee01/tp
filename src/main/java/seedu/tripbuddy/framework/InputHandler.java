@@ -18,12 +18,21 @@ import java.util.logging.Logger;
  */
 public class InputHandler {
 
+    private static InputHandler instance = null;
+
     private final CommandHandler commandHandler;
     private final Parser parser;
 
-    public InputHandler(Logger logger, ExpenseManager expenseManager) {
-        this.commandHandler = new CommandHandler(expenseManager);
-        this.parser = new Parser(logger);
+    private InputHandler(Logger logger) {
+        this.commandHandler = CommandHandler.getInstance();
+        this.parser = Parser.getInstance(logger);
+    }
+
+    public static InputHandler getInstance(Logger logger) {
+        if (instance == null) {
+            instance = new InputHandler(logger);
+        }
+        return instance;
     }
 
     public boolean isQuitCommand(String userInput) {
@@ -35,7 +44,7 @@ public class InputHandler {
             Command cmd = parser.parseCommand(userInput);
             Keyword keyword = cmd.getKeyword();
             int optCount = cmd.getOptCount();
-            String message = switch (keyword) {
+            return switch (keyword) {
             case TUTORIAL -> commandHandler.handleTutorial();
             case SET_BUDGET -> commandHandler.handleSetBudget(cmd.parseDouble(""));
             case VIEW_BUDGET -> commandHandler.handleViewBudget();
@@ -59,16 +68,12 @@ public class InputHandler {
             case SET_BASE_CURRENCY -> commandHandler.handleSetBaseCurrency(cmd.getOpt(""));
             case CLEAR -> commandHandler.handleClearAll();
             };
-            //Ui.printMessage(message);
-            return message;
         } catch (DateTimeParseException e) {
             return ExceptionHandler.handleDateTimeParseException(e);
         } catch (InvalidKeywordException e) {
             return ExceptionHandler.handleInvalidKeywordException(e);
         } catch (MissingOptionException e) {
             return ExceptionHandler.handleMissingOptionException(e);
-        } catch (NumberFormatException e) {
-            return ExceptionHandler.handleNumberFormatException();
         } catch (InvalidArgumentException e) {
             return ExceptionHandler.handleInvalidArgumentException(e);
         }

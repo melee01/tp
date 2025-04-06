@@ -17,26 +17,45 @@ import java.util.Set;
  * Has CRUD access to all user data.
  */
 public class ExpenseManager {
-    public static Currency baseCurrency = Currency.SGD;
+
     public static final int DEFAULT_BUDGET = 1000;
+
+    private static ExpenseManager instance = null;
+
+    private Currency baseCurrency;
     private double budget;
-    private double totalExpense = 0;
+    private double totalExpense;
     private final HashSet<String> categories = new HashSet<>();
     private final ArrayList<Expense> expenses = new ArrayList<>();
     private final HashSet<String> expenseNames = new HashSet<>();
 
-    /**
-     * Clears all existing data and initializes budget value. Uses {@code SGD} for default currency.
-     */
-    public ExpenseManager(double budget) {
+    private ExpenseManager(double budget) {
         assert budget > 0 : "Budget must be positive";
         this.budget = budget;
-        //this.baseCurrency = Currency.SGD;
+        this.totalExpense = 0;
+        this.baseCurrency = Currency.SGD;
         clearExpensesAndCategories();
     }
 
-    public ExpenseManager() {
-        this(DEFAULT_BUDGET);
+    /**
+     * Gets a singleton instance and sets the budget to {@code DEFAULT_BUDGET}.
+     */
+    public static ExpenseManager getInstance() {
+        if (instance == null) {
+            instance = new ExpenseManager(DEFAULT_BUDGET);
+        }
+        return instance;
+    }
+
+    /**
+     * Gets a singleton instance and sets the budget to the given value.
+     */
+    public static ExpenseManager getInstance(double budget) {
+        if (instance == null) {
+            instance = new ExpenseManager(budget);
+        }
+        instance.setBudget(budget);
+        return instance;
     }
 
     public Currency getBaseCurrency() {
@@ -73,6 +92,10 @@ public class ExpenseManager {
     }
 
 
+    /**
+     * Truncates all existing expenses and categories without modifying budget
+     * and base currency.
+     */
     public void clearExpensesAndCategories() {
         expenses.clear();
         categories.clear();
@@ -89,6 +112,9 @@ public class ExpenseManager {
      * Adds a new category name into {@code categories} if not exists.
      */
     public void createCategory(String categoryName) throws InvalidArgumentException {
+        if (categoryName.isEmpty()) {
+            throw new InvalidArgumentException("", "Category name should not be empty.");
+        }
         if (categories.contains(categoryName)) {
             throw new InvalidArgumentException(categoryName, "Category name already exists.");
         }
@@ -100,6 +126,9 @@ public class ExpenseManager {
      */
     public void addExpense(String name, double amount) throws InvalidArgumentException {
         assert amount > 0 : "Amount must be positive";
+        if (name.isEmpty()) {
+            throw new InvalidArgumentException("", "Expense name should not be empty.");
+        }
         if (expenseNames.contains(name)) {
             throw new InvalidArgumentException(name, "Expense name already exists.");
         }
@@ -117,6 +146,9 @@ public class ExpenseManager {
      */
     public void addExpense(String name, double amount, String categoryName) throws InvalidArgumentException {
         assert amount > 0 : "Amount must be positive";
+        if (name.isEmpty()) {
+            throw new InvalidArgumentException("", "Expense name should not be empty.");
+        }
         if (expenseNames.contains(name)) {
             throw new InvalidArgumentException(name, "Expense name already exists.");
         }
@@ -132,6 +164,9 @@ public class ExpenseManager {
     public void addExpense(JSONObject expObj) throws JSONException {
         Expense expense = Expense.fromJSON(expObj);
         String name = expense.getName();
+        if (name.isEmpty()) {
+            throw new JSONException("Expense name should not be empty.");
+        }
         if (expenseNames.contains(name)) {
             throw new JSONException("Expense \"" + name + "\" already exists. Skipping");
         }
@@ -143,6 +178,11 @@ public class ExpenseManager {
         if (amount > Command.MAX_INPUT_VAL) {
             throw new JSONException('"' + name + "\": Expense amount should be no more than " +
                     Command.MAX_INPUT_VAL);
+        }
+
+        String categoryName = expense.getCategory();
+        if (categoryName != null) {
+            categories.add(categoryName);
         }
 
         expenses.add(expense);
@@ -184,6 +224,9 @@ public class ExpenseManager {
     }
 
     public void setExpenseCategory(String expenseName, String category) throws InvalidArgumentException {
+        if (expenseName.isEmpty()) {
+            throw new JSONException("Expense name should not be empty.");
+        }
         for (Expense expense : expenses) {
             if (expense.getName().equalsIgnoreCase(expenseName)) {
                 expense.setCategory(category);
