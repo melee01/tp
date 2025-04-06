@@ -286,8 +286,10 @@ public class CommandHandler {
         return "Current base is: " + newBase;
     }
 
-    public String handleSetTime(String expenseName, String timestampStr) throws InvalidArgumentException {
-        LocalDateTime timestamp = LocalDateTime.parse(timestampStr, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    public String handleSetTime(String expenseName, String timestampStr)
+            throws DateTimeParseException, InvalidArgumentException {
+        LocalDateTime timestamp = LocalDateTime.parse(timestampStr,
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         for (Expense expense : expenseManager.getExpenses()) {
             if (expense.getName().equalsIgnoreCase(expenseName)) {
                 expense.setDateTime(timestamp);
