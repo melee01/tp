@@ -293,4 +293,5 @@ class CommandHandlerTest {
         assertTrue(thrown.getMessage().contains("Invalid date format"),
                 "The exception message should contain 'Invalid date format'");
     }
+
 }
