@@ -78,7 +78,7 @@ public class InputHandlerTest {
     @Test
     public void handleUserInputTest_invalidInputs() {
         assertAll(
-                () -> inputHandler.handleUserInput("tuutorial"),
+                () -> inputHandler.handleUserInput("tutorial"),
                 () -> inputHandler.handleUserInput("set-budget"),
                 () -> inputHandler.handleUserInput("create-category"),
                 () -> inputHandler.handleUserInput("add-expense greek-meal -a twenty"),
@@ -106,7 +106,7 @@ public class InputHandlerTest {
                 () -> inputHandler.handleUserInput("add-expense Lunch -a 15 with extra text"),
                 () -> inputHandler.handleUserInput("delete-expense "),
                 () -> inputHandler.handleUserInput("view-expenses"),
-                () -> inputHandler.handleUserInput("      view-expenses")
+                () -> inputHandler.handleUserInput("      view-expenses"),
                 () -> inputHandler.handleUserInput("set-time     "),
                 () -> inputHandler.handleUserInput("set-time Lunch -t 2024-04-01 10:00:00 extra"),
                 () -> inputHandler.handleUserInput("     set-time Lunch -t 2024-04-01 10:00:00")
