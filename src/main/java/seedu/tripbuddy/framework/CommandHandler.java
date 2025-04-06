@@ -166,7 +166,8 @@ public class CommandHandler {
         double remainingBudget = expenseManager.getRemainingBudget();
         if (remainingBudget >= 0) {
             return "Expense " + expenseName + " added successfully.\n" +
-                    "Your remaining budget is $" + ExpenseManager.baseCurrency.getFormattedAmount(remainingBudget) + ".";
+                    "Your remaining budget is $" +
+                    ExpenseManager.baseCurrency.getFormattedAmount(remainingBudget) + ".";
         }
         return "Expense " + expenseName + " added successfully.\n" +
                 "Uh oh! You've exceeded your budget.\n" +
