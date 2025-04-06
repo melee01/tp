@@ -93,6 +93,9 @@ public class DataHandler {
         }
         ExpenseManager expenseManager = ExpenseManager.getInstance();
 
+        // Save all messages to be displayed
+        StringBuilder invalidJsonMessage = new StringBuilder();
+
         try {
             double budget = root.getDouble("budget");
             if (budget <= 0 || budget > Command.MAX_INPUT_VAL) {
@@ -101,11 +104,8 @@ public class DataHandler {
             }
             expenseManager.setBudget(budget);
         } catch (JSONException e) {
-            throw new DataLoadingException("Missing or invalid budget information.");
+            invalidJsonMessage.append("Budget information missing. Using default budget instead.\n");
         }
-
-        // Save all messages to be displayed
-        StringBuilder invalidJsonMessage = new StringBuilder();
 
         String currencyName;
         try {
@@ -120,31 +120,39 @@ public class DataHandler {
                     .append(currencyName).append(". Using SGD instead.\n");
         }
 
-        JSONArray categoriesArr = root.getJSONArray("categories");
-        for (int i = 0; i < categoriesArr.length(); i++) {
-            String category = categoriesArr.optString(i, null);
-            if (category == null) {
-                continue;
+        try {
+            JSONArray categoriesArr = root.getJSONArray("categories");
+            for (int i = 0; i < categoriesArr.length(); i++) {
+                String category = categoriesArr.optString(i, null);
+                if (category == null) {
+                    continue;
+                }
+                try {
+                    expenseManager.createCategory(category);
+                } catch (InvalidArgumentException e) {
+                    String message = e.getMessage();
+                    invalidJsonMessage.append("Category \"").append(category).append("\": ")
+                            .append(message).append("\n");
+                }
             }
-            try {
-                expenseManager.createCategory(category);
-            } catch (InvalidArgumentException e) {
-                String message = e.getMessage();
-                invalidJsonMessage.append("Category \"").append(category).append("\": ")
-                        .append(message).append("\n");
-            }
+        } catch (JSONException e) {
+            invalidJsonMessage.append("Categories information missing. Will create categories along with expenses.\n");
         }
 
-        JSONArray expensesArr = root.getJSONArray("expenses");
-        for (int i = 0; i < expensesArr.length(); i++) {
-            try {
-                JSONObject expObj = expensesArr.getJSONObject(i);
-                expenseManager.addExpense(expObj);
-            } catch (JSONException e) {
-                String message = e.getMessage();
-                invalidJsonMessage.append("Failed to parse expense at index ").append(i).append(". Skipping:\n\t")
-                        .append(message).append("\n");
+        try {
+            JSONArray expensesArr = root.getJSONArray("expenses");
+            for (int i = 0; i < expensesArr.length(); i++) {
+                try {
+                    JSONObject expObj = expensesArr.getJSONObject(i);
+                    expenseManager.addExpense(expObj);
+                } catch (JSONException e) {
+                    String message = e.getMessage();
+                    invalidJsonMessage.append("Failed to parse expense at index ").append(i).append(". Skipping:\n\t")
+                            .append(message).append("\n");
+                }
             }
+        } catch (JSONException e) {
+            invalidJsonMessage.append("Expenses information missing.\n");
         }
 
         return invalidJsonMessage.toString();

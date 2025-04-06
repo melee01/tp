@@ -180,6 +180,11 @@ public class ExpenseManager {
                     Command.MAX_INPUT_VAL);
         }
 
+        String categoryName = expense.getCategory();
+        if (categoryName != null) {
+            categories.add(categoryName);
+        }
+
         expenses.add(expense);
         expenseNames.add(name);
         totalExpense += amount;
