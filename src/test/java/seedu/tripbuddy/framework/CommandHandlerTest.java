@@ -6,8 +6,6 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -273,7 +271,8 @@ class CommandHandlerTest {
         String result = commandHandler.handleSetTime(name, newTimestampStr);
         Expense updatedExpense = expenseManager.getExpense(0);
         assertEquals(expectedTime, updatedExpense.getDateTime());
-        assertTrue(result.contains("Updated timestamp for"), "The result message should contain 'Updated timestamp for'");
+        assertTrue(result.contains("Updated timestamp for"),
+                "The result message should contain 'Updated timestamp for'");
     }
 
     @Test
@@ -283,7 +282,8 @@ class CommandHandlerTest {
         String timestampStr = "2024-01-01 10:00:00";
         InvalidArgumentException thrown = assertThrows(InvalidArgumentException.class, () ->
                 commandHandler.handleSetTime(name, timestampStr));
-        assertEquals("Expense name not found.", thrown.getMessage(), "The exception message should be 'Expense name not found.'");
+        assertEquals("Expense name not found.", thrown.getMessage(),
+                "The exception message should be 'Expense name not found.'");
     }
 
     @Test
