@@ -140,4 +140,12 @@ class ExpenseTest {
         assertNull(expense.getCategory());
         assertEquals(dateTimeStr, expense.getDateTimeString());
     }
+
+    @Test
+    public void setDateTime_validDateTime_success() {
+        Expense expense = new Expense("flight", 300.00);
+        LocalDateTime newTime = LocalDateTime.of(2024, 3, 30, 15, 0);
+        expense.setDateTime(newTime);
+        assertEquals(newTime, expense.getDateTime());
+    }
 }

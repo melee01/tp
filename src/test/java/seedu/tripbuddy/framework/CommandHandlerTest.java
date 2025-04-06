@@ -21,9 +21,10 @@ class CommandHandlerTest {
     private static final int DEFAULT_BUDGET = 2333;
 
     @BeforeEach
-    void initExpenseManager() {
-        ExpenseManager expenseManager = ExpenseManager.getInstance();
-        expenseManager.clearExpensesAndCategories();
+    public void setup() {
+        expenseManager = ExpenseManager.getInstance();
+        expenseManager.clearExpensesAndCategories(); // Ensure clean state
+        commandHandler = CommandHandler.getInstance();
     }
 
     @Test
@@ -253,5 +254,37 @@ class CommandHandlerTest {
         ExpenseManager expenseManager = ExpenseManager.getInstance(DEFAULT_BUDGET);
         CommandHandler commandHandler = CommandHandler.getInstance();
         assertThrows(InvalidArgumentException.class, () -> commandHandler.handleSetBaseCurrency("XXX"));
+    }
+
+    @Test
+    public void testSetTime_validExpense_success() throws InvalidArgumentException {
+        String name = "test-dinner";
+        double amount = 25.0;
+        expenseManager.addExpense(name, amount);
+        String newTimestampStr = "2024-03-15 19:30:00";
+        LocalDateTime expectedTime = LocalDateTime.parse(newTimestampStr, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        String result = commandHandler.handleSetTime(name, newTimestampStr);
+        Expense updatedExpense = expenseManager.getExpense(0);
+        assertEquals(expectedTime, updatedExpense.getDateTime());
+        assertTrue(result.contains("Updated timestamp for"));
+    }
+
+    @Test
+    public void testSetTime_nonexistentExpense_throwsException() {
+        String name = "ghost-expense";
+        String timestampStr = "2024-01-01 10:00:00";
+        InvalidArgumentException thrown = assertThrows(InvalidArgumentException.class, () ->
+                commandHandler.handleSetTime(name, timestampStr));
+        assertEquals("Expense name not found.", thrown.getMessage());
+    }
+
+    @Test
+    public void testSetTime_invalidTimestampFormat_throwsException() {
+        String name = "test-breakfast";
+        expenseManager.addExpense(name, 10.0);
+        String invalidTime = "15th March, 2024";
+        InvalidArgumentException thrown = assertThrows(InvalidArgumentException.class, () ->
+                commandHandler.handleSetTime(name, invalidTime));
+        assertTrue(thrown.getMessage().contains("Invalid date format"));
     }
 }

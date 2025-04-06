@@ -70,6 +70,7 @@ public class InputHandlerTest {
                 () -> inputHandler.handleUserInput("create-category accommodation"),
                 () -> inputHandler.handleUserInput("add-expense greek-meal -a 10"),
                 () -> inputHandler.handleUserInput("set-category greek-meal -c food"),
+                () -> inputHandler.handleUserInput("set-time greek-meal -t 2024-04-02 12:00:00"),
                 () -> inputHandler.handleUserInput("delete-expense greek-meal")
         );
     }
@@ -85,6 +86,11 @@ public class InputHandlerTest {
                 () -> inputHandler.handleUserInput("delete-expense greek-meal"),
                 () -> inputHandler.handleUserInput("set-budget 100000000"),
                 () -> inputHandler.handleUserInput("set-budget -1234")
+                () -> inputHandler.handleUserInput("set-time"),
+                () -> inputHandler.handleUserInput("set-time onlyexpense"),
+                () -> inputHandler.handleUserInput("set-time onlyexpense -t"),
+                () -> inputHandler.handleUserInput("set-time onlyexpense -t not-a-date"),
+                () -> inputHandler.handleUserInput("set-time nonexistent -t 2024-04-01 10:00:00")
         );
     }
 
@@ -101,6 +107,9 @@ public class InputHandlerTest {
                 () -> inputHandler.handleUserInput("delete-expense "),
                 () -> inputHandler.handleUserInput("view-expenses"),
                 () -> inputHandler.handleUserInput("      view-expenses")
+                () -> inputHandler.handleUserInput("set-time     "),
+                () -> inputHandler.handleUserInput("set-time Lunch -t 2024-04-01 10:00:00 extra"),
+                () -> inputHandler.handleUserInput("     set-time Lunch -t 2024-04-01 10:00:00")
         );
     }
 }
