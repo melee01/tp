@@ -1,7 +1,6 @@
 package seedu.tripbuddy.exception;
 
 import org.json.JSONException;
-import seedu.tripbuddy.framework.Ui;
 
 import java.io.FileNotFoundException;
 import java.time.format.DateTimeParseException;

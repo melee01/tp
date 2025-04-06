@@ -3,7 +3,6 @@ package seedu.tripbuddy.framework;
 import seedu.tripbuddy.command.Command;
 import seedu.tripbuddy.command.Keyword;
 import seedu.tripbuddy.command.Parser;
-import seedu.tripbuddy.dataclass.Expense;
 import seedu.tripbuddy.exception.ExceptionHandler;
 import seedu.tripbuddy.exception.InvalidArgumentException;
 import seedu.tripbuddy.exception.InvalidKeywordException;

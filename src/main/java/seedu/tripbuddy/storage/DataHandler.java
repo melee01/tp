@@ -86,7 +86,9 @@ public class DataHandler {
         JSONArray categoriesArr = root.getJSONArray("categories");
         for (int i = 0; i < categoriesArr.length(); i++) {
             String category = categoriesArr.optString(i, null);
-            if (category == null) continue;
+            if (category == null) {
+                continue;
+            }
             try {
                 expenseManager.createCategory(category);
             } catch (InvalidArgumentException e) {

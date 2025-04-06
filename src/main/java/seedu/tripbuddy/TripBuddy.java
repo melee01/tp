@@ -3,7 +3,6 @@ package seedu.tripbuddy;
 import org.json.JSONException;
 import seedu.tripbuddy.exception.DataLoadingException;
 import seedu.tripbuddy.exception.ExceptionHandler;
-import seedu.tripbuddy.framework.CommandHandler;
 import seedu.tripbuddy.framework.InputHandler;
 import seedu.tripbuddy.framework.ExpenseManager;
 import seedu.tripbuddy.framework.Ui;
