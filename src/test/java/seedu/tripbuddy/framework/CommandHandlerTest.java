@@ -3,7 +3,6 @@ package seedu.tripbuddy.framework;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import org.junit.jupiter.api.Test;
 import seedu.tripbuddy.dataclass.Currency;
 import seedu.tripbuddy.dataclass.Expense;
@@ -14,44 +13,47 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
-
 class CommandHandlerTest {
 
-    static final Logger LOGGER = Logger.getLogger(CommandHandlerTest.class.getName());
-    static final int DEFAULT_BUDGET = 2333;
+    private static final Logger LOGGER = Logger.getLogger(CommandHandlerTest.class.getName());
+    private static final int DEFAULT_BUDGET = 2333;
 
     @Test
     void addExpense_a1() throws InvalidArgumentException {
-        ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
-        String message = CommandHandler.handleAddExpense("a", 1);
+        ExpenseManager expenseManager = new ExpenseManager(DEFAULT_BUDGET);
+        CommandHandler commandHandler = new CommandHandler(expenseManager);
+        String message = commandHandler.handleAddExpense("a", 1);
         assertEquals("Expense a added successfully.\n" +
-                "Your remaining budget is $" + String.format("%.2f", DEFAULT_BUDGET - 1.) + " SGD.",
+                        "Your remaining budget is $" + String.format("%.2f", DEFAULT_BUDGET - 1.0) + " SGD.",
                 message);
     }
 
     @Test
     void addExpense_negativeAmount_expectInvalidArgumentException() {
-        ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
+        ExpenseManager expenseManager = new ExpenseManager(DEFAULT_BUDGET);
+        CommandHandler commandHandler = new CommandHandler(expenseManager);
+        // Assuming negative amounts trigger an assertion failure in the new design.
         assertThrows(AssertionError.class,
-                () -> CommandHandler.handleAddExpense("a", -1));
+                () -> commandHandler.handleAddExpense("a", -1));
     }
 
     @Test
     void addExpense_incorrectCurrency() {
-        ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
+        ExpenseManager expenseManager = new ExpenseManager(DEFAULT_BUDGET);
+        CommandHandler commandHandler = new CommandHandler(expenseManager);
         assertThrows(InvalidArgumentException.class,
-                () -> CommandHandler.handleAddExpense("a", 20, "dinner", "XXX"));
-
+                () -> commandHandler.handleAddExpense("a", 20, "dinner", "XXX"));
     }
 
     @Test
     void addExpense_correct() {
-        ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
+        ExpenseManager expenseManager = new ExpenseManager(DEFAULT_BUDGET);
+        CommandHandler commandHandler = new CommandHandler(expenseManager);
         try {
-            CommandHandler.handleAddExpense("a", 20, "dinner", "USD");
-            Expense expense = ExpenseManager.getExpense(0);
+            commandHandler.handleAddExpense("a", 20, "dinner", "USD");
+            Expense expense = expenseManager.getExpense(0);
+            // Assuming Currency.USD.convert(20) returns the correctly converted value.
             assertEquals(expense.getAmount(), Currency.USD.convert(20));
-
         } catch (InvalidArgumentException e) {
             fail();
         }
@@ -59,209 +61,212 @@ class CommandHandlerTest {
 
     @Test
     void setBudget_set135() throws InvalidArgumentException {
-        ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
-        String message = CommandHandler.handleSetBudget(135);
+        ExpenseManager expenseManager = new ExpenseManager(DEFAULT_BUDGET);
+        CommandHandler commandHandler = new CommandHandler(expenseManager);
+        String message = commandHandler.handleSetBudget(135);
         assertEquals("Your budget has been set to 135.00 SGD.", message);
     }
 
     @Test
     void handleViewBudgetTest_positiveRemaining() throws InvalidArgumentException {
-        ExpenseManager.initExpenseManager(100);
-        ExpenseManager.addExpense("item1", 40);
-        String message = CommandHandler.handleViewBudget();
+        ExpenseManager expenseManager = new ExpenseManager(100);
+        CommandHandler commandHandler = new CommandHandler(expenseManager);
+        expenseManager.addExpense("item1", 40);
+        String message = commandHandler.handleViewBudget();
         assertTrue(message.contains("remaining budget of 60.00 SGD."));
     }
 
     @Test
     void handleViewBudgetTest_exceededBudget() throws InvalidArgumentException {
-        ExpenseManager.initExpenseManager(100);
-        ExpenseManager.addExpense("item1", 150);
-        String message = CommandHandler.handleViewBudget();
+        ExpenseManager expenseManager = new ExpenseManager(100);
+        CommandHandler commandHandler = new CommandHandler(expenseManager);
+        expenseManager.addExpense("item1", 150);
+        String message = commandHandler.handleViewBudget();
         LOGGER.log(Level.INFO, message);
         assertTrue(message.contains("exceeded your budget by 50"));
     }
 
     @Test
     void handleCreateCategoryTest() throws InvalidArgumentException {
-        ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
-        String message = CommandHandler.handleCreateCategory("food");
+        ExpenseManager expenseManager = new ExpenseManager(DEFAULT_BUDGET);
+        CommandHandler commandHandler = new CommandHandler(expenseManager);
+        String message = commandHandler.handleCreateCategory("food");
         assertEquals("Successfully created category: food.", message);
-        assertTrue(ExpenseManager.getCategories().contains("food"));
+        assertTrue(expenseManager.getCategories().contains("food"));
     }
 
     @Test
     void handleSetCategoryTest() throws InvalidArgumentException {
-        ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
-        ExpenseManager.addExpense("meal", 50);
-        String message = CommandHandler.handleSetCategory("meal", "dining");
+        ExpenseManager expenseManager = new ExpenseManager(DEFAULT_BUDGET);
+        CommandHandler commandHandler = new CommandHandler(expenseManager);
+        expenseManager.addExpense("meal", 50);
+        String message = commandHandler.handleSetCategory("meal", "dining");
         assertEquals("Successfully set category for meal to dining.", message);
-        assertEquals("dining", ExpenseManager.getExpense(0).getCategory());
+        assertEquals("dining", expenseManager.getExpense(0).getCategory());
     }
 
     @Test
     void handleDeleteExpenseTest() throws InvalidArgumentException {
-        ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
-        ExpenseManager.addExpense("deleteTest", 20);
-        String message = CommandHandler.handleDeleteExpense("deleteTest");
+        ExpenseManager expenseManager = new ExpenseManager(DEFAULT_BUDGET);
+        CommandHandler commandHandler = new CommandHandler(expenseManager);
+        expenseManager.addExpense("deleteTest", 20);
+        String message = commandHandler.handleDeleteExpense("deleteTest");
         assertTrue(message.contains("Expense deleteTest deleted successfully."));
-        assertEquals(0, ExpenseManager.getExpenses().size());
+        assertEquals(0, expenseManager.getExpenses().size());
     }
 
     @Test
     void handleMaxExpenseTest() throws InvalidArgumentException {
-        ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
-        ExpenseManager.addExpense("a", 10);
-        ExpenseManager.addExpense("b", 20);
-
+        ExpenseManager expenseManager = new ExpenseManager(DEFAULT_BUDGET);
+        CommandHandler commandHandler = new CommandHandler(expenseManager);
+        expenseManager.addExpense("a", 10);
+        expenseManager.addExpense("b", 20);
         Expense expense = new Expense("b", 20);
-        String expected = "Maximum expense: " +  expense;
-        String actual = CommandHandler.handleMaxExpense();
+        String expected = "Maximum expense: " + expense;
+        String actual = commandHandler.handleMaxExpense();
         assertEquals(expected, actual);
     }
 
     @Test
     void handleMinExpenseTest() throws InvalidArgumentException {
-        ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
-        ExpenseManager.addExpense("a", 10);
-        ExpenseManager.addExpense("b", 20);
-
+        ExpenseManager expenseManager = new ExpenseManager(DEFAULT_BUDGET);
+        CommandHandler commandHandler = new CommandHandler(expenseManager);
+        expenseManager.addExpense("a", 10);
+        expenseManager.addExpense("b", 20);
         Expense expense = new Expense("a", 10);
-        String expected = "Minimum expense: " +  expense;
-        String actual = CommandHandler.handleMinExpense();
+        String expected = "Minimum expense: " + expense;
+        String actual = commandHandler.handleMinExpense();
         assertEquals(expected, actual);
     }
 
     @Test
     void handleMaxExpense_noExpenses_throwsException() {
-        ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
-        assertThrows(InvalidArgumentException.class, CommandHandler::handleMaxExpense);
+        ExpenseManager expenseManager = new ExpenseManager(DEFAULT_BUDGET);
+        CommandHandler commandHandler = new CommandHandler(expenseManager);
+        assertThrows(InvalidArgumentException.class, commandHandler::handleMaxExpense);
     }
 
     @Test
     void handleMinExpense_noExpenses_throwsException() {
-        ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
-        assertThrows(InvalidArgumentException.class, CommandHandler::handleMinExpense);
+        ExpenseManager expenseManager = new ExpenseManager(DEFAULT_BUDGET);
+        CommandHandler commandHandler = new CommandHandler(expenseManager);
+        assertThrows(InvalidArgumentException.class, commandHandler::handleMinExpense);
     }
 
     @Test
     void handleListExpense_totalAmountSpent() throws InvalidArgumentException {
-        ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
-        ExpenseManager.addExpense("a", 50);
-        ExpenseManager.addExpense("b", 100);
-
-        Expense expense2 = new Expense("b", 100);
+        ExpenseManager expenseManager = new ExpenseManager(DEFAULT_BUDGET);
+        CommandHandler commandHandler = new CommandHandler(expenseManager);
+        expenseManager.addExpense("a", 50);
+        expenseManager.addExpense("b", 100);
         Expense expense1 = new Expense("a", 50);
-
+        Expense expense2 = new Expense("b", 100);
         String expected = "Here is a list of your past expenses: " +
                 "\n - " + expense1 +
                 "\n - " + expense2 +
                 "\nTotal amount spent: 150.00 SGD.";
-        String actual = CommandHandler.handleListExpense(null);
+        String actual = commandHandler.handleListExpense(null);
         assertEquals(expected, actual);
     }
 
     @Test
     void handleSearchExpense_matchingExpenses() throws InvalidArgumentException {
-        ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
-        ExpenseManager.addExpense("lunch", 20);
-        ExpenseManager.addExpense("dinner", 40);
-        ExpenseManager.addExpense("lunch-buffet", 30);
-        ExpenseManager.addExpense("transport", 15);
-
+        ExpenseManager expenseManager = new ExpenseManager(DEFAULT_BUDGET);
+        CommandHandler commandHandler = new CommandHandler(expenseManager);
+        expenseManager.addExpense("lunch", 20);
+        expenseManager.addExpense("dinner", 40);
+        expenseManager.addExpense("lunch-buffet", 30);
+        expenseManager.addExpense("transport", 15);
         Expense expense1 = new Expense("lunch", 20);
         Expense expense2 = new Expense("lunch-buffet", 30);
-
         String expected = "Expenses that matched your search word 'lunch':" +
                 "\n - " + expense1 +
                 "\n - " + expense2;
-        String actual = CommandHandler.handleSearch("lunch");
-
+        String actual = commandHandler.handleSearch("lunch");
         assertEquals(expected, actual);
     }
 
     @Test
     void handleSearchExpense_noMatchingExpenses() throws InvalidArgumentException {
-        ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
-        ExpenseManager.addExpense("lunch", 20);
-        ExpenseManager.addExpense("dinner", 40);
-        ExpenseManager.addExpense("transport", 15);
-
+        ExpenseManager expenseManager = new ExpenseManager(DEFAULT_BUDGET);
+        CommandHandler commandHandler = new CommandHandler(expenseManager);
+        expenseManager.addExpense("lunch", 20);
+        expenseManager.addExpense("dinner", 40);
+        expenseManager.addExpense("transport", 15);
         String expected = "There are no expenses that matched your search word: shopping.";
-        String actual = CommandHandler.handleSearch("shopping");
-
+        String actual = commandHandler.handleSearch("shopping");
         assertEquals(expected, actual);
     }
 
     @Test
     void handleSearchExpense_emptyExpenseList() {
-        ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
-
+        ExpenseManager expenseManager = new ExpenseManager(DEFAULT_BUDGET);
+        CommandHandler commandHandler = new CommandHandler(expenseManager);
         String expected = "There are no expenses that matched your search word: shirt.";
-        String actual = CommandHandler.handleSearch("shirt");
-
+        String actual = commandHandler.handleSearch("shirt");
         assertEquals(expected, actual);
     }
 
     @Test
     public void getCategories_returnCorrectList() throws InvalidArgumentException {
-        ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
-        ExpenseManager.addExpense("lunch", 20, "food");
-        ExpenseManager.addExpense("dinner", 40, "food");
-        ExpenseManager.addExpense("grab", 15, "transport");
-
-        List<String> categories = ExpenseManager.getCategories();
-
+        ExpenseManager expenseManager = new ExpenseManager(DEFAULT_BUDGET);
+        CommandHandler commandHandler = new CommandHandler(expenseManager);
+        expenseManager.addExpense("lunch", 20, "food");
+        expenseManager.addExpense("dinner", 40, "food");
+        expenseManager.addExpense("grab", 15, "transport");
+        List<String> categories = expenseManager.getCategories();
         assertEquals(2, categories.size());
-
         assertTrue(categories.contains("food"));
         assertTrue(categories.contains("transport"));
     }
 
     @Test
     public void getCategories_emptySet_returnsEmptyList() {
-        ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
-        List<String> categories = ExpenseManager.getCategories();
+        ExpenseManager expenseManager = new ExpenseManager(DEFAULT_BUDGET);
+        List<String> categories = expenseManager.getCategories();
         assertEquals(0, categories.size());
     }
 
     @Test
     public void clear_returnsEmptyList() throws InvalidArgumentException {
-        ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
-        ExpenseManager.addExpense("greek-meal", 20, "food");
-        ExpenseManager.addExpense("mediterranean-meal", 30, "food");
-        ExpenseManager.addExpense("grab", 15, "transport");
-
-        CommandHandler.handleClearAll();
-        List<String> categories = ExpenseManager.getCategories();
-        List<Expense> expenses = ExpenseManager.getExpenses();
-
+        ExpenseManager expenseManager = new ExpenseManager(DEFAULT_BUDGET);
+        CommandHandler commandHandler = new CommandHandler(expenseManager);
+        expenseManager.addExpense("greek-meal", 20, "food");
+        expenseManager.addExpense("mediterranean-meal", 30, "food");
+        expenseManager.addExpense("grab", 15, "transport");
+        commandHandler.handleClearAll();
+        List<String> categories = expenseManager.getCategories();
+        List<Expense> expenses = expenseManager.getExpenses();
         assertEquals(0, categories.size());
         assertEquals(0, expenses.size());
     }
 
     @Test
     public void viewCurrency_returnsEmptyList() {
-        ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
-        assertNotEquals(null, CommandHandler.handleViewCurrency());
+        ExpenseManager expenseManager = new ExpenseManager(DEFAULT_BUDGET);
+        CommandHandler commandHandler = new CommandHandler(expenseManager);
+        assertNotEquals(null, commandHandler.handleViewCurrency());
     }
 
     @Test
     public void setBaseCurrency_correct() throws InvalidArgumentException {
-        ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
-        try{
-            CommandHandler.handleSetBaseCurrency("USD");
+        ExpenseManager expenseManager = new ExpenseManager(DEFAULT_BUDGET);
+        CommandHandler commandHandler = new CommandHandler(expenseManager);
+        try {
+            commandHandler.handleSetBaseCurrency("USD");
         } catch (InvalidArgumentException e) {
             fail();
         }
-
-        assertEquals(Currency.USD.getRate(), 1);
-        assertNotEquals(Currency.SGD.getRate(), 1);
-
+        assertEquals(Currency.USD.getRate(), ExpenseManager.baseCurrency.getRate());
+        assertNotEquals(Currency.SGD.getRate(), ExpenseManager.baseCurrency.getRate());
     }
 
     @Test
     public void setBaseCurrency_incorrect() {
-        ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
-        assertThrows(InvalidArgumentException.class, () -> CommandHandler.handleSetBaseCurrency("XXX"));
+        ExpenseManager expenseManager = new ExpenseManager(DEFAULT_BUDGET);
+        CommandHandler commandHandler = new CommandHandler(expenseManager);
+        assertThrows(InvalidArgumentException.class, () -> commandHandler.handleSetBaseCurrency("XXX"));
     }
+
+
 }

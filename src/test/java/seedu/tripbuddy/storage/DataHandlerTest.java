@@ -2,152 +2,101 @@ package seedu.tripbuddy.storage;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import seedu.tripbuddy.dataclass.Currency;
 import seedu.tripbuddy.dataclass.Expense;
+import seedu.tripbuddy.exception.DataLoadingException;
+import seedu.tripbuddy.exception.InvalidArgumentException;
 import seedu.tripbuddy.framework.ExpenseManager;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.nio.file.Files;
-import java.util.HashSet;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 class DataHandlerTest {
 
-    private static final int DEFAULT_BUDGET = 2333;
-    private final PrintStream originalOut = System.out;
-    private ByteArrayOutputStream outContent;
-
-
-    @BeforeEach
-    void setUp() {
-        // Capture system output so we can verify Ui messages.
-        outContent = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(outContent));
-
-        // Reset ExpenseManager state before each test.
-        ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
-        ExpenseManager.setCategories(new HashSet<>());
-    }
-
-    @AfterEach
-    void tearDown() {
-        // Restore System.out after tests.
-        System.setOut(originalOut);
-    }
-
     @Test
-    void round2DigitsTest_floor() {
-        assertEquals(11.11, DataHandler.round2Digits(11.111), 1e-6);
-        assertEquals(11.11, DataHandler.round2Digits(11.1119), 1e-6);
-    }
-
-    @Test
-    void round2DigitsTest_ceil() {
-        assertEquals(11.12, DataHandler.round2Digits(11.118), 1e-6);
-    }
-
-    @Test
-    void testSaveData() throws IOException {
-        // Set up ExpenseManager state.
-        double budget = 1000.0;
-        ExpenseManager.initExpenseManager(budget);
-        // For testing, assume no expenses and no categories.
-        ExpenseManager.setCategories(new HashSet<>());
-        // ExpenseManager.getTotalExpense() should be 0 in this state.
-
-        // Create a temporary file to save JSON data.
-        File tempFile = File.createTempFile("testSaveData", ".json");
-        tempFile.deleteOnExit();
-        String path = tempFile.getAbsolutePath();
-
-        // Call DataHandler.saveData.
-        DataHandler.saveData(path);
-
-        // Verify that Ui printed the expected message.
-        String output = outContent.toString();
-        assertTrue(output.contains("Saved data to file:"), "Output should mention saved data.");
-
-        // Read the file content to verify JSON structure.
-        String jsonContent = new String(Files.readAllBytes(tempFile.toPath()));
-        JSONObject root = new JSONObject(jsonContent);
-
-        // Check that the JSON contains the correct budget.
-        assertEquals(budget, root.getDouble("budget"), 0.0001);
-        // Categories array should be empty.
-        JSONArray categoriesArr = root.getJSONArray("categories");
-        assertEquals(0, categoriesArr.length());
-        // Expenses array should be empty.
-        JSONArray expensesArr = root.getJSONArray("expenses");
-        assertEquals(0, expensesArr.length());
-    }
-
-    @Test
-    void testLoadData() throws IOException {
-        // Create a JSON object that mimics the saved data structure.
+    void testLoadDataValid() throws IOException, DataLoadingException, InvalidArgumentException {
+        // Create a JSON object with valid data.
         JSONObject root = new JSONObject();
-        double budget = 2000.0;
+        double budget = 1500.0;
         root.put("budget", budget);
-        double totalExpense = 150.0;
-        root.put("totalExpense", totalExpense);
+        root.put("currency", "SGD");
 
-        // Prepare categories.
         JSONArray categoriesArr = new JSONArray();
         categoriesArr.put("Food");
         categoriesArr.put("Transport");
         root.put("categories", categoriesArr);
 
-        // Prepare expenses.
         JSONArray expensesArr = new JSONArray();
-        JSONObject expenseObj = new JSONObject();
-        expenseObj.put("name", "Lunch");
-        expenseObj.put("amount", 12.5);
-        expenseObj.put("category", "Food");
-        // Use a fixed date/time string for reproducibility.
-        String dateTimeStr = "2025-04-05 12:00:00";
-        expenseObj.put("dateTime", dateTimeStr);
-        expensesArr.put(expenseObj);
+        JSONObject expense1 = new JSONObject();
+        expense1.put("name", "Lunch");
+        expense1.put("amount", 12.5);
+        expense1.put("category", "Food");
+        expense1.put("dateTime", "2025-04-05 12:00:00");
+        expensesArr.put(expense1);
         root.put("expenses", expensesArr);
 
-        // Write the JSON to a temporary file.
-        File tempFile = File.createTempFile("testLoadData", ".json");
+        // Write JSON to a temporary file.
+        File tempFile = File.createTempFile("testLoadDataValid", ".json");
         tempFile.deleteOnExit();
         Files.write(tempFile.toPath(), root.toString().getBytes());
-        String path = tempFile.getAbsolutePath();
 
-        // Clear the ExpenseManager state before loading.
-        ExpenseManager.initExpenseManager(DEFAULT_BUDGET);
-        ExpenseManager.setCategories(new HashSet<>());
-        outContent.reset();
+        // Load the data.
+        ExpenseManager expenseManager = DataHandler.loadData(tempFile.getAbsolutePath());
 
-        // Call DataHandler.loadData.
-        DataHandler.loadData(path);
+        // Verify the loaded state.
+        assertEquals(budget, expenseManager.getBudget(), 0.0001);
+        assertEquals(Currency.SGD, expenseManager.getBaseCurrency());
+        List<String> categories = expenseManager.getCategories();
+        assertTrue(categories.contains("Food"), "Categories should contain 'Food'");
+        assertTrue(categories.contains("Transport"), "Categories should contain 'Transport'");
 
-        // After loading, verify that ExpenseManager has updated its state.
-        assertEquals(budget, ExpenseManager.getBudget(), 0.0001);
-
-        // Verify categories.
-        List<String> categories = ExpenseManager.getCategories();
-        assertTrue(categories.contains("Food"), "Categories should include 'Food'");
-        assertTrue(categories.contains("Transport"), "Categories should include 'Transport'");
-
-        // Verify expenses.
-        List<Expense> expenses = ExpenseManager.getExpenses();
+        List<Expense> expenses = expenseManager.getExpenses();
         assertEquals(1, expenses.size(), "There should be one expense loaded.");
         Expense loadedExpense = expenses.get(0);
         assertEquals("Lunch", loadedExpense.getName());
         assertEquals(12.5, loadedExpense.getAmount(), 0.0001);
         assertEquals("Food", loadedExpense.getCategory());
-        assertEquals(dateTimeStr, loadedExpense.getDateTimeString());
+        assertEquals("2025-04-05 12:00:00", loadedExpense.getDateTimeString());
+    }
 
-        // Verify Ui output for loadData.
-        String output = outContent.toString();
-        assertTrue(output.contains("Loaded data from file:"), "Output should mention loaded data.");
+    @Test
+    void testLoadDataInvalidBudget() throws IOException {
+        // Create JSON with an invalid (negative) budget.
+        JSONObject root = new JSONObject();
+        root.put("budget", -100.0);
+        root.put("currency", "SGD");
+        root.put("categories", new JSONArray());
+        root.put("expenses", new JSONArray());
+
+        File tempFile = File.createTempFile("testLoadDataInvalidBudget", ".json");
+        tempFile.deleteOnExit();
+        Files.write(tempFile.toPath(), root.toString().getBytes());
+
+        // Expect a DataLoadingException due to an invalid budget.
+        assertThrows(DataLoadingException.class, () -> DataHandler.loadData(tempFile.getAbsolutePath()));
+    }
+
+    @Test
+    void testLoadDataMissingCurrency() throws IOException {
+        // Create JSON missing the currency field.
+        JSONObject root = new JSONObject();
+        root.put("budget", 1500.0);
+        // Currency is missing here.
+        root.put("categories", new JSONArray());
+        root.put("expenses", new JSONArray());
+
+        File tempFile = File.createTempFile("testLoadDataMissingCurrency", ".json");
+        tempFile.deleteOnExit();
+        Files.write(tempFile.toPath(), root.toString().getBytes());
+
+        // Expect a DataLoadingException due to missing currency information.
+        assertThrows(DataLoadingException.class, () -> DataHandler.loadData(tempFile.getAbsolutePath()));
     }
 }

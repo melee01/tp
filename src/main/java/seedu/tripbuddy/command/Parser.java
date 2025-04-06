@@ -7,19 +7,24 @@ import java.util.logging.Logger;
 
 public class Parser {
 
-    private static final Logger LOGGER = Logger.getLogger("TripBuddy");
+    //private final Logger LOGGER = Logger.getLogger("TripBuddy");
+    private final Logger LOGGER;
+
+    public Parser(Logger logger) {
+        this.LOGGER = logger;
+    }
 
     /**
      * Checks if a {@code String} is an option expression.
      */
-    private static boolean isOpt(String s) {
+    private boolean isOpt(String s) {
         return s.length() > 1 && s.startsWith("-");
     }
 
     /**
      * Parses an input line into {@link Command}.
      */
-    public static Command parseCommand(String cmdInput) throws InvalidKeywordException {
+    public Command parseCommand(String cmdInput) throws InvalidKeywordException {
         LOGGER.log(Level.INFO, "Start parsing: \"" + cmdInput + '"');
 
         String[] tokens = cmdInput.strip().split(" ");
