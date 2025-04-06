@@ -14,7 +14,7 @@ public class Command {
     /**
      * Values larger than this should be invalid.
      */
-    public static final double MAX_INPUT_VAL = 1e5;
+    public static final double MAX_INPUT_VAL = 1e6;
 
     private final Keyword keyword;
     private final ArrayList<Option> optList;

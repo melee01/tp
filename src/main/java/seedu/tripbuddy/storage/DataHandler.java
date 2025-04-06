@@ -9,7 +9,6 @@ import seedu.tripbuddy.dataclass.Expense;
 import seedu.tripbuddy.exception.DataLoadingException;
 import seedu.tripbuddy.exception.InvalidArgumentException;
 import seedu.tripbuddy.framework.ExpenseManager;
-import seedu.tripbuddy.framework.Ui;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -19,9 +18,7 @@ import java.util.logging.Logger;
 public class DataHandler {
 
     private static DataHandler instance = null;
-
     private static final Logger LOGGER = Logger.getLogger("TripBuddy");
-
     private final FileHandler fileHandler;
 
     private DataHandler() {
@@ -43,6 +40,10 @@ public class DataHandler {
         return instance;
     }
 
+    /**
+     * Saves the current {@link ExpenseManager} info into a json file.
+     * @return The message for display
+     */
     public String saveData(String path, ExpenseManager expenseManager) throws IOException {
         JSONObject root = new JSONObject();
         root.put("currency", expenseManager.getBaseCurrency().toString());
@@ -73,15 +74,15 @@ public class DataHandler {
     }
 
     /**
-     * Loads the ExpenseManager data from a file and shows progress messages via the UI.
+     * Loads the ExpenseManager data from a file and returns a status message for display.
      *
      * @param path The path to the JSON file.
-     * @return A new ExpenseManager instance populated with the data.
+     * @return A message including all error info.
      * @throws FileNotFoundException If the file cannot be found.
      * @throws JSONException         If there is an error parsing the JSON.
      * @throws DataLoadingException  If required fields are missing or invalid.
      */
-    public ExpenseManager loadData(String path)
+    public String loadData(String path)
             throws FileNotFoundException, DataLoadingException {
 
         JSONObject root;
@@ -91,7 +92,6 @@ public class DataHandler {
             throw new DataLoadingException("Failed to load your json save due syntax errors:\n\t" + e.getMessage());
         }
         ExpenseManager expenseManager = ExpenseManager.getInstance();
-        Ui ui = Ui.getInstance();
 
         try {
             double budget = root.getDouble("budget");
@@ -104,16 +104,20 @@ public class DataHandler {
             throw new DataLoadingException("Missing or invalid budget information.");
         }
 
+        // Save all messages to be displayed
+        StringBuilder invalidJsonMessage = new StringBuilder();
+
         String currencyName;
         try {
             currencyName = root.getString("currency");
             Currency currency = Currency.valueOf(currencyName);
             expenseManager.setBaseCurrency(currency);
         } catch (JSONException e) {
-            ui.printMessage("Currency information missing. Using SGD instead.");
+            invalidJsonMessage.append("Currency information missing. Using SGD instead.\n");
         } catch (IllegalArgumentException e) {
             currencyName = root.optString("currency", "UNKNOWN");
-            ui.printMessage("Unrecognized currency: " + currencyName + ". Using SGD instead.");
+            invalidJsonMessage.append("Unrecognized currency: ")
+                    .append(currencyName).append(". Using SGD instead.\n");
         }
 
         JSONArray categoriesArr = root.getJSONArray("categories");
@@ -126,7 +130,8 @@ public class DataHandler {
                 expenseManager.createCategory(category);
             } catch (InvalidArgumentException e) {
                 String message = e.getMessage();
-                ui.printMessage("Category \"" + category + "\": " + message);
+                invalidJsonMessage.append("Category \"").append(category).append("\": ")
+                        .append(message).append("\n");
             }
         }
 
@@ -137,10 +142,11 @@ public class DataHandler {
                 expenseManager.addExpense(expObj);
             } catch (JSONException e) {
                 String message = e.getMessage();
-                ui.printMessage("Failed to parse expense at index " + i + "\n\t" + message);
+                invalidJsonMessage.append("Failed to parse expense at index ").append(i).append("\n\t")
+                        .append(message).append("\n");
             }
         }
 
-        return expenseManager;
+        return invalidJsonMessage.toString();
     }
 }

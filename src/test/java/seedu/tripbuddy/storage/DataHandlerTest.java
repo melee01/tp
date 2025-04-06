@@ -55,7 +55,8 @@ class DataHandlerTest {
         Files.write(tempFile.toPath(), root.toString().getBytes());
 
         // Load the data.
-        ExpenseManager expenseManager = DataHandler.getInstance().loadData(tempFile.getAbsolutePath());
+        DataHandler.getInstance().loadData(tempFile.getAbsolutePath());
+        ExpenseManager expenseManager = ExpenseManager.getInstance();
 
         // Verify the loaded state.
         assertEquals(budget, expenseManager.getBudget(), 0.0001);
