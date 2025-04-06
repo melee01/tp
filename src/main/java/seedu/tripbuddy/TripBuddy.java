@@ -20,7 +20,6 @@ public class TripBuddy {
     private static final String LOG_PATH = "log.txt";
     private static final String FILE_PATH = "tripbuddy_data.json";
 
-
     private static Logger logger;
 
     /**

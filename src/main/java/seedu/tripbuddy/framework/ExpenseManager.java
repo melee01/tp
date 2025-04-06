@@ -43,8 +43,8 @@ public class ExpenseManager {
         return baseCurrency;
     }
 
-    public void setBaseCurrency(Currency baseCurrency) {
-        //this.baseCurrency = baseCurrency;
+    public void setBaseCurrency(Currency newBaseCurrency) {
+        baseCurrency = newBaseCurrency;
         Currency.setBaseCurrency(baseCurrency);
     }
 

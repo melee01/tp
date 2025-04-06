@@ -32,9 +32,7 @@ public class InputHandlerTest {
         System.setOut(new PrintStream(outContent));
 
         try {
-            inputHandler.handleUserInput("tutorial");
-            String output = outContent.toString();
-            assertTrue(output.contains("Welcome to the tutorial of TripBuddy"));
+            String output = inputHandler.handleUserInput("tutorial");
             assertTrue(output.contains("set-budget"));
             assertTrue(output.contains("add-expense"));
         } finally {

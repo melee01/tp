@@ -267,4 +267,6 @@ class CommandHandlerTest {
         CommandHandler commandHandler = new CommandHandler(expenseManager);
         assertThrows(InvalidArgumentException.class, () -> commandHandler.handleSetBaseCurrency("XXX"));
     }
+
+
 }
