@@ -30,7 +30,7 @@ public class ExpenseManager {
      */
     public ExpenseManager(double budget) {
         assert budget > 0 : "Budget must be positive";
-        this.budget = DEFAULT_BUDGET;
+        this.budget = budget;
         //this.baseCurrency = Currency.SGD;
         clearExpensesAndCategories();
     }
