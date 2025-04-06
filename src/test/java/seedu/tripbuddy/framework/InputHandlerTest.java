@@ -78,7 +78,7 @@ public class InputHandlerTest {
     @Test
     public void handleUserInputTest_invalidInputs() {
         assertAll(
-                () -> inputHandler.handleUserInput("tutorial"),
+                () -> inputHandler.handleUserInput("tuutorial"),
                 () -> inputHandler.handleUserInput("set-budget"),
                 () -> inputHandler.handleUserInput("create-category"),
                 () -> inputHandler.handleUserInput("add-expense greek-meal -a twenty"),
