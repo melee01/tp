@@ -3,6 +3,8 @@ package seedu.tripbuddy.framework;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,6 +21,9 @@ class CommandHandlerTest {
 
     private static final Logger LOGGER = Logger.getLogger(CommandHandlerTest.class.getName());
     private static final int DEFAULT_BUDGET = 2333;
+
+    private ExpenseManager expenseManager;
+    private CommandHandler commandHandler;
 
     @BeforeEach
     public void setup() {
