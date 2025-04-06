@@ -142,7 +142,7 @@ public class DataHandler {
                 expenseManager.addExpense(expObj);
             } catch (JSONException e) {
                 String message = e.getMessage();
-                invalidJsonMessage.append("Failed to parse expense at index ").append(i).append("\n\t")
+                invalidJsonMessage.append("Failed to parse expense at index ").append(i).append(". Skipping:\n\t")
                         .append(message).append("\n");
             }
         }
