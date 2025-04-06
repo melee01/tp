@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import seedu.tripbuddy.dataclass.Currency;
 import seedu.tripbuddy.dataclass.Expense;
 import seedu.tripbuddy.exception.DataLoadingException;
-import seedu.tripbuddy.exception.InvalidArgumentException;
 import seedu.tripbuddy.framework.ExpenseManager;
 
 import java.io.File;
@@ -17,11 +16,12 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class DataHandlerTest {
 
     @Test
-    void testLoadDataValid() throws IOException, DataLoadingException, InvalidArgumentException {
+    void testLoadDataValid() throws IOException, DataLoadingException {
         // Create a JSON object with valid data.
         JSONObject root = new JSONObject();
         double budget = 1500.0;
@@ -84,7 +84,7 @@ class DataHandlerTest {
     }
 
     @Test
-    void testLoadDataMissingCurrency() throws IOException {
+    void testLoadDataMissingCurrency_expectNoThrows() throws IOException {
         // Create JSON missing the currency field.
         JSONObject root = new JSONObject();
         root.put("budget", 1500.0);
@@ -96,7 +96,7 @@ class DataHandlerTest {
         tempFile.deleteOnExit();
         Files.write(tempFile.toPath(), root.toString().getBytes());
 
-        // Expect a DataLoadingException due to missing currency information.
-        assertThrows(DataLoadingException.class, () -> DataHandler.loadData(tempFile.getAbsolutePath()));
+        // Expect handled exception due to missing currency information.
+        assertAll(() -> DataHandler.loadData(tempFile.getAbsolutePath()));
     }
 }

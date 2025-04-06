@@ -21,7 +21,7 @@ class ParserTest {
         // Create a logger instance for testing purposes.
         testLogger = Logger.getLogger("TestLogger");
         // Instantiate Parser with the injected logger.
-        parser = new Parser(testLogger);
+        parser = Parser.getInstance(testLogger);
     }
 
     @Test

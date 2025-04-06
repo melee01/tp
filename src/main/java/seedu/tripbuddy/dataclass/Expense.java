@@ -81,11 +81,13 @@ public class Expense {
     @Override
     public String toString() {
         String dateTimeStr = dateTime.format(FORMATTER);
+        Currency baseCurrency = ExpenseManager.getInstance().getBaseCurrency();
         if (category == null) {
-            return "name: " + name + ", amount: " + getFormattedAmount(amount, ExpenseManager.baseCurrency) +
+            return "name: " + name + ", amount: " +
+                    getFormattedAmount(amount, baseCurrency) +
                     ", date: " + dateTimeStr;
         }
-        return "name: " + name + ", amount: " + getFormattedAmount(amount, ExpenseManager.baseCurrency)
+        return "name: " + name + ", amount: " + getFormattedAmount(amount, baseCurrency)
                 + ", category: " + category + ", date: " + dateTimeStr;
     }
 

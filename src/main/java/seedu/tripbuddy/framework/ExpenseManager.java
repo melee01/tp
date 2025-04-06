@@ -17,26 +17,45 @@ import java.util.Set;
  * Has CRUD access to all user data.
  */
 public class ExpenseManager {
-    public static Currency baseCurrency = Currency.SGD;
+
     public static final int DEFAULT_BUDGET = 1000;
+
+    private static ExpenseManager instance = null;
+
+    private Currency baseCurrency;
     private double budget;
-    private double totalExpense = 0;
+    private double totalExpense;
     private final HashSet<String> categories = new HashSet<>();
     private final ArrayList<Expense> expenses = new ArrayList<>();
     private final HashSet<String> expenseNames = new HashSet<>();
 
-    /**
-     * Clears all existing data and initializes budget value. Uses {@code SGD} for default currency.
-     */
-    public ExpenseManager(double budget) {
+    private ExpenseManager(double budget) {
         assert budget > 0 : "Budget must be positive";
         this.budget = budget;
-        //this.baseCurrency = Currency.SGD;
+        this.totalExpense = 0;
+        this.baseCurrency = Currency.SGD;
         clearExpensesAndCategories();
     }
 
-    public ExpenseManager() {
-        this(DEFAULT_BUDGET);
+    /**
+     * Gets a singleton instance and sets the budget to {@code DEFAULT_BUDGET}.
+     */
+    public static ExpenseManager getInstance() {
+        if (instance == null) {
+            instance = new ExpenseManager(DEFAULT_BUDGET);
+        }
+        return instance;
+    }
+
+    /**
+     * Gets a singleton instance and sets the budget to the given value.
+     */
+    public static ExpenseManager getInstance(double budget) {
+        if (instance == null) {
+            instance = new ExpenseManager(budget);
+        }
+        instance.setBudget(budget);
+        return instance;
     }
 
     public Currency getBaseCurrency() {
@@ -73,6 +92,10 @@ public class ExpenseManager {
     }
 
 
+    /**
+     * Truncates all existing expenses and categories without modifying budget
+     * and base currency.
+     */
     public void clearExpensesAndCategories() {
         expenses.clear();
         categories.clear();

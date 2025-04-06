@@ -8,6 +8,8 @@ import java.util.Scanner;
  */
 public class Ui {
 
+    private static Ui instance = null;
+
     private static final String LINE =
             "____________________________________________________________";
     private static final String START_MESSAGE =
@@ -15,6 +17,15 @@ public class Ui {
     private static final String END_MESSAGE = "Your TripBuddy session has ended. Bye!";
 
     private final Scanner scanner = new Scanner(System.in);
+
+    private Ui() {}
+
+    public static Ui getInstance() {
+        if (instance == null) {
+            instance = new Ui();
+        }
+        return instance;
+    }
 
     /**
      * Prints a line separator for better readability.

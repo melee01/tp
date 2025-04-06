@@ -42,20 +42,20 @@ public class TripBuddy {
      */
     public static void run() {
         initLogging();
-        Ui ui = new Ui();
+        Ui ui = Ui.getInstance();
         ExpenseManager expenseManager;
 
         try {
-            expenseManager = DataHandler.loadData(FILE_PATH, ui);
+            expenseManager = DataHandler.loadData(FILE_PATH);
             ui.printMessage("Loading expense data from " + FILE_PATH);
         } catch (FileNotFoundException e) {
             ui.printMessage(ExceptionHandler.handleFileNotFoundException(e));
-            expenseManager = new ExpenseManager();
+            expenseManager = ExpenseManager.getInstance();
         } catch (DataLoadingException e) {
             ui.printMessage(e.getMessage());
-            expenseManager = new ExpenseManager();
+            expenseManager = ExpenseManager.getInstance();
         }
-        InputHandler inputHandler = new InputHandler(logger, expenseManager);
+        InputHandler inputHandler = InputHandler.getInstance(logger);
         ui.printStartMessage();
         while (true) {
             String userInput = ui.getUserInput();
@@ -74,7 +74,6 @@ public class TripBuddy {
                 return;
             }
             ui.printMessage(inputHandler.handleUserInput(userInput));
-
         }
     }
 

@@ -55,20 +55,20 @@ public class DataHandler {
     }
 
     /**
-     * Loads the ExpenseManager data from a file and shows progress messages via the provided UI.
+     * Loads the ExpenseManager data from a file and shows progress messages via the UI.
      *
      * @param path The path to the JSON file.
-     * @param ui   The UI instance to show messages.
      * @return A new ExpenseManager instance populated with the data.
      * @throws FileNotFoundException If the file cannot be found.
      * @throws JSONException         If there is an error parsing the JSON.
      * @throws DataLoadingException  If required fields are missing or invalid.
      */
-    public static ExpenseManager loadData(String path, Ui ui)
+    public static ExpenseManager loadData(String path)
             throws FileNotFoundException, DataLoadingException {
 
         JSONObject root = FileHandler.readJsonObject(path);
-        ExpenseManager expenseManager;
+        ExpenseManager expenseManager = ExpenseManager.getInstance();
+        Ui ui = Ui.getInstance();
 
         try {
             double budget = root.getDouble("budget");
@@ -76,8 +76,7 @@ public class DataHandler {
                 throw new DataLoadingException(
                         "Budget value invalid or out of range. Using default budget instead.");
             }
-            expenseManager = new ExpenseManager(budget);
-
+            expenseManager.setBudget(budget);
         } catch (JSONException e) {
             throw new DataLoadingException("Missing or invalid budget information.");
         }
