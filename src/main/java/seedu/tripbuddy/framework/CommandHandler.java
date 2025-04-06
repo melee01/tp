@@ -10,20 +10,25 @@ import java.time.format.DateTimeParseException;
 
 import java.util.List;
 
-
 /**
- * Handles commands and return message strings.
+ * Handles user commands and returns result messages.
+ * Coordinates actions with the {@link ExpenseManager}.
  */
 public class CommandHandler {
 
     private static CommandHandler instance = null;
-
     private final ExpenseManager expenseManager;
 
+    /**
+     * Private constructor to enforce singleton pattern.
+     */
     private CommandHandler() {
         this.expenseManager = ExpenseManager.getInstance();
     }
 
+    /**
+     * Returns the singleton instance of {@code CommandHandler}.
+     */
     public static CommandHandler getInstance() {
         if (instance == null) {
             instance = new CommandHandler();
@@ -31,6 +36,9 @@ public class CommandHandler {
         return instance;
     }
 
+    /**
+     * Returns a full tutorial message listing all commands.
+     */
     public String handleTutorial() {
         return """
                 Welcome to the tutorial of TripBuddy!
@@ -84,6 +92,9 @@ public class CommandHandler {
                 Enjoy tracking your expenses with TripBuddy!""";
     }
 
+    /**
+     * Displays the user's budget, total spent, and remaining amount.
+     */
     public String handleViewBudget() {
         double budget = expenseManager.getBudget();
         double totalExpense = expenseManager.getTotalExpense();
@@ -102,6 +113,12 @@ public class CommandHandler {
                 ".\nConsider adjusting your budget to get back on track.";
     }
 
+    /**
+     * Sets a new budget amount.
+     *
+     * @param budget the budget value to set
+     * @return confirmation message
+     */
     public String handleSetBudget(double budget) throws InvalidArgumentException {
         assert budget > 0;
         expenseManager.setBudget(budget);
@@ -109,22 +126,51 @@ public class CommandHandler {
         return "Your budget has been set to " + baseCurrency.getFormattedAmount(budget) + ".";
     }
 
+    /**
+     * Creates a new category.
+     *
+     * @param category the category name
+     * @return confirmation message
+     */
     public String handleCreateCategory(String category) throws InvalidArgumentException {
         expenseManager.createCategory(category);
         return "Successfully created category: " + category + ".";
     }
 
+    /**
+     * Assigns a category to an existing expense.
+     *
+     * @param expenseName name of the expense
+     * @param category    category to assign
+     * @return confirmation message
+     */
     public String handleSetCategory(String expenseName, String category) throws InvalidArgumentException {
         expenseManager.setExpenseCategory(expenseName, category);
         return "Successfully set category for " + expenseName + " to " + category + ".";
     }
 
+    /**
+     * Deletes an expense by name.
+     *
+     * @param expenseName name of the expense to delete
+     * @return confirmation message
+     */
     public String handleDeleteExpense(String expenseName) throws InvalidArgumentException {
         expenseManager.deleteExpense(expenseName);
         return "Expense " + expenseName + " deleted successfully.\nYour remaining budget is " +
                 expenseManager.getBaseCurrency().getFormattedAmount(expenseManager.getRemainingBudget()) + ".";
     }
 
+    /**
+     * Adds a new expense with a given name, amount, and category or currency.
+     * If the category matches a supported currency code, the amount is converted accordingly.
+     *
+     * @param expenseName the name of the expense to add
+     * @param amount      the amount of the expense
+     * @param category    the category or currency code
+     * @return a message confirming the addition and updated budget status
+     * @throws InvalidArgumentException if the input is invalid
+     */
     public String handleAddExpense(String expenseName, double amount, String category)
             throws InvalidArgumentException {
         assert amount > 0;
@@ -152,6 +198,14 @@ public class CommandHandler {
         }
     }
 
+    /**
+     * Adds a new expense with a given name and amount.
+     *
+     * @param expenseName the name of the expense to add
+     * @param amount      the amount of the expense
+     * @return a message confirming the addition and updated budget status
+     * @throws InvalidArgumentException if the input is invalid
+     */
     public String handleAddExpense(String expenseName, double amount) throws InvalidArgumentException {
         assert amount > 0;
         expenseManager.addExpense(expenseName, amount);
@@ -168,6 +222,13 @@ public class CommandHandler {
                 ". Time to rein it in!\nConsider adjusting your budget to get back on track!";
     }
 
+    /**
+     * Lists all expenses or filters by category.
+     *
+     * @param category the category to filter by (null to list all expenses)
+     * @return a formatted list of expenses and total amount spent
+     * @throws InvalidArgumentException if an error occurs retrieving expenses
+     */
     public String handleListExpense(String category) throws InvalidArgumentException {
         List<Expense> expenses = (category == null? expenseManager.getExpenses() :
                 expenseManager.getExpensesByCategory(category));
@@ -183,16 +244,37 @@ public class CommandHandler {
                 + expensesString;
     }
 
+    /**
+     * Retrieves the expense with the maximum amount.
+     *
+     * @return a message containing the maximum expense details
+     * @throws InvalidArgumentException if no expenses are recorded
+     */
     public String handleMaxExpense() throws InvalidArgumentException {
         Expense maxExpense = expenseManager.getMaxExpense();
         return "Maximum expense: " + maxExpense.toString();
     }
 
+    /**
+     * Retrieves the expense with the minimum amount.
+     *
+     * @return a message containing the minimum expense details
+     * @throws InvalidArgumentException if no expenses are recorded
+     */
     public String handleMinExpense() throws InvalidArgumentException {
         Expense minExpense = expenseManager.getMinExpense();
         return "Minimum expense: " + minExpense.toString();
     }
 
+    /**
+     * Filters and lists all expenses between two specified date-time values.
+     *
+     * @param startStr the start date-time string in format yyyy-MM-dd HH:mm:ss
+     * @param endStr   the end date-time string in format yyyy-MM-dd HH:mm:ss
+     * @return a formatted message listing filtered expenses or an appropriate message if none found
+     * @throws DateTimeParseException      if either start or end date-time strings are invalid
+     * @throws InvalidArgumentException    if filtering fails due to internal logic constraints
+     */
     public String handleFilterExpenseByDateRange(String startStr, String endStr)
             throws DateTimeParseException, InvalidArgumentException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -212,6 +294,11 @@ public class CommandHandler {
         }
     }
 
+    /**
+     * Displays the current exchange rates of all currencies against the base currency.
+     *
+     * @return A string listing the exchange rate of each currency compared to the base currency.
+     */
     public String handleViewCurrency() {
         StringBuilder message = new StringBuilder("The current exchange rate against base currency is: \n");
         Currency baseCurrency = expenseManager.getBaseCurrency();
@@ -229,6 +316,12 @@ public class CommandHandler {
         return message.toString();
     }
 
+    /**
+     * Searches for expenses that match the provided search word.
+     *
+     * @param searchWord The word to search for in expense names.
+     * @return A string listing all matched expenses or a message if no matches are found.
+     */
     public String handleSearch(String searchWord) {
         List<Expense> expenses = expenseManager.getExpensesBySearchword(searchWord);
         if (expenses.isEmpty()) {
@@ -242,6 +335,11 @@ public class CommandHandler {
         }
     }
 
+    /**
+     * Retrieves and displays all user-defined expense categories.
+     *
+     * @return A string listing all categories or a message if none exist.
+     */
     public String handleViewCategories() {
         List<String> categories = expenseManager.getCategories();
         if (categories.isEmpty()) {
@@ -255,11 +353,23 @@ public class CommandHandler {
         }
     }
 
+    /**
+     * Clears all recorded expenses and categories from the expense manager.
+     *
+     * @return A confirmation message indicating that all data has been cleared.
+     */
     public String handleClearAll() {
         expenseManager.clearExpensesAndCategories();
         return "All past expenses and categories have been cleared.";
     }
 
+    /**
+     * Sets a new base currency and converts all relevant data (budget, total spent, expenses) accordingly.
+     *
+     * @param baseCurrency The new base currency as a string (e.g., "USD", "SGD").
+     * @return A confirmation message displaying the new base currency.
+     * @throws InvalidArgumentException If the provided currency is invalid.
+     */
     public String handleSetBaseCurrency(String baseCurrency) throws InvalidArgumentException {
         Currency newBase;
         try {
@@ -286,6 +396,14 @@ public class CommandHandler {
         return "Current base is: " + newBase;
     }
 
+    /**
+     * Updates the timestamp of a specific expense by name.
+     *
+     * @param expenseName The name of the expense to update.
+     * @param timestampStr The new timestamp in the format "yyyy-MM-dd HH:mm:ss".
+     * @return A confirmation message if the update was successful.
+     * @throws InvalidArgumentException If the expense name is not found.
+     */
     public String handleSetTime(String expenseName, String timestampStr) throws InvalidArgumentException {
         LocalDateTime timestamp = LocalDateTime.parse(timestampStr, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         for (Expense expense : expenseManager.getExpenses()) {

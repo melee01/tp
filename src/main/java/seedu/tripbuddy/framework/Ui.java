@@ -18,8 +18,15 @@ public class Ui {
 
     private final Scanner scanner = new Scanner(System.in);
 
+    /**
+     * Private constructor for singleton pattern.
+     */
     private Ui() {}
 
+    /**
+     * Returns the singleton instance of {@code Ui}.
+     * If the instance does not exist, it is created.
+     */
     public static Ui getInstance() {
         if (instance == null) {
             instance = new Ui();
@@ -45,8 +52,9 @@ public class Ui {
 
     /**
      * Retrieves user input from the console.
+     * If there is no next line (e.g., in text UI testing), returns "quit".
      *
-     * @return The command entered by the user, whitespace stripped.
+     * @return The command entered by the user, with leading and trailing whitespace removed.
      */
     public String getUserInput() {
         // Force quit if text-ui-testing does not end with a "quit" line input
@@ -65,6 +73,11 @@ public class Ui {
         printLineSeparator();
     }
 
+    /**
+     * Prints a custom message wrapped with line separators.
+     *
+     * @param message The message to display.
+     */
     public void printMessage(String message) {
         printLineSeparator();
         System.out.println(message);

@@ -23,11 +23,22 @@ public class InputHandler {
     private final CommandHandler commandHandler;
     private final Parser parser;
 
+    /**
+     * Private constructor for singleton pattern. Initializes the command handler and parser.
+     *
+     * @param logger Logger used for parsing debug output.
+     */
     private InputHandler(Logger logger) {
         this.commandHandler = CommandHandler.getInstance();
         this.parser = Parser.getInstance(logger);
     }
 
+    /**
+     * Returns a singleton instance of {@code InputHandler}.
+     *
+     * @param logger Logger instance for parser initialization.
+     * @return The singleton {@code InputHandler}.
+     */
     public static InputHandler getInstance(Logger logger) {
         if (instance == null) {
             instance = new InputHandler(logger);
@@ -35,10 +46,23 @@ public class InputHandler {
         return instance;
     }
 
+    /**
+     * Checks if the input is a quit command.
+     *
+     * @param userInput The full user input string.
+     * @return True if the command is "quit", false otherwise.
+     */
     public boolean isQuitCommand(String userInput) {
         return userInput.split(" ")[0].equals("quit");
     }
 
+    /**
+     * Parses the user's input and executes the corresponding command.
+     * Delegates command execution to {@code CommandHandler}.
+     *
+     * @param userInput The full user input string.
+     * @return The result message from executing the command.
+     */
     public String handleUserInput(String userInput) {
         try {
             Command cmd = parser.parseCommand(userInput);
